@@ -1,0 +1,36 @@
+{
+  "name": "mibo-api",
+  "version": "1.0.0",
+  "description": "mibo app",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run build:live",
+    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PhysioHealth/mibo-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PhysioHealth/mibo-api/issues"
+  },
+  "homepage": "https://github.com/PhysioHealth/mibo-api#readme",
+  "devDependencies": {
+    "@types/node": "^6.0.51",
+    "nodemon": "^1.11.0",
+    "ts-node": "^1.7.0",
+    "typescript": "^2.0.10"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.0",
+    "glob": "^7.1.1",
+    "jade": "^1.11.0",
+    "lodash": "^4.17.2",
+    "mongoose": "^4.7.0",
+    "morgan": "^1.7.0"
+  }
+}
