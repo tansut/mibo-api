@@ -1,8 +1,53 @@
+import { ObjectID } from 'mongodb';
 import { connect } from 'net';
 import config from '../config';
 import * as mongoose from 'mongoose';
-//import * as mongodb from 'mongodb';
+import * as moment from 'moment';
 
+export interface DBDocument extends mongoose.Document {
+    _meta: {
+        created: Date,
+        updated?: Date,
+        owner?: string | mongoose.Types.ObjectId
+    }
+}
+
+
+export class DBSchema extends mongoose.Schema {
+
+    preSave(doc: DBDocument, next: Function) {
+        if (!doc.isNew) {
+            doc._meta.updated = moment.utc().toDate();
+        } else {
+
+        }
+        next();
+    }
+
+    static getMetaDefinition(): mongoose.SchemaDefinition {
+        return {
+            created: { type: Date, required: true, default: moment.utc },
+            updated: { type: Date, required: false },
+            owner: { type: String, required: false, ref: 'Users' }
+        }
+    }
+
+    constructor(definition?: mongoose.SchemaDefinition, options?: mongoose.SchemaOptions) {
+        definition['_meta'] || (definition['_meta'] = DBSchema.getMetaDefinition());
+        super(definition, options);
+        var self = this;
+        this.pre('save', function (next: Function) {
+            self.preSave.apply(self, [this, next]);
+        });
+    }
+
+}
+
+
+
+export interface DBModel<T extends DBDocument> extends mongoose.Model<T> {
+
+}
 
 export class DBManager {
     public connection: mongoose.Connection;
@@ -20,7 +65,7 @@ export class DBManager {
         var connStr = options ? 'mongodb://' + options.user + ':' + options.pwd + '@' + config.dbaddress + ':' + config.dbport + '/' + config.dbname
             : 'mongodb://' + config.dbaddress + ':' + config.dbport + '/' + config.dbname;
 
-        //mongoose.Promise = global.Promise;
+        (<any>mongoose).Promise = global.Promise;
 
         this.connection = mongoose.createConnection(connStr);
 

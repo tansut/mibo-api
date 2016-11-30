@@ -29,8 +29,8 @@ class Config {
         nconf.argv().env();
         this.port = this.get(Config.PORT) || 3000;
         this.dbaddress = this.get(Config.DBADDRESS) || '127.0.0.1';
-        this.dbport = this.get(Config.DBPORT) || 27019;
-        this.dbname = this.get(Config.DBNAME) || 'mibo';
+        this.dbport = this.get(Config.DBPORT) || 27017;
+        this.dbname = this.get(Config.DBNAME) || 'mibo-local';
         this.dbuser = this.get(Config.DBUSER) || '';
         this.dbpwd = this.get(Config.DBPWD) || '';
         this.authdb = this.get(Config.AUTHDB) || 'admin';

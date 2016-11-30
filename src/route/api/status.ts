@@ -31,6 +31,6 @@ class StatusRoute extends ApiBase {
     }
 }
 
-export var status: StatusRoute;
+export let status: StatusRoute;
 
-export default (router: express.Router) => status == new StatusRoute(router); 
+export default (router: express.Router) => status = new StatusRoute(router); 
