@@ -1,8 +1,8 @@
-import { ObjectID } from 'mongodb';
-import { connect } from 'net';
 import config from '../config';
 import * as mongoose from 'mongoose';
 import * as moment from 'moment';
+import * as mongodb from 'mongodb';
+
 
 export interface DBDocument extends mongoose.Document {
     _meta: {
@@ -16,19 +16,23 @@ export interface DBDocument extends mongoose.Document {
 export class DBSchema extends mongoose.Schema {
 
     preSave(doc: DBDocument, next: Function) {
-        if (!doc.isNew) {
-            doc._meta.updated = moment.utc().toDate();
-        } else {
-
+        try {
+            if (!doc.isNew) {
+                doc._meta.updated = moment.utc().toDate();
+            } else {
+                doc._meta.owner = mongoose.Types.ObjectId.createFromHexString("583f3e65b6db002ce969e714");
+            }
+            next();
+        } catch (err) {
+            next(err)
         }
-        next();
     }
 
     static getMetaDefinition(): mongoose.SchemaDefinition {
         return {
             created: { type: Date, required: true, default: moment.utc },
             updated: { type: Date, required: false },
-            owner: { type: String, required: false, ref: 'Users' }
+            owner: { type: mongoose.Schema['ObjectId'], required: false, ref: 'Users' }
         }
     }
 
