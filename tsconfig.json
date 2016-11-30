@@ -1,17 +1,21 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "watch": true,
+        "target": "es6",
         "module": "commonjs",
         "declaration": false,
         "noImplicitAny": false,
         "removeComments": true,
-        "noLib": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
+        "moduleResolution": "node",
         "sourceMap": true,
-        "listFiles": false
+        "listFiles": false,
+        "outDir": "bin",
+        "rootDir": "src",
+        "suppressImplicitAnyIndexErrors": true
     },
     "exclude": [
-        "node_modules"
+        "node_modules/**"
     ]
 }
