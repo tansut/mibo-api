@@ -4,7 +4,7 @@
   "description": "mibo app",
   "main": "index.js",
   "scripts": {
-    "start-api": "npm run build:live-api",
+    "start": "npm run build:live-api",
     "build:live-api": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/app.ts /start api"
   },
   "repository": {
