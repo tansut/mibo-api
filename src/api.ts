@@ -20,6 +20,9 @@ class ApiApp {
 
         this.app.use(bp.urlencoded({ extended: true }));
         this.app.use(bp.json())
+        this.app.use(bp.text());
+        this.app.use(bp.raw());
+
         db.connect();
 
 
@@ -39,6 +42,13 @@ class ApiApp {
         server.on("listening", () => {
             console.log("Server started on port " + config.port);
         });
+
+        this.app.use((err: any, req: express.Request, res: express.Response, next: Function, ) => {
+            if (err) {
+                debugger;
+            }
+            next(err);
+        })
     }
 }
 

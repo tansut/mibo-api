@@ -1,4 +1,4 @@
-import { ApiRequest } from '../../lib/api.request';
+import * as http from '../../lib/http';
 import * as express from "express";
 import { auth } from '../../middleware/api/auth';
 

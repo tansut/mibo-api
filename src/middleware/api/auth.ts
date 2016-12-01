@@ -1,20 +1,19 @@
 import * as express from "express";
 import Middleware from "./base";
-import * as requests from '../../lib/api.request';
-import * as errors from '../../lib/http.errors';
+import * as http from '../../lib/http';
 
 export var auth: AuthMiddleware;
 
 class AuthMiddleware extends Middleware {
 
-    private loadUser(req: requests.ApiRequest, res: express.Response, next: Function) {
+    private loadUser(req: http.ApiRequest, res: express.Response, next: Function) {
         req.user = "foo";
         next();
     }
 
-    public force(req: requests.ApiRequest, res: express.Response, next: Function, roles?: Array<string>) {
+    public force(req: http.ApiRequest, res: express.Response, next: Function, roles?: Array<string>) {
         if (!req.user)
-            next(new errors.PermissionError());
+            next(new http.PermissionError());
         else next();
     }
 

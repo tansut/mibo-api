@@ -4,18 +4,28 @@ import * as moment from 'moment';
 import * as mongodb from 'mongodb';
 
 
-export interface DBDocument extends mongoose.Document {
+export interface IDBDocument extends mongoose.Document {
+
     _meta: {
         created: Date,
         updated?: Date,
         owner?: string | mongoose.Types.ObjectId
     }
+
+    toClient();
 }
 
 
 export class DBSchema extends mongoose.Schema {
 
-    preSave(doc: DBDocument, next: Function) {
+    toClient(doc: IDBDocument) {
+        var result = doc.toObject();
+        delete result['__v'];
+        delete result['_meta'];
+        return result;
+    }
+
+    preSave(doc: IDBDocument, next: Function) {
         try {
             if (!doc.isNew) {
                 doc._meta.updated = moment.utc().toDate();
@@ -41,15 +51,19 @@ export class DBSchema extends mongoose.Schema {
         super(definition, options);
         var self = this;
         this.pre('save', function (next: Function) {
-            self.preSave.apply(self, [this, next]);
+            return self.preSave.apply(self, [this, next]);
+        });
+        this.method('toClient', function () {
+            return self.toClient.apply(self, [this]);
         });
     }
-
 }
 
 
 
-export interface DBModel<T extends DBDocument> extends mongoose.Model<T> {
+
+
+export interface DBModel<T extends IDBDocument> extends mongoose.Model<T> {
 
 }
 
@@ -76,7 +90,7 @@ export class DBManager {
         require('./models').default.use(this);
     }
     constructor() {
-
+        mongoose.set('debug', true)
     }
 }
 
