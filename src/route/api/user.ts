@@ -1,5 +1,5 @@
 import ApiBase from './base';
-
+import { ObjectID } from 'mongodb';
 import { request } from 'https';
 import * as express from "express";
 import { User, UserDocument, UserModel } from '../../db/models/user';
@@ -8,6 +8,7 @@ import CrudRoute from './crud';
 import * as bcrypt from 'bcryptjs';
 import * as validator from 'validator';
 import * as moment from 'moment';
+import * as crud from './crud';
 
 class UserRoute extends CrudRoute<UserDocument> {
 
@@ -17,6 +18,7 @@ class UserRoute extends CrudRoute<UserDocument> {
         doc.password = hash;
         return this.model.create(doc);
     }
+
 
     authenticate(email: string, password: string): Promise<UserDocument> {
         return new Promise((resolve, reject) => {

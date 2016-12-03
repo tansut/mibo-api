@@ -15,27 +15,6 @@ export interface ApiResponse {
 
 export default class ApiRoute {
 
-    populateSuccess(result: any): ApiResponse {
-        return {
-            $status: ResponseStatus.success,
-            result: result
-        }
-    }
-
-    populateError(result: any): ApiResponse {
-        return {
-            $status: ResponseStatus.error,
-            result: result
-        }
-    }
-
-    populateWarning(result: any): ApiResponse {
-        return {
-            $status: ResponseStatus.warning,
-            result: result
-        }
-    }
-
     authenticate(req, res, next) {
         return auth.force(req, res, next);
     }

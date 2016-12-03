@@ -30,6 +30,7 @@ export class DBSchema extends mongoose.Schema {
             if (!doc.isNew) {
                 doc._meta.updated = moment.utc().toDate();
             } else {
+                // Volkan: Current User
                 doc._meta.owner = mongoose.Types.ObjectId.createFromHexString("583f3e65b6db002ce969e714");
             }
             next();
@@ -58,9 +59,6 @@ export class DBSchema extends mongoose.Schema {
         });
     }
 }
-
-
-
 
 
 export interface DBModel<T extends IDBDocument> extends mongoose.Model<T> {

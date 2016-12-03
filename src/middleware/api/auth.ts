@@ -7,7 +7,7 @@ export var auth: AuthMiddleware;
 class AuthMiddleware extends Middleware {
 
     private loadUser(req: http.ApiRequest, res: express.Response, next: Function) {
-        req.user = "foo";
+        //req.user = "foo";
         next();
     }
 

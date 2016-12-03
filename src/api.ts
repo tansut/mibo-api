@@ -43,7 +43,7 @@ class ApiApp {
             console.log("Server started on port " + config.port);
         });
 
-        this.app.use((err: any, req: express.Request, res: express.Response, next: Function, ) => {
+        this.app.use((err: any, req: express.Request, res: express.Response, next: Function) => {
             if (err) {
                 debugger;
             }

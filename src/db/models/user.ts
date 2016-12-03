@@ -11,6 +11,10 @@ export const UserRoles = {
     user: 'user'
 }
 
+interface IUser {
+    inRole(role: string): boolean;
+}
+
 export class User {
     firstName: string;
     lastName: string;
@@ -20,7 +24,8 @@ export class User {
     roles: Array<string>;
 }
 
-export interface UserDocument extends User, IDBDocument { }
+
+export interface UserDocument extends User, IUser, IDBDocument { }
 
 class Schema extends DBSchema {
 
@@ -38,8 +43,8 @@ class Schema extends DBSchema {
         let meta = DBSchema.getMetaDefinition();
         super(definition, options);
         var self = this;
-        this.virtual('inRole', function (next: Function) {
-            return self.inRole.apply(self, [this, next]);
+        this.method('inRole', function (role) {
+            return self.inRole.apply(self, [this, role]);
         });
     }
 }
