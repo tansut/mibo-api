@@ -23,14 +23,15 @@ module.exports = function (shipit) {
     });
 
     shipit.blTask('install', function (next) {
-        var gulpTask = this.options.environment == 'production' ? 'tsc' : 'tsc';
-        shipit.remote('cd ' + this.currentPath + ' && npm install && npm prune', (err) => {
-            if (err) return next(err);
-            shipit.remote('cd ' + this.currentPath + ' && node_modules/.bin/gulp ' + gulpTask, (err) => {
-                if (err) return next(err);
-                next();
-            });
-        });
+        shipit.remote('cd ' + this.currentPath + ' && npm install && npm prune', next);
+        // var gulpTask = this.options.environment == 'production' ? 'tsc' : 'tsc';
+        // shipit.remote('cd ' + this.currentPath + ' && npm install && npm prune', (err) => {
+        //     if (err) return next(err);
+        //     shipit.remote('cd ' + this.currentPath + ' && node_modules/.bin/gulp ' + gulpTask, (err) => {
+        //         if (err) return next(err);
+        //         next();
+        //     });
+        // });
     });
 
 
