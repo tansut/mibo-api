@@ -7,7 +7,8 @@
     "deploy-stage": "./node_modules/shipit-cli/bin/shipit staging deploy",
     "deploy-production": "./node_modules/shipit-cli/bin/shipit production deploy",
     "start": "npm run build:live-api",
-    "build:live-api": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/app.ts /start api"
+    "build:live-api": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/app.ts /start api",
+    "postinstall": "node_modules/.bin/typings install && node_modules/.bin/gulp tsc"
   },
   "engines": {
     "node": "7.2.0"
@@ -30,7 +31,8 @@
     "shipit-cli": "^2.0.0",
     "shipit-deploy": "^2.4.0",
     "ts-node": "^1.7.0",
-    "typescript": "^2.0.10"
+    "typescript": "^2.0.10",
+    "typings": "^2.0.0"
   },
   "dependencies": {
     "bcryptjs": "^2.3.0",
