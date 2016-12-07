@@ -5,7 +5,7 @@ import config from "./config";
 import apiRoutes from './route/api';
 import apiMiddlewares from './middleware/api';
 import db from './db';
-
+import stripe from './lib/stripe';
 class ApiApp {
     app: express.Application;
     router: express.Router;
@@ -24,7 +24,9 @@ class ApiApp {
         this.app.use(bp.raw());
 
         db.connect();
-
+        stripe({
+            apikey: config.stripeApi
+        })
 
         apiMiddlewares.use(this.app);
 

@@ -17,6 +17,7 @@
     "nconf": "registry:dt/nconf#0.0.0+20160724073144",
     "node": "registry:dt/node#6.0.0+20161110151007",
     "serve-static": "registry:dt/serve-static#0.0.0+20160606155157",
+    "stripe-node": "registry:dt/stripe-node#4.6.0+20160811111312",
     "validator": "registry:dt/validator#5.7.0+20161105193831"
   }
 }

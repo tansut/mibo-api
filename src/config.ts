@@ -11,6 +11,8 @@ class Config {
     public static DBUSER = "DBUSER";
     public static DBPWD = "DBPWD";
     public static AUTHDB = "AUTHDB";
+    public static STRIPEAPIKEY = "STRIPEAPIKEY";
+    public static SINCHAPIKEY = "SINCHAPIKEY";
 
 
     public port: number;
@@ -20,6 +22,8 @@ class Config {
     public dbuser: string;
     public dbpwd: string;
     public authdb: string;
+    public stripeApi: string;
+    public sinchApi: string;
 
     public get(key?: string, cb?: nconf.ICallbackFunction) {
         return nconf.get(key, cb);
@@ -34,6 +38,8 @@ class Config {
         this.dbuser = this.get(Config.DBUSER) || '';
         this.dbpwd = this.get(Config.DBPWD) || '';
         this.authdb = this.get(Config.AUTHDB) || 'admin';
+        this.stripeApi = this.get(Config.STRIPEAPIKEY) || '';
+        this.sinchApi = this.get(Config.SINCHAPIKEY) || '';
     }
 }
 

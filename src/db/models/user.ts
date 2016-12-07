@@ -1,15 +1,39 @@
+import { key } from 'nconf';
 import * as _ from 'lodash';
 import * as stream from 'stream';
 import * as mongoose from 'mongoose';
 import { DBModel, DBSchema, IDBDocument } from '../';
 import * as validator from 'validator';
-
+import * as common from '../../lib/common';
+import * as stripe from '../../lib/stripe';
+import * as sinch from '../../lib/sinch';
 
 export const UserRoles = {
     admin: 'admin',
     dietition: 'dietition',
-    user: 'user'
+    user: 'user',
+    sales: 'sales'
 }
+
+export const Verifications = {
+    email: 'email',
+    mobile: 'mobile'
+}
+
+export interface Verification {
+    verificationDate: Date
+}
+
+export interface Verifications {
+    email?: Verification,
+    phone?: Verification
+}
+
+export interface Integrations {
+    stripe: stripe.UserData,
+    sinch: sinch.UserData
+}
+
 
 interface IUser {
     inRole(role: string): boolean;
@@ -22,6 +46,8 @@ export class User {
     password: string;
     lastLogin: Date;
     roles: Array<string>;
+    verifications: Verifications;
+    integrations: Integrations
 }
 
 
@@ -55,7 +81,9 @@ export const UserSchema = new Schema({
     email: { type: String, required: true, validate: validator.isEmail },
     password: { type: String, required: true },
     roles: [{ type: String, enum: [UserRoles.admin, UserRoles.dietition, UserRoles.user], default: [UserRoles.user] }],
-    lastLogin: { type: Date, required: false }
+    lastLogin: { type: Date, required: false },
+    verifications: { email: { type: Object, required: false }, mobile: { type: Object, required: false } },
+    integrations: { stripe: { type: Object, required: false }, sinch: { type: Object, required: false } }
 });
 
 
