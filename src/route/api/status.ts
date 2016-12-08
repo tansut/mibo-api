@@ -3,6 +3,8 @@ import * as express from "express";
 import * as http from '../../lib/http';
 import ApiBase from './base';
 import { UserModel } from '../../db/models/user';
+import * as validator from 'validator';
+import * as common from '../../lib/common';
 
 
 class StatusRoute extends ApiBase {

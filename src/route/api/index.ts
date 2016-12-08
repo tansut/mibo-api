@@ -5,7 +5,8 @@ export default class RouteLoader {
         return [
             require('./status').default(router),
             require('./user').default(router),
-            require('./system').default(router)
+            require('./system').default(router),
+            require('./payment').default(router)
         ]
     }
 }
