@@ -46,6 +46,8 @@ export class User {
     password: string;
     lastLogin: Date;
     roles: Array<string>;
+    resetToken?: string;
+    resetTokenValid?: Date;
     verifications: Verifications;
     integrations: Integrations
 }
@@ -82,6 +84,8 @@ export const UserSchema = new Schema({
     password: { type: String, required: true },
     roles: [{ type: String, enum: [UserRoles.admin, UserRoles.dietition, UserRoles.user], default: [UserRoles.user] }],
     lastLogin: { type: Date, required: false },
+    resetToken: { type: String, required: false },
+    resetTokenValid: { type: Date, required: false },
     verifications: { email: { type: Object, required: false }, mobile: { type: Object, required: false } },
     integrations: { stripe: { type: Object, required: false }, sinch: { type: Object, required: false } }
 });

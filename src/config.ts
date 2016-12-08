@@ -13,6 +13,10 @@ class Config {
     public static AUTHDB = "AUTHDB";
     public static STRIPEAPIKEY = "STRIPEAPIKEY";
     public static SINCHAPIKEY = "SINCHAPIKEY";
+    public static EMAILACCESSKEY = "EMAILACCESSKEY";
+    public static EMAILSECRETACCESSKEY = "EMAILSECRETACCESSKEY";
+    public static EMAILSERVICEURL = "EMAILSERVICEURL";
+    public static EMAILRATELIMIT = "EMAILRATELIMIT";
 
 
     public port: number;
@@ -24,6 +28,11 @@ class Config {
     public authdb: string;
     public stripeApi: string;
     public sinchApi: string;
+    public emailAccessKey: string;
+    public emailSecretAccessKey: string;
+    public emailServiceUrl: string;
+    public emailRateLimit: number;
+
 
     public get(key?: string, cb?: nconf.ICallbackFunction) {
         return nconf.get(key, cb);
@@ -40,6 +49,10 @@ class Config {
         this.authdb = this.get(Config.AUTHDB) || 'admin';
         this.stripeApi = this.get(Config.STRIPEAPIKEY) || '';
         this.sinchApi = this.get(Config.SINCHAPIKEY) || '';
+        this.emailAccessKey = this.get(Config.EMAILACCESSKEY) || '';
+        this.emailSecretAccessKey = this.get(Config.EMAILSECRETACCESSKEY) || '';
+        this.emailServiceUrl = this.get(Config.EMAILSERVICEURL) || '';
+        this.emailRateLimit = this.get(Config.EMAILRATELIMIT) || 15;
     }
 }
 

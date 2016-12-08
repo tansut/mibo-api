@@ -2,6 +2,9 @@ import * as stream from 'stream';
 import { IntegrationInfo } from './common';
 import * as common from './common';
 import * as StripeLib from 'stripe';
+import config from '../config';
+
+let lib = StripeLib(config.stripeApi);
 
 export const StripeKey: string = 'stripe';
 
@@ -13,18 +16,18 @@ export class UserData extends IntegrationInfo<IStripeData> {
 
 }
 
-interface StripeConfig {
-    apikey: string;
-}
 
 class StripeManager {
-    lib: any;
-
-    constructor(private config: StripeConfig) {
-        this.lib = StripeLib(config.apikey);
+    createUser(id: string, email: string) {
+        lib.customers.create({
+            email: email,
+            description: id
+        })
     }
 }
 
 export let Stripe: StripeManager;
 
-export default (config: StripeConfig) => Stripe || (Stripe = new StripeManager(config));
+export default {
+    init: () => Stripe || (Stripe = new StripeManager())
+}

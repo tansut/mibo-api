@@ -27,14 +27,20 @@ export class HttpError extends ApplicationError {
 
 
 export class PermissionError extends HttpError {
-    constructor() {
-        super(401, 'unauthorized');
+    constructor(msg: string = null) {
+        super(401, msg || 'unauthorized');
     }
 }
 
 export class NotFoundError extends HttpError {
-    constructor() {
-        super(404, 'notfound');
+    constructor(msg: string = null) {
+        super(404, msg || 'notfound');
+    }
+}
+
+export class ValidationError extends HttpError {
+    constructor(msg: string = null) {
+        super(422, msg || 'invaliddata');
     }
 }
 

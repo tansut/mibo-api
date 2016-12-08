@@ -1,3 +1,4 @@
+import { NotFoundError } from '../../lib/http';
 import ApiBase from './base';
 import { ObjectID } from 'mongodb';
 import { request } from 'https';
@@ -9,6 +10,8 @@ import * as bcrypt from 'bcryptjs';
 import * as validator from 'validator';
 import * as moment from 'moment';
 import * as crud from './crud';
+import * as crypto from 'crypto';
+import emailmanager from '../../lib/email';
 
 class UserRoute extends CrudRoute<UserDocument> {
 
@@ -39,6 +42,38 @@ class UserRoute extends CrudRoute<UserDocument> {
         this.authenticate(email, password).then((user) => { res.send(user) }, (err) => next(err))
     }
 
+    resetPasswordRequest(email: string) {
+        return this.model.findOne().where('email', email).then((user) => {
+            if (!user) return Promise.reject(new http.NotFoundError());
+            user.resetToken = crypto.randomBytes(32).toString('hex');
+            user.resetTokenValid = moment.utc().add(1, 'days').toDate();
+            return user.save().then((user) => {
+                emailmanager.send(user.email, 'Password reset request from Mibo', 'resetpassword.html', {
+                    token: user.resetToken
+                })
+            });
+        })
+    }
+
+    resetPasswordRequestRoute(req: http.ApiRequest, res: express.Response, next: Function) {
+        var email = req.body.email;
+        if (validator.isEmpty(email) || !validator.isEmail(email))
+            return next(new http.ValidationError());
+        this.resetPasswordRequest(email).then(() => { res.sendStatus(200) }, (err) => next(err))
+
+    }
+
+    resetPassword(req: http.ApiRequest, res: express.Response, next: Function) {
+        //Todo: 1. get token from query string,
+        // 2 validate token, find user
+        // generate a new password
+        // send ne password to user
+        // save to db
+        // destroy token & validity 
+
+    }
+
+
     protected generateCreateRoute() {
         this.router.post(this.url, this.createRoute.bind(this));
     }
@@ -49,6 +84,8 @@ class UserRoute extends CrudRoute<UserDocument> {
             update: true
         });
         this.router.post('/user/authenticate', this.authenticateRoute.bind(this));
+        this.router.post('/user/resetpassword', this.resetPasswordRequestRoute.bind(this));
+        this.router.get('/user/resetpassword', this.resetPasswordRoute.bind(this));
         this.generateRetrieveRoute();
     }
 }
