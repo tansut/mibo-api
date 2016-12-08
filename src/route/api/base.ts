@@ -19,6 +19,12 @@ export default class ApiRoute {
         return auth.force(req, res, next);
     }
 
+    validateUserRequest(req, userparam: string = 'userid') {
+        return new Promise((resolve, reject) => {
+            resolve();
+        });
+    }
+
     constructor(public router: express.Router) {
 
     }

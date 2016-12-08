@@ -25,7 +25,6 @@ export class ApiApp {
         this.app.use(bp.raw());
 
         db.connect();
-        stripe.init();
 
         apiMiddlewares.use(this.app);
 
