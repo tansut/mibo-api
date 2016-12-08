@@ -40,8 +40,7 @@ interface IUser {
 }
 
 export class User {
-    firstName: string;
-    lastName: string;
+    nickName: string;
     email: string;
     password: string;
     lastLogin: Date;

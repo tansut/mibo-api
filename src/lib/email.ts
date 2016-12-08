@@ -2,6 +2,8 @@ import * as common from './common';
 import config from '../config';
 import * as nodemailer from 'nodemailer';
 import * as ses from 'nodemailer-ses-transport';
+import * as ejs from 'ejs';
+import * as http from './http'
 
 
 
@@ -16,8 +18,21 @@ class EmailManager {
         }));
     }
 
-    send(to: string, subject: string, template: string, data?: { [key: string]: any }) {
+    send(to: string, nickName: string, subject: string, template: string, data?: { [key: string]: any }) {
         return new Promise((resolve, reject) => {
+            var html = ejs.renderFile('../content/email/' + template, {
+                    nickName: nickName,
+                    token: data,
+                    resetLink: resetLink
+                });
+
+            var resetLink: string = 'http://localhost:3000/resetpassword?token=' + data;
+            var mailOptions = {
+                to: to,
+                from: 'mibo@mibo.com',                
+                subject: subject,
+                html : html
+            }
             //TODO: get template, replace with data, send to user;
             resolve();
         })
