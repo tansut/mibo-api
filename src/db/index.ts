@@ -69,26 +69,37 @@ export class DBManager {
     public connection: mongoose.Connection;
 
     connect() {
-        var options = config.dbuser ? {
-            user: config.dbuser,
-            pwd: config.dbpwd ? new Buffer(config.dbpwd, 'base64').toString('ascii') : '',
-            auth: {
-                authdb: config.authdb ? config.authdb : 'admin'
+        return new Promise((resolve, reject) => {
+            var options = config.dbuser ? {
+                user: config.dbuser,
+                pwd: config.dbpwd ? new Buffer(config.dbpwd, 'base64').toString('ascii') : '',
+                auth: {
+                    authdb: config.authdb ? config.authdb : 'admin'
+                }
             }
-        }
-            : undefined;
+                : undefined;
 
-        var connStr = options ? 'mongodb://' + options.user + ':' + options.pwd + '@' + config.dbaddress + ':' + config.dbport + '/' + config.dbname
-            : 'mongodb://' + config.dbaddress + ':' + config.dbport + '/' + config.dbname;
+            var connStr = options ? 'mongodb://' + options.user + ':' + options.pwd + '@' + config.dbaddress + ':' + config.dbport + '/' + config.dbname
+                : 'mongodb://' + config.dbaddress + ':' + config.dbport + '/' + config.dbname;
 
+
+            this.connection = mongoose.createConnection(connStr);
+            this.connection.on('connected', () => {
+                require('./models').default.use(this);
+                resolve();
+            })
+
+            this.connection.on('error', (err) => {
+                reject(err);
+            })
+        });
+
+    }
+
+    constructor() {
+        //mongoose.set('debug', true);
         (<any>mongoose).Promise = global.Promise;
 
-        this.connection = mongoose.createConnection(connStr);
-
-        require('./models').default.use(this);
-    }
-    constructor() {
-        mongoose.set('debug', true)
     }
 }
 

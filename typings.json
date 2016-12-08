@@ -13,6 +13,7 @@
     "express-serve-static-core": "registry:dt/express-serve-static-core#4.0.0+20161012061536",
     "lodash": "registry:dt/lodash#4.14.0+20161110215204",
     "mime": "registry:dt/mime#0.0.0+20160316155526",
+    "mocha": "registry:dt/mocha#2.2.5+20161028141524",
     "mongodb": "registry:dt/mongodb#2.1.0+20161110150902",
     "mongoose": "registry:dt/mongoose#4.6.8+20161122192135",
     "morgan": "registry:dt/morgan#1.7.0+20160524142355",

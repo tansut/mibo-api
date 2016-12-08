@@ -27,6 +27,7 @@ export class UserData extends IntegrationInfo<IStripeData> {
 
 
 class StripeManager {
+    
     createUser(id: string, email: string) {
         return lib.customers.create({
             email: email,
