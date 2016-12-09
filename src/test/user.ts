@@ -4,7 +4,6 @@ import { route } from '../route/api/user';
 
 
 describe('account', function () {
-    before(done);
 
     describe('#signin()', function () {
         it('should signin test user', function () {

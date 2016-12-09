@@ -106,7 +106,6 @@ class Route extends CrudRoute<UserDocument> {
     constructor(router?: express.Router) {
         console.log('user route const', process.pid);
         var model = UserModel;
-        assert(model);
         super(router, model, '/user', {
             create: true,
             update: true

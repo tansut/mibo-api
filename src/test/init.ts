@@ -3,7 +3,7 @@ import { UserDocument, UserModel, UserRoles } from '../db/models/user';
 import db from '../db';
 import apiRoutes from '../route/api';
 import { route } from '../route/api/user';
-
+import * as mocha from 'mocha';
 
 let inited = false;
 
@@ -33,3 +33,7 @@ export let done = (done) => {
 
         }, (err) => done(err))
 }
+
+describe('hook', function () {
+    before(done);
+});

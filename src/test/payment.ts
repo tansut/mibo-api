@@ -6,7 +6,7 @@ import * as common from '../lib/common';
 
 
 describe('payment', function () {
-    before(done);
+
 
     describe('#createPlan()', function () {
         it('should create basic-plan for test-user', function () {
