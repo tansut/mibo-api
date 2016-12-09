@@ -31,8 +31,8 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
 
     validateDocumentOwnership(doc: T) {
         if (doc._meta.owner)
-            return super.validateOwnership(doc._meta.owner);
-        else return super.validateOwnership(doc._id);
+            return this.validateOwnership(doc._meta.owner);
+        else return this.validateOwnership(doc._id);
     }
 
     private toObjectId(id: string): mongoose.Types.ObjectId {

@@ -23,6 +23,12 @@ import emailmanager from '../../lib/email';
 
 class Route extends CrudRoute<UserDocument> {
 
+    validateOwnership(owner: string | ObjectID) {
+        return new Promise((resolve, reject) => {
+            resolve();
+        });
+    }
+
     create(model: SignupModel) {
         let passwordSalt = bcrypt.genSaltSync(10);
         let hash = bcrypt.hashSync(model.password, passwordSalt);
@@ -118,7 +124,6 @@ class Route extends CrudRoute<UserDocument> {
     }
 
     delete(user: UserDocument) {
-
         return super.delete(user).then(() => {
             if (user.integrations.stripe && user.integrations.stripe.remoteId)
                 stripe.deleteCustomer(user.integrations.stripe.remoteId)
@@ -139,12 +144,8 @@ class Route extends CrudRoute<UserDocument> {
         this.router && this.router.post('/user/resetpassword', this.resetPasswordRequestRoute.bind(this));
         this.router && this.router.get('/user/resetpassword', this.resetPasswordRoute.bind(this));
         this.router && this.router.post('/user/changepassword/:userid', this.changePasswordRoute.bind(this));
-        this.router && this.generateRetrieveRoute();
     }
 }
 
-
 export function init(router?: express.Router) { return route = new Route(router) };
-
-
 export let route: Route;

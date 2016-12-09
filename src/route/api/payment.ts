@@ -1,3 +1,4 @@
+import { ObjectID } from 'mongodb';
 import { request } from 'https';
 import * as express from "express";
 import * as http from '../../lib/http';
@@ -7,8 +8,11 @@ import ApiBase from './base';
 import { User, UserDocument, UserModel } from '../../db/models/user';
 import stripe from '../../lib/stripe';
 import { UserData as StripeData } from '../../lib/stripe';
+import { route as userRoute } from './user';
 
 class Route extends ApiBase {
+
+
 
     createPlan(user: UserDocument, plan: string, source: string) {
         if (user.integrations.stripe && user.integrations.stripe.remoteId)
@@ -27,6 +31,7 @@ class Route extends ApiBase {
                     plan: plan,
                     id: sres.id
                 };
+                user.markModified('integrations.stripe');
                 return user.save();
             })
         } else {
@@ -35,23 +40,29 @@ class Route extends ApiBase {
                     plan: plan,
                     id: sres.id
                 };
+                user.markModified('integrations.stripe');
                 return user.save();
             });
         }
     }
 
     createPlanRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        this.validateOwnership(req.params.userid).then(() => {
-            UserModel.findById(req.params.userid).then((user) => {
-                if (!user) return next(new http.NotFoundError());
-                if (!validator.contains(req.body.plan, Object.keys(common.Plans).map((k) => common.Plans[k])))
-                    return next(new http.ValidationError());
-                this.createPlan(user, req.body.plan, req.body.source).then(() => res.sendStatus(200), (err) => next(err));
-            })
-        }, (err) => next(err))
+        userRoute.retrieve(req.params.userid).then((user) => {
+            if (!validator.contains(req.body.plan, Object.keys(common.Plans).map((k) => common.Plans[k])))
+                return Promise.reject(new http.ValidationError());
+            return this.createPlan(user, req.body.plan, req.body.source).then(() => res.sendStatus(200));
+        }).catch((err) => next(err));
     }
 
     getPlanRoute(req: http.ApiRequest, res: express.Response, next: Function) {
+        userRoute.retrieve(req.params.userid).then((user) => {
+            let plan = user.integrations.stripe && user.integrations.stripe.subscription ?
+                user.integrations.stripe.subscription.plan : undefined;
+            res.send({
+                plan: plan
+            });
+        }).catch((err) => next(err));
+
 
     }
 

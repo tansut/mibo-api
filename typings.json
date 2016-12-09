@@ -12,6 +12,7 @@
     "ejs": "registry:dt/ejs#0.0.0+20161003130526",
     "express": "registry:dt/express#4.0.0+20160708185218",
     "express-serve-static-core": "registry:dt/express-serve-static-core#4.0.0+20161012061536",
+    "form-data": "registry:dt/form-data#0.0.0+20160724024111",
     "lodash": "registry:dt/lodash#4.14.0+20161110215204",
     "mime": "registry:dt/mime#0.0.0+20160316155526",
     "mocha": "registry:dt/mocha#2.2.5+20161028141524",
@@ -24,7 +25,10 @@
     "nodemailer-direct-transport": "registry:dt/nodemailer-direct-transport#0.0.0+20160805030905",
     "nodemailer-ses-transport": "registry:dt/nodemailer-ses-transport#1.4.0+20160805030905",
     "nodemailer-smtp-transport": "registry:dt/nodemailer-smtp-transport#0.0.0+20160805030905",
+    "request": "registry:dt/request#0.0.0+20161116202412",
+    "request-promise-native": "registry:dt/request-promise-native#1.0.3+20161006212032",
     "serve-static": "registry:dt/serve-static#0.0.0+20160606155157",
+    "should": "registry:dt/should#8.1.1+20160608082854",
     "stripe-node": "registry:dt/stripe-node#4.6.0+20160811111312",
     "validator": "registry:dt/validator#5.7.0+20161105193831"
   }

@@ -22,7 +22,7 @@ export default class ApiRoute {
 
     validateOwnership(owner: string | ObjectID) {
         return new Promise((resolve, reject) => {
-            reject();
+            reject(new http.PermissionError());
         });
     }
 
