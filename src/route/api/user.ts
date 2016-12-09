@@ -63,7 +63,7 @@ class Route extends CrudRoute<UserDocument> {
                 emailmanager.send(user.email, 'Password Reset Request from Mibo', 'resetpassword.ejs', {
                     nickName: user.nickName,
                     resetLink: 'http://localhost:3000/resetpassword?token=' + user.resetToken
-                })
+                }).then((info) => console.log('E-mail sent: ' + info), (err) => { return err });
             });
         })
     }
@@ -97,8 +97,8 @@ class Route extends CrudRoute<UserDocument> {
         if (validator.isEmpty(newPass) || validator.isEmpty(oldPass)) return next(new http.ValidationError('Empty Password'));
         this.model.findById(req.params.userid).then((user) => {
             if (!user) return next(new http.NotFoundError());
-            if(!bcrypt.compareSync(oldPass, user.password)) return next(new http.PermissionError());
-            this.changePassword(user, newPass).then((user) =>{ res.sendStatus(200) }, (err) => next(err))
+            if (!bcrypt.compareSync(oldPass, user.password)) return next(new http.PermissionError());
+            this.changePassword(user, newPass).then((user) => { res.sendStatus(200) }, (err) => next(err))
         }, (err) => next(err))
     }
 
@@ -107,7 +107,7 @@ class Route extends CrudRoute<UserDocument> {
             var passwordSalt = bcrypt.genSaltSync(10);
             var hash = bcrypt.hashSync(newPass, passwordSalt);
             user.password = hash;
-            return user.save().then((user) => resolve(user), (err) => reject(err));
+            return user.save().then((user) => { resolve(user) }, (err) => reject(err));
         });
     }
 
