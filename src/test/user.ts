@@ -1,18 +1,14 @@
 import * as mocha from 'mocha';
-import init from './init';
+import { testUser, done } from './init';
 import { route } from '../route/api/user';
 
 
 describe('account', function () {
-    before(init);
+    before(done);
 
-    describe('#signup()', function () {
-        it('should signup user', function () {
-            return route.create({
-                email: 'test@test.com',
-                nickName: 'testuser',
-                password: 'foo@foo'
-            })
+    describe('#signin()', function () {
+        it('should signin test user', function () {
+            return route.authenticate('test@mibo.io', 'foo');
         });
     });
 });
