@@ -68,6 +68,7 @@ class UserRoute extends CrudRoute<UserDocument> {
         var resetToken = req.body.resetToken;
         this.model.findOne().where('resetToken', resetToken).then((user) => {
             if (!user) return Promise.reject(new http.NotFoundError());
+            if (moment.utc().toDate() > user.resetTokenValid) return Promise.reject(new http.PermissionError());
             user.resetToken = null;
             user.resetTokenValid = null;
 
@@ -76,7 +77,7 @@ class UserRoute extends CrudRoute<UserDocument> {
             var hash = bcrypt.hashSync(newPass, passwordSalt);
             user.password = hash;
             return user.save().then((user) => { res.sendStatus(200) }, (err) => next(err));
-        });
+        }, (err) => next(err));
         //Todo: 1. get token from query string,
         // 2 validate token, find user
         // generate a new password
