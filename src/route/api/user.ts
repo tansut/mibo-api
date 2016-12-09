@@ -1,9 +1,11 @@
+import { create } from 'nconf';
 import { NotFoundError } from '../../lib/http';
 import ApiBase from './base';
 import { ObjectID } from 'mongodb';
 import { request } from 'https';
 import * as express from "express";
 import { User, UserDocument, UserModel, UserRoles } from '../../db/models/user';
+import { SignupModel } from '../../models/account';
 import * as http from '../../lib/http';
 import CrudRoute from './crud';
 import * as bcrypt from 'bcryptjs';
@@ -15,10 +17,15 @@ import emailmanager from '../../lib/email';
 
 class Route extends CrudRoute<UserDocument> {
 
-    create(doc: UserDocument) {
-        var passwordSalt = bcrypt.genSaltSync(10);
-        var hash = bcrypt.hashSync(doc.password, passwordSalt);
-        doc.password = hash;
+    create(model: SignupModel) {
+        let passwordSalt = bcrypt.genSaltSync(10);
+        let hash = bcrypt.hashSync(model.password, passwordSalt);
+
+        let doc = <UserDocument>{
+            nickName: model.nickName,
+            password: hash,
+            email: model.email
+        };
         return this.model.create(doc);
     }
 
@@ -61,7 +68,6 @@ class Route extends CrudRoute<UserDocument> {
         if (validator.isEmpty(email) || !validator.isEmail(email))
             return next(new http.ValidationError());
         this.resetPasswordRequest(email).then(() => { res.sendStatus(200) }, (err) => next(err))
-
     }
 
     resetPasswordRoute(req: http.ApiRequest, res: express.Response, next: Function) {
@@ -93,7 +99,7 @@ class Route extends CrudRoute<UserDocument> {
 
     constructor(router: express.Router) {
         super(router, UserModel, '/user', {
-            create: true,
+            create: false,
             update: true
         });
         this.router.post('/user/authenticate', this.authenticateRoute.bind(this));
@@ -104,6 +110,7 @@ class Route extends CrudRoute<UserDocument> {
 }
 
 let route: Route;
+
 export function init(router: express.Router) { route = new Route(router) };
 
 export default route; 

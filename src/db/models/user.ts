@@ -43,12 +43,12 @@ export class User {
     nickName: string;
     email: string;
     password: string;
-    lastLogin: Date;
+    lastLogin?: Date;
     roles: Array<string>;
     resetToken?: string;
     resetTokenValid?: Date;
-    verifications: Verifications;
-    integrations: Integrations
+    verifications?: Verifications;
+    integrations?: Integrations
 }
 
 
@@ -77,8 +77,7 @@ class Schema extends DBSchema {
 }
 
 export const UserSchema = new Schema({
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    nickName: { type: String, required: true },
     email: { type: String, required: true, validate: validator.isEmail },
     password: { type: String, required: true },
     roles: [{ type: String, enum: [UserRoles.admin, UserRoles.dietition, UserRoles.user], default: [UserRoles.user] }],
@@ -91,6 +90,7 @@ export const UserSchema = new Schema({
 
 
 UserSchema.index({ 'email': 1 }, { unique: true });
+UserSchema.index({ 'nickName': 1 }, { unique: true });
 
 export var UserModel: DBModel<UserDocument>;
 

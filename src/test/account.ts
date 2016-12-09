@@ -5,7 +5,11 @@ import UserRoute from '../route/api/user';
 describe('account', function () {
     describe('#signup()', function () {
         it('should signup user', function () {
-            UserRoute.
+            return UserRoute.create({
+                email: 'test@test.com',
+                nickName: 'testuser',
+                password: 'foo@foo'
+            })
         });
     });
 });

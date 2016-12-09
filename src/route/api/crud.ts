@@ -63,8 +63,11 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
         this.retrieve(dbId).then((result) => res.send(result.toClient()), (err) => next(err));
     }
 
-    create(doc: T) {
-        return this.model.create(doc);
+    create(model: any): Promise<T> {
+        //return this.model.create(doc);
+        return new Promise((resolve, reject) => {
+
+        });
     }
 
     protected createRoute(req: http.ApiRequest, res: express.Response, next: Function) {
@@ -85,16 +88,17 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
         this.delete(dbId).then((result) => res.sendStatus(200), (err) => next(err));
     }
 
-    update(id: string | ObjectID, values: any) {
-        return this.retrieve(id, { lean: true }).then((item) => {
-            return this.retrieve(id, { lean: true }).then((doc) => this.ensurePermission(doc, CrudOperation.update).then((doc) => _.extend(item, values).save()));
-        })
+    update(doc: T, updateValues: any) {
+        return new Promise((resolve, reject) => {
+
+        });
     }
 
     updateRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         var dbId = this.toObjectId(req.params._id);
         var updateValues = req.body;
-        this.update(dbId, updateValues).then((result) => { res.send(200) }, (err) => next(err));
+        var updateResult = this.retrieve(dbId, { lean: true }).then((doc) => this.ensurePermission(doc, CrudOperation.update).then((doc) => this.update(doc, updateValues)));
+        updateResult.then((result) => { res.send(result || 200) }, (err) => next(err));
     }
 
     query(req: http.ApiRequest, res: express.Response, next: Function) {
