@@ -36,14 +36,14 @@ class Route extends ApiBase {
         })
     }
 
-    constructor(router: express.Router) {
+    constructor(router?: express.Router) {
         super(router);
-        router.get("/tou", this.touRoute.bind(this));
-        router.get("/privacy", this.privacyRoute.bind(this));
+        this.router && this.router.get("/tou", this.touRoute.bind(this));
+        this.router && this.router.get("/privacy", this.privacyRoute.bind(this));
     }
 }
 
 let route: Route;
-export function init(router: express.Router) { route = new Route(router) };
+export function init(router?: express.Router) { route = new Route(router) };
 
 export default route; 

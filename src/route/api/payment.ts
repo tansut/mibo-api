@@ -64,15 +64,14 @@ class Route extends ApiBase {
 
     }
 
-    constructor(router: express.Router) {
+    constructor(router?: express.Router) {
         super(router);
-        router.post("/plan/change/:userid", this.authenticate.bind(this), this.changePlanRoute.bind(this));
-        router.get("/plan/get/:userid", this.authenticate.bind(this), this.getPlanRoute.bind(this));
-        router.post("/plan/create/:userid", this.authenticate.bind(this), this.createPlanRoute.bind(this));
+        this.router && router.post("/plan/change/:userid", this.authenticate.bind(this), this.changePlanRoute.bind(this));
+        this.router && router.get("/plan/get/:userid", this.authenticate.bind(this), this.getPlanRoute.bind(this));
+        this.router && router.post("/plan/create/:userid", this.authenticate.bind(this), this.createPlanRoute.bind(this));
     }
 }
 
-let route: Route;
-export function init(router: express.Router) { route = new Route(router) };
+export let route: Route;
+export function init(router?: express.Router) { route = new Route(router) };
 
-export default route; 

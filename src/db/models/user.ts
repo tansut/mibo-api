@@ -92,6 +92,6 @@ export const UserSchema = new Schema({
 UserSchema.index({ 'email': 1 }, { unique: true });
 UserSchema.index({ 'nickName': 1 }, { unique: true });
 
-export var UserModel: DBModel<UserDocument>;
+export let UserModel: DBModel<UserDocument>;
 
 export default (conn: mongoose.Connection) => (UserModel = conn.model<UserDocument>('user', UserSchema));

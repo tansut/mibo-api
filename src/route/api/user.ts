@@ -1,3 +1,5 @@
+import * as assert from 'assert';
+import * as process from 'process';
 import { create } from 'nconf';
 import { NotFoundError } from '../../lib/http';
 import ApiBase from './base';
@@ -5,6 +7,9 @@ import { ObjectID } from 'mongodb';
 import { request } from 'https';
 import * as express from "express";
 import { User, UserDocument, UserModel, UserRoles } from '../../db/models/user';
+
+import * as um from '../../db/models/user';
+
 import { SignupModel } from '../../models/account';
 import * as http from '../../lib/http';
 import CrudRoute from './crud';
@@ -98,20 +103,23 @@ class Route extends CrudRoute<UserDocument> {
         this.router.post(this.url, this.createRoute.bind(this));
     }
 
-    constructor(router: express.Router) {
-        super(router, UserModel, '/user', {
-            create: false,
+    constructor(router?: express.Router) {
+        console.log('user route const', process.pid);
+        var model = UserModel;
+        assert(model);
+        super(router, model, '/user', {
+            create: true,
             update: true
         });
-        this.router.post('/user/authenticate', this.authenticateRoute.bind(this));
-        this.router.post('/user/resetpassword', this.resetPasswordRequestRoute.bind(this));
-        this.router.get('/user/resetpassword', this.resetPasswordRoute.bind(this));
-        this.generateRetrieveRoute();
+        this.router && this.router.post('/user/authenticate', this.authenticateRoute.bind(this));
+        this.router && this.router.post('/user/resetpassword', this.resetPasswordRequestRoute.bind(this));
+        this.router && this.router.get('/user/resetpassword', this.resetPasswordRoute.bind(this));
+        this.router && this.generateRetrieveRoute();
     }
 }
 
-let route: Route;
 
-export function init(router: express.Router) { route = new Route(router) };
+export function init(router?: express.Router) { return route = new Route(router) };
 
-export default route; 
+
+export let route: Route;
