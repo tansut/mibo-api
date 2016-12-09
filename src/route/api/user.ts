@@ -2,6 +2,7 @@ import * as assert from 'assert';
 import * as process from 'process';
 import { create } from 'nconf';
 import { NotFoundError } from '../../lib/http';
+import stripe from '../../lib/stripe';
 import ApiBase from './base';
 import { ObjectID } from 'mongodb';
 import { request } from 'https';
@@ -26,7 +27,7 @@ class Route extends CrudRoute<UserDocument> {
         let passwordSalt = bcrypt.genSaltSync(10);
         let hash = bcrypt.hashSync(model.password, passwordSalt);
 
-        let doc = <UserDocument>{
+        let doc = <SignupModel>{
             nickName: model.nickName,
             password: hash,
             email: model.email
@@ -47,6 +48,11 @@ class Route extends CrudRoute<UserDocument> {
             })
         });
     }
+
+    retrieveByEMail(email: string) {
+        return UserModel.findOne().where('email', email);
+    }
+
 
     authenticateRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         var email = req.body.email;
@@ -97,7 +103,7 @@ class Route extends CrudRoute<UserDocument> {
         if (validator.isEmpty(newPass) || validator.isEmpty(oldPass)) return next(new http.ValidationError('Empty Password'));
         this.model.findById(req.params.userid).then((user) => {
             if (!user) return next(new http.NotFoundError());
-            this.changePassword(user, newPass).then((user) =>{ res.sendStatus(200) }, (err) => next(err))
+            this.changePassword(user, newPass).then((user) => { res.sendStatus(200) }, (err) => next(err))
         }, (err) => next(err))
     }
 
@@ -110,12 +116,19 @@ class Route extends CrudRoute<UserDocument> {
         });
     }
 
+    delete(user: UserDocument) {
+
+        return super.delete(user).then(() => {
+            if (user.integrations.stripe && user.integrations.stripe.remoteId)
+                stripe.deleteCustomer(user.integrations.stripe.remoteId)
+        });
+    }
+
     protected generateCreateRoute() {
         this.router.post(this.url, this.createRoute.bind(this));
     }
 
     constructor(router?: express.Router) {
-        console.log('user route const', process.pid);
         var model = UserModel;
         super(router, model, '/user', {
             create: true,

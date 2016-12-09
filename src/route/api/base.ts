@@ -1,6 +1,7 @@
 import * as http from '../../lib/http';
 import * as express from "express";
 import { auth } from '../../middleware/api/auth';
+import { ObjectID } from 'mongodb';
 
 export enum ResponseStatus {
     success = 0,
@@ -19,9 +20,9 @@ export default class ApiRoute {
         return auth.force(req, res, next);
     }
 
-    validateUserRequest(req, userparam: string = 'userid') {
+    validateOwnership(owner: string | ObjectID) {
         return new Promise((resolve, reject) => {
-            resolve();
+            reject();
         });
     }
 

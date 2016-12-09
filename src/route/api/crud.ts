@@ -7,7 +7,7 @@ import * as mongoose from 'mongoose';
 import ApiRoute from './base';
 import * as http from '../../lib/http';
 import * as _ from 'lodash';
-import { IDBDocument } from '../../db'
+import { IDBDocument } from '../../db';
 
 export interface crudRouteOptions {
     create?: boolean,
@@ -28,10 +28,11 @@ export interface RetrieveOptions {
 }
 
 export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
-    ensurePermission(doc: T, operation?: CrudOperation) {
-        return new Promise<T>((resolve, reject) => {
-            resolve(doc);
-        });
+
+    validateDocumentOwnership(doc: T) {
+        if (doc._meta.owner)
+            return super.validateOwnership(doc._meta.owner);
+        else return super.validateOwnership(doc._id);
     }
 
     private toObjectId(id: string): mongoose.Types.ObjectId {
@@ -50,7 +51,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
             baseQuery = baseQuery.select(select);
         return baseQuery.then((doc: T) => {
             if (!doc) return Promise.reject(new http.NotFoundError());
-            return this.ensurePermission(doc, CrudOperation.read).then(() => {
+            return this.validateDocumentOwnership(doc).then(() => {
                 if (options.toClient)
                     return doc.toClient()
                 else return doc;
@@ -64,7 +65,6 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
     }
 
     create(model: any): Promise<T> {
-        //return this.model.create(doc);
         return new Promise((resolve, reject) => {
 
         });
@@ -79,13 +79,14 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
         }, (err) => next(err));
     }
 
-    delete(id: string | ObjectID) {
-        return this.retrieve(id, { lean: true }).then((doc) => this.ensurePermission(doc, CrudOperation.delete).then((doc) => doc.remove()));
+    delete(doc: T) {
+        return doc.remove();
     }
 
     deleteRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         var dbId = this.toObjectId(req.params._id);
-        this.delete(dbId).then((result) => res.sendStatus(200), (err) => next(err));
+        var deleteResult = this.retrieve(dbId, { lean: true }).then((doc) => this.delete(doc));
+        deleteResult.then((result) => res.sendStatus(200), (err) => next(err));
     }
 
     update(doc: T, updateValues: any) {
@@ -97,7 +98,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
     updateRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         var dbId = this.toObjectId(req.params._id);
         var updateValues = req.body;
-        var updateResult = this.retrieve(dbId, { lean: true }).then((doc) => this.ensurePermission(doc, CrudOperation.update).then((doc) => this.update(doc, updateValues)));
+        var updateResult = this.retrieve(dbId, { lean: true }).then((doc) => this.update(doc, updateValues));
         updateResult.then((result) => { res.send(result || 200) }, (err) => next(err));
     }
 

@@ -19,7 +19,7 @@ interface ISubscription {
 
 export class UserData extends IntegrationInfo<IStripeData> {
     public subscription: ISubscription;
-    public token: string;
+    public source: string;
     constructor(remoteId: string) {
         super(remoteId);
     }
@@ -27,6 +27,10 @@ export class UserData extends IntegrationInfo<IStripeData> {
 
 
 class StripeManager {
+
+    deleteCustomer(customerId: string) {
+        return lib.customers.del(customerId);
+    }
 
     createUser(id: string, email: string, source?: string) {
         return lib.customers.create({
@@ -40,6 +44,18 @@ class StripeManager {
         return lib.subscriptions.create({
             customer: stripeId,
             plan: plan
+        });
+    }
+
+    createTokenSample() {
+        var card = {
+            number: '4242424242424242',
+            exp_month: 12,
+            exp_year: 2017,
+            cvc: '123'
+        }
+        return lib.tokens.create(<any>{
+            card: card
         });
     }
 
