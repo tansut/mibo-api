@@ -13,7 +13,7 @@ import * as crud from './crud';
 import * as crypto from 'crypto';
 import emailmanager from '../../lib/email';
 
-class UserRoute extends CrudRoute<UserDocument> {
+class Route extends CrudRoute<UserDocument> {
 
     create(doc: UserDocument) {
         var passwordSalt = bcrypt.genSaltSync(10);
@@ -104,6 +104,7 @@ class UserRoute extends CrudRoute<UserDocument> {
     }
 }
 
-export var user: UserRoute;
+let route: Route;
+export function init(router: express.Router) { route = new Route(router) };
 
-export default (router: express.Router) => user = new UserRoute(router); 
+export default route; 

@@ -1,24 +1,29 @@
-import { request } from 'https';
+import ApiBase from './base';
 import * as express from "express";
 import * as http from '../../lib/http';
-import ApiBase from './base';
-import { UserModel } from '../../db/models/user';
 import * as validator from 'validator';
 import * as common from '../../lib/common';
 
 
-class StatusRoute extends ApiBase {
+class Route extends ApiBase {
 
-    status(req: http.ApiRequest, res: express.Response, next: Function) {
-        res.send('Oh yeah!');
+    status() {
+        return new Promise((resolve, reject) => {
+            resolve('Oh yeah!');
+        });
+    }
+
+    statusRoute(req: http.ApiRequest, res: express.Response, next: Function) {
+        this.status().then((data) => res.send(data)).catch((err) => next(err));
     }
 
     constructor(router: express.Router) {
         super(router);
-        router.get("/status", this.status.bind(this));
+        router.get("/status", this.statusRoute.bind(this));
     }
 }
 
-export let status: StatusRoute;
+let route: Route;
+export function init(router: express.Router) { route = new Route(router) };
 
-export default (router: express.Router) => status = new StatusRoute(router); 
+export default route; 

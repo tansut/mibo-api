@@ -8,7 +8,7 @@ import { User, UserDocument, UserModel } from '../../db/models/user';
 import stripe from '../../lib/stripe';
 import { UserData as StripeData } from '../../lib/stripe';
 
-class PaymentRoute extends ApiBase {
+class Route extends ApiBase {
 
     createPlan(user: UserDocument, plan: string) {
         if (user.integrations.stripe && user.integrations.stripe.remoteId)
@@ -72,6 +72,7 @@ class PaymentRoute extends ApiBase {
     }
 }
 
-export let route: PaymentRoute;
+let route: Route;
+export function init(router: express.Router) { route = new Route(router) };
 
-export default (router: express.Router) => route = new PaymentRoute(router); 
+export default route; 

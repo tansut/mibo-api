@@ -6,7 +6,7 @@ import { UserModel } from '../../db/models/user';
 import * as fs from 'fs';
 
 
-class StatusRoute extends ApiBase {
+class Route extends ApiBase {
 
     touRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         this.tou().then((data) => {
@@ -43,6 +43,7 @@ class StatusRoute extends ApiBase {
     }
 }
 
-export let status: StatusRoute;
+let route: Route;
+export function init(router: express.Router) { route = new Route(router) };
 
-export default (router: express.Router) => status = new StatusRoute(router); 
+export default route; 
