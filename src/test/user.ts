@@ -1,11 +1,14 @@
 import * as mocha from 'mocha';
-import * as user from '../db/models/user';
-import UserRoute from '../route/api/user';
+import init from './init';
+import { route } from '../route/api/user';
+
 
 describe('account', function () {
+    before(init);
+
     describe('#signup()', function () {
         it('should signup user', function () {
-            return UserRoute.create({
+            return route.create({
                 email: 'test@test.com',
                 nickName: 'testuser',
                 password: 'foo@foo'
@@ -13,3 +16,4 @@ describe('account', function () {
         });
     });
 });
+

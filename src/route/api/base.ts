@@ -25,7 +25,7 @@ export default class ApiRoute {
         });
     }
 
-    constructor(public router: express.Router) {
+    constructor(public router?: express.Router) {
 
     }
 }

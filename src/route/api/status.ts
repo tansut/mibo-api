@@ -17,13 +17,12 @@ class Route extends ApiBase {
         this.status().then((data) => res.send(data)).catch((err) => next(err));
     }
 
-    constructor(router: express.Router) {
+    constructor(router?: express.Router) {
         super(router);
-        router.get("/status", this.statusRoute.bind(this));
+        this.router && this.router.get("/status", this.statusRoute.bind(this));
     }
 }
 
-let route: Route;
-export function init(router: express.Router) { route = new Route(router) };
+export let route: Route;
+export function init(router?: express.Router) { route = new Route(router) };
 
-export default route; 

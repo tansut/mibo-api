@@ -144,6 +144,6 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
             query: true,
             update: true
         }
-        this.generateRoutes();
+        this.router && this.generateRoutes();
     }
 }

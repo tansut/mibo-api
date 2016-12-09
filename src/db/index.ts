@@ -1,3 +1,4 @@
+import * as process from 'process';
 import config from '../config';
 import * as mongoose from 'mongoose';
 import * as moment from 'moment';
@@ -82,10 +83,12 @@ export class DBManager {
             var connStr = options ? 'mongodb://' + options.user + ':' + options.pwd + '@' + config.dbaddress + ':' + config.dbport + '/' + config.dbname
                 : 'mongodb://' + config.dbaddress + ':' + config.dbport + '/' + config.dbname;
 
-
+            console.log('connecting', process.pid);
             this.connection = mongoose.createConnection(connStr);
             this.connection.on('connected', () => {
+                console.log('creating models', process.pid);
                 require('./models').default.use(this);
+                console.log('connected', process.pid);
                 resolve();
             })
 
