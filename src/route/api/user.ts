@@ -119,7 +119,11 @@ class Route extends CrudRoute<UserDocument> {
             var passwordSalt = bcrypt.genSaltSync(10);
             var hash = bcrypt.hashSync(newPass, passwordSalt);
             user.password = hash;
-            return user.save().then((user) => { resolve(user) }, (err) => reject(err));
+            return user.save().then((user) => { 
+                emailmanager.send(user.email, 'Password Change Notification from Mibo', 'passwordchange.ejs', {
+                    nickName: user.nickName
+                }).then((info) => resolve(user), (err) => {return err})
+            }, (err) => reject(err));
         });
     }
 
