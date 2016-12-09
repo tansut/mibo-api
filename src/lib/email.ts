@@ -21,20 +21,25 @@ class EmailManager {
     send(to: string, nickName: string, subject: string, template: string, data?: { [key: string]: any }) {
         return new Promise((resolve, reject) => {
             var html = ejs.renderFile('../content/email/' + template, {
-                    nickName: nickName,
-                    token: data,
-                    resetLink: resetLink
-                });
+                nickName: nickName,
+                token: data,
+                resetLink: resetLink
+            });
 
             var resetLink: string = 'http://localhost:3000/resetpassword?token=' + data;
             var mailOptions = {
                 to: to,
-                from: 'mibo@mibo.com',                
+                from: 'mibo@mibo.com',
                 subject: subject,
-                html : html
+                html: html
             }
+            this.transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    reject(error);
+                }
+                resolve(info.response);
+            });
             //TODO: get template, replace with data, send to user;
-            resolve();
         })
     }
 

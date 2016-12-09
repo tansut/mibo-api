@@ -70,9 +70,9 @@ class UserRoute extends CrudRoute<UserDocument> {
             user.resetToken = null;
             user.resetTokenValid = null;
 
-            user.password = 'ali';
+            var newPass = 'ali';
             var passwordSalt = bcrypt.genSaltSync(10);
-            var hash = bcrypt.hashSync(req.body.password, passwordSalt);
+            var hash = bcrypt.hashSync(newPass, passwordSalt);
             user.password = hash;
             return user.save().then((user) => { res.sendStatus(200) }, (err) => next(err));
         });
