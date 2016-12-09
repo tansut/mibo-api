@@ -97,6 +97,7 @@ class Route extends CrudRoute<UserDocument> {
         if (validator.isEmpty(newPass) || validator.isEmpty(oldPass)) return next(new http.ValidationError('Empty Password'));
         this.model.findById(req.params.userid).then((user) => {
             if (!user) return next(new http.NotFoundError());
+            if(!bcrypt.compareSync(oldPass, user.password)) return next(new http.PermissionError());
             this.changePassword(user, newPass).then((user) =>{ res.sendStatus(200) }, (err) => next(err))
         }, (err) => next(err))
     }
