@@ -10,13 +10,11 @@ class StatusRoute extends ApiBase {
 
     tou(req: http.ApiRequest, res: express.Response, next: Function) {
         fs.readFile('../src/content/tou.txt', 'utf8', (err, data) => {
-            if(err) {
-                return next(err)                
+            if (err) {
+                return next(err)
             }
             res.send(data);
         })
-        //TODO: Utku
-        // read file from disk and send to client
     }
 
     constructor(router: express.Router) {

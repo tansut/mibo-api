@@ -48,8 +48,9 @@ class UserRoute extends CrudRoute<UserDocument> {
             user.resetToken = crypto.randomBytes(32).toString('hex');
             user.resetTokenValid = moment.utc().add(1, 'days').toDate();
             return user.save().then((user) => {
-                emailmanager.send(user.email, user.nickName, 'Password Reset Request from Mibo', 'resetpassword.ejs', {
-                    token: user.resetToken
+                emailmanager.send(user.email, 'Password Reset Request from Mibo', 'resetpassword.ejs', {
+                    nickName: user.nickName,
+                    resetLink: 'http://localhost:3000/resetpassword?token=' + user.resetToken
                 })
             });
         })
