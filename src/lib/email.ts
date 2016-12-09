@@ -22,7 +22,7 @@ class EmailManager {
 
     send(to: string, subject: string, template: string, data?: { [key: string]: any }) {
         return new Promise((resolve, reject) => {
-            var html = ejs.renderFile('../content/email/' + template, data);
+            var html = ejs.renderFile('../../content/email/' + template, data);
 
             var mailOptions = {
                 to: to,

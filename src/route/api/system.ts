@@ -8,18 +8,38 @@ import * as fs from 'fs';
 
 class Route extends ApiBase {
 
-    tou(req: http.ApiRequest, res: express.Response, next: Function) {
-        fs.readFile('../src/content/tou.txt', 'utf8', (err, data) => {
-            if (err) {
-                return next(err)
-            }
-            res.send(data);
+    touRoute(req: http.ApiRequest, res: express.Response, next: Function) {
+        this.tou().then((data) => {
+            res.send(data)
+        }, (err) => next(err));
+    }
+
+    tou() {
+        return new Promise((resolve, reject) => {
+            fs.readFile('../content/tou.txt', 'utf8', (err, data) => {
+                (err) ? reject(new http.ValidationError()) : resolve(data);
+            });
+        })
+    }
+
+    privacyRoute(req: http.ApiRequest, res: express.Response, next: Function) {
+        this.privacy().then((data) => {
+            res.send(data)
+        }, (err) => next(err));
+    }
+
+    privacy() {
+        return new Promise((resolve, reject) => {
+            fs.readFile('../content/privacy.txt', 'utf8', (err, data) => {
+                (err) ? reject(new http.ValidationError()) : resolve(data);
+            });
         })
     }
 
     constructor(router: express.Router) {
         super(router);
-        router.get("/tou", this.tou.bind(this));
+        router.get("/tou", this.touRoute.bind(this));
+        router.get("/privacy", this.privacyRoute.bind(this));
     }
 }
 
