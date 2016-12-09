@@ -33,7 +33,7 @@ class EmailManager {
                 subject: subject,
                 html: html
             }
-            this.transporter.sendMail(mailOptions, (error, info) => {
+            EmailManager.transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
                     reject(error);
                 }
