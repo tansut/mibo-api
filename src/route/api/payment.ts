@@ -9,11 +9,10 @@ import stripe from '../../lib/stripe';
 import { UserData as StripeData } from '../../lib/stripe';
 
 class Route extends ApiBase {
-
-    createPlan(user: UserDocument, plan: string) {
+    createPlan(user: UserDocument, plan: string, source: string) {
         if (user.integrations.stripe && user.integrations.stripe.remoteId)
             return this.changePlan(user, plan);
-        return stripe.createUser(user._id.toString(), user.email).then((striperes) => {
+        return stripe.createUser(user._id.toString(), user.email, source).then((striperes) => {
             user.integrations.stripe = new StripeData(striperes.id);
             return user.save().then(() => this.changePlan(user, plan));
         })
@@ -45,7 +44,7 @@ class Route extends ApiBase {
                 if (!user) return next(new http.NotFoundError());
                 if (!validator.contains(req.body.plan, Object.keys(common.Plans).map((k) => common.Plans[k])))
                     return next(new http.ValidationError());
-                this.createPlan(user, req.body.plan).then(() => res.sendStatus(200), (err) => next(err));
+                this.createPlan(user, req.body.plan, req.body.source).then(() => res.sendStatus(200), (err) => next(err));
             })
         }, (err) => next(err))
     }
