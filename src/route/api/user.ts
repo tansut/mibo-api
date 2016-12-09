@@ -74,7 +74,7 @@ class Route extends CrudRoute<UserDocument> {
         var resetToken = req.body.resetToken;
         this.model.findOne().where('resetToken', resetToken).then((user) => {
             if (!user) return Promise.reject(new http.NotFoundError());
-            if (moment.utc().toDate() > user.resetTokenValid) return Promise.reject(new http.PermissionError());
+            if (moment.utc().toDate() > user.resetTokenValid) return Promise.reject(new http.ValidationError('Token Expired'));
             user.resetToken = null;
             user.resetTokenValid = null;
 
@@ -93,6 +93,16 @@ class Route extends CrudRoute<UserDocument> {
 
     }
 
+    changePasswordRoute(req: http.ApiRequest, res: express.Response, next: Function) {
+        var newPass = req.body.password
+        if(validator.isEmpty(newPass)) return next(new http.ValidationError('Empty Password'));
+        this.changePassword(newPass)
+
+    }
+
+    changePassword(newPass: string) {
+        
+    }
 
     protected generateCreateRoute() {
         this.router.post(this.url, this.createRoute.bind(this));
