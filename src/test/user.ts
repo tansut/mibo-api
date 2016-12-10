@@ -11,7 +11,6 @@ export default function () {
                     password: 'foo'
                 }
             }).then((result) => {
-
                 result.should.have.property('user');
                 result.should.have.property('token');
                 lib.authenticationDone(result.token);
@@ -36,7 +35,8 @@ export default function () {
                     password: 'foo2'
                 }
             }).then((result) => {
-                result.should.have.property('nickName');
+                result.should.have.property('user');
+                result.should.have.property('token');
             })
         });
         it('should send reset password e-mail', function () {
