@@ -1,3 +1,4 @@
+import { Auth } from '../../lib/common';
 import * as stream from 'stream';
 import ApiBase from './base';
 import * as express from "express";
@@ -14,6 +15,7 @@ export default class Route extends ApiBase {
         });
     }
 
+    @Auth.Anonymous()
     statusRoute() {
         return this.status().then((data) => this.res.send(data));
     }

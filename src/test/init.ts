@@ -1,7 +1,7 @@
 import { UserDocument, UserModel, UserRoles } from '../db/models/user';
 import db from '../db';
 import apiRoutes from '../route/api';
-import { route } from '../route/api/user';
+import UserRoute from '../route/api/user';
 import * as mocha from 'mocha';
 
 import usertests from './user';
@@ -15,7 +15,7 @@ import * as lib from './lib';
 export let testUser: UserDocument;
 
 export let testemail = 'tansut@gmail.com';
-
+let route = new UserRoute();
 
 describe('tests', function () {
     before(function () {

@@ -1,3 +1,4 @@
+import { IRequestParams } from './base';
 import * as assert from 'assert';
 import * as process from 'process';
 import { create } from 'nconf';
@@ -27,7 +28,7 @@ interface GeneratedTokenData {
     refreshToken: string;
 }
 
-export default class Route extends CrudRoute<UserDocument> {
+export default class UserRoute extends CrudRoute<UserDocument> {
 
 
     create(model: SignupModel) {
@@ -162,19 +163,18 @@ export default class Route extends CrudRoute<UserDocument> {
     }
 
     static SetRoutes(router: express.Router) {
-        Route.SetCrudRoutes("/user", router, {
+        UserRoute.SetCrudRoutes("/user", router, {
             create: true,
             update: true
         });
-        router.post("/user/authenticate", Route.BindRequest('authenticateRoute'));
-        router.post("/user/resetpassword", Route.BindRequest('resetPasswordRequestRoute'));
-        router.get('/user/resetpassword', Route.BindRequest('resetPasswordRoute'));
-        router.post("/user/changepassword/:userid", Route.AuthenticateRequest, Route.BindRequest('changePasswordRoute'));
-        router.post("/user/useRefreshToken", Route.BindRequest('useRefreshTokenRoute'));
+        router.post("/user/authenticate", UserRoute.BindRequest('authenticateRoute'));
+        router.post("/user/resetpassword", UserRoute.BindRequest('resetPasswordRequestRoute'));
+        router.get('/user/resetpassword', UserRoute.BindRequest('resetPasswordRoute'));
+        router.post("/user/changepassword/:userid", UserRoute.AuthenticateRequest, UserRoute.BindRequest('changePasswordRoute'));
+        router.post("/user/useRefreshToken", UserRoute.BindRequest('useRefreshTokenRoute'));
     }
 
-    constructor() {
-        var model = UserModel;
-        super(model);
+    constructor(reqParams?: IRequestParams) {
+        super(reqParams, UserModel);
     }
 }

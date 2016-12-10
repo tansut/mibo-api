@@ -1,4 +1,4 @@
-let reflect = require('reflect-metadata');
+import 'reflect-metadata';
 
 export class IntegrationInfo<T> {
     public data?: T;
@@ -16,9 +16,13 @@ export class Auth {
     static Anonymous() {
         var fn = () => {
             return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-                reflect.defineMetadata('auth:anonymous', null, target);
+                Reflect.defineMetadata('auth:anonymous', {}, descriptor.value);
             }
         }
         return fn();
+    }
+
+    static GetAnonymous(target: any) {
+        return Reflect.getMetadata('auth:anonymous', target);
     }
 }

@@ -3,6 +3,7 @@ import * as express from "express";
 import { auth } from '../../middleware/api/auth';
 import { ObjectID } from 'mongodb';
 import { Auth } from '../../lib/common';
+import 'reflect-metadata';
 
 export enum ResponseStatus {
     success = 0,
@@ -20,6 +21,12 @@ export interface ICredentialIdentifier {
     roles: Array<string>;
 }
 
+export interface IRequestParams {
+    req: http.ApiRequest;
+    res: express.Response;
+    next: Function;
+}
+
 export default class ApiRoute {
     protected req: http.ApiRequest;
     protected res: express.Response;
@@ -32,6 +39,7 @@ export default class ApiRoute {
     protected static BindRequest(method: string) {
 
         var self = this;
+
         return (req, res, next) => ApiRoute.CreateRouterInstance(req, res, next, self, method);
     }
 
@@ -43,11 +51,20 @@ export default class ApiRoute {
 
 
     protected static CreateRouterInstance(req: http.ApiRequest, res: express.Response, next: Function, constructor: typeof ApiRoute, method: string): ApiRoute {
-        var instance = new constructor();
-        instance.req = req;
-        instance.res = res;
-        instance.next = next;
+        var instance = new constructor({
+            req: req,
+            res: res,
+            next: next
+        });
+
         let handler = instance[method];
+
+        var anonymous = Auth.GetAnonymous(handler);
+
+        if (!anonymous && !req.user)
+            return next(new http.PermissionError());
+
+
         var promise = handler.apply(instance);
 
         if (promise && promise instanceof Promise) {
@@ -72,7 +89,11 @@ export default class ApiRoute {
         });
     }
 
-    constructor() {
-
+    constructor(reqParams?: IRequestParams) {
+        if (reqParams) {
+            this.req = reqParams.req;
+            this.res = reqParams.res;
+            this.next = reqParams.next;
+        }
     }
 }
