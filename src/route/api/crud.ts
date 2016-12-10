@@ -66,7 +66,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
 
     create(model: any): Promise<T> {
         return new Promise((resolve, reject) => {
-
+            reject();
         });
     }
 
@@ -74,7 +74,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
         var itemToAdd = req.body;
         this.create(itemToAdd).then((result) => {
             res.send({
-                _id: result._id
+                _id: result._id.toString()
             })
         }, (err) => next(err));
     }
@@ -91,7 +91,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
 
     update(doc: T, updateValues: any) {
         return new Promise((resolve, reject) => {
-
+            reject();
         });
     }
 

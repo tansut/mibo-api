@@ -6,31 +6,28 @@ import stripe from '../lib/stripe';
 import * as lib from './lib';
 
 
-export default function() {
-    describe('payment', function() {
-        describe('#createPlan()', function() {
-            it('should create basic-plan for test-user', function() {
-                var plan = common.Plans.basicMonthly;
-
-                return stripe.createTokenSample().then((token) => {
-                    return lib.post('/plan/create/'.concat(testUser._id.toString()), {
-                        body: {
-                            plan: plan,
-                            source: token.id
-                        }
-                    })
+export default function () {
+    describe('payment', function () {
+        it('should create basic-plan for test-user', function () {
+            var plan = common.Plans.basicMonthly;
+            return stripe.createTokenSample().then((token) => {
+                return lib.post('/plan/create/'.concat(testUser._id), {
+                    body: {
+                        plan: plan,
+                        source: token.id
+                    }
                 })
             })
-            it('should get basic-plan for test-user', function() {
-                var plan = common.Plans.basicMonthly;
-                return stripe.createTokenSample().then((token) => {
-                    return lib.get('/plan/get/'.concat(testUser._id.toString()), {
-                        json: true
-                    }).then((result) => {
-                        result.should.have.property('plan').be.eql(result.plan);
-                    })
+        })
+        it('should get basic-plan for test-user', function () {
+            var plan = common.Plans.basicMonthly;
+            return stripe.createTokenSample().then((token) => {
+                return lib.get('/plan/get/'.concat(testUser._id), {
+                    json: true
+                }).then((result) => {
+                    result.should.have.property('plan').be.eql(result.plan);
                 })
             })
-        });
+        })
     });
 }

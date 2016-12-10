@@ -44,7 +44,7 @@ class Route extends CrudRoute<UserDocument> {
 
     authenticate(email: string, password: string): Promise<UserDocument> {
         return new Promise((resolve, reject) => {
-            this.model.findOne().where('email', email).then((doc: UserDocument) => {
+            this.retrieveByEMail(email).then((doc: UserDocument) => {
                 if (!doc) return reject(new http.PermissionError());
                 if (bcrypt.compareSync(password, doc.password)) {
                     doc.lastLogin = moment.utc().toDate();
@@ -66,16 +66,16 @@ class Route extends CrudRoute<UserDocument> {
         this.authenticate(email, password).then((user) => { res.send(user) }, (err) => next(err))
     }
 
-    resetPasswordRequest(email: string) {
-        return this.model.findOne().where('email', email).then((user) => {
+    resetPasswordRequest(email: string, url: string) {
+        return this.retrieveByEMail(email).then((user) => {
             if (!user) return Promise.reject(new http.NotFoundError());
             user.resetToken = crypto.randomBytes(32).toString('hex');
             user.resetTokenValid = moment.utc().add(1, 'days').toDate();
             return user.save().then((user) => {
-                emailmanager.send(user.email, 'Password Reset Request from Mibo', 'resetpassword.ejs', {
+                return emailmanager.send(user.email, 'Password Reset Request from Mibo', 'resetpassword.ejs', {
                     nickName: user.nickName,
-                    resetLink: 'http://localhost:3000/resetpassword?token=' + user.resetToken
-                }).then((info) => console.log('E-mail sent: ' + info), (err) => { return err });
+                    resetLink: url + '/user/resetpassword?token=' + user.resetToken
+                });
             });
         })
     }
@@ -84,14 +84,16 @@ class Route extends CrudRoute<UserDocument> {
         var email = req.body.email;
         if (validator.isEmpty(email) || !validator.isEmail(email))
             return next(new http.ValidationError());
-        this.resetPasswordRequest(email).then(() => { res.sendStatus(200) }, (err) => next(err))
+        var url = req.protocol + '://' + req.get('host');
+        this.resetPasswordRequest(email, url).then(() => { res.sendStatus(200) }).catch((err) => next(err));
     }
 
     resetPasswordRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         var resetToken = req.body.resetToken;
         this.model.findOne().where('resetToken', resetToken).then((user) => {
             if (!user) return Promise.reject(new http.NotFoundError());
-            if (moment.utc().toDate() > user.resetTokenValid) return Promise.reject(new http.ValidationError('Token Expired'));
+            if (moment.utc().toDate() > user.resetTokenValid)
+                return Promise.reject(new http.ValidationError('Token Expired'));
             user.resetToken = null;
             user.resetTokenValid = null;
 
@@ -107,11 +109,10 @@ class Route extends CrudRoute<UserDocument> {
         var oldPass = req.body.oldPass;
         var newPass = req.body.newPass;
         if (validator.isEmpty(newPass) || validator.isEmpty(oldPass)) return next(new http.ValidationError('Empty Password'));
-        this.model.findById(req.params.userid).then((user) => {
-            if (!user) return next(new http.NotFoundError());
+        this.retrieve(req.params.userid).then((user) => {
             if (!bcrypt.compareSync(oldPass, user.password)) return next(new http.PermissionError());
-            this.changePassword(user, newPass).then((user) => { res.sendStatus(200) }, (err) => next(err))
-        }, (err) => next(err))
+            return this.changePassword(user, newPass).then((user) => { res.sendStatus(200) });
+        }).catch((err) => next(err))
     }
 
     changePassword(user: UserDocument, newPass: string) {
@@ -144,6 +145,7 @@ class Route extends CrudRoute<UserDocument> {
         this.router && this.router.post('/user/resetpassword', this.resetPasswordRequestRoute.bind(this));
         this.router && this.router.get('/user/resetpassword', this.resetPasswordRoute.bind(this));
         this.router && this.router.post('/user/changepassword/:userid', this.changePasswordRoute.bind(this));
+
     }
 }
 

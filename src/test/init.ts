@@ -14,36 +14,29 @@ import * as lib from './lib';
 
 export let testUser: UserDocument;
 
+export let testemail = 'tansut@gmail.com';
+
+
 describe('tests', function () {
     before(function () {
         return apiApp().bootstrap().then(() => {
-            return route.retrieveByEMail('test@mibo.io').then((user) => {
+            return route.retrieveByEMail(testemail).then((user) => {
                 if (user) return route.delete(user);
             }).then(() => {
-                return route.create({
-                    email: 'test@mibo.io',
-                    password: 'foo',
-                    nickName: 'testuser'
+                return lib.post('/user', {
+                    body: {
+                        email: testemail,
+                        password: 'foo',
+                        nickName: 'testuser'
+                    }
+                }).then((result) => {
+                    result.should.have.property('_id');
+                    return result;
                 })
             }).then((user) => {
-                testUser = user;
+                testUser = <UserDocument>user;
             });
         });
-        // db.connect().then(() => {
-        //     apiRoutes.use();
-        //     route.retrieveByEMail('test@mibo.io').then((user) => {
-        //         if (user) return route.delete(user);
-        //     }).then(() => {
-        //         return route.create({
-        //             email: 'test@mibo.io',
-        //             password: 'foo',
-        //             nickName: 'testuser'
-        //         })
-        //     }).then((user) => {
-        //         testUser = user;
-        //         done();
-        //     })
-        // }, (err) => done(err))
     });
     usertests();
     paymentests();
