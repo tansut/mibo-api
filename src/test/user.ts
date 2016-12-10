@@ -1,11 +1,10 @@
 import * as mocha from 'mocha';
 import { testUser, testemail } from './init';
-import { route } from '../route/api/user';
+import UserRoute from '../route/api/user';
 import * as lib from './lib';
 
 export default function () {
     describe.only('account', function () {
-
         it('should signin test user', function () {
             return lib.post('/user/authenticate', {
                 body: {

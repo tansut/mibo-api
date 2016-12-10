@@ -180,3 +180,4 @@ export default class Route extends CrudRoute<UserDocument> {
         super(model);
     }
 }
+ 

@@ -1,6 +1,11 @@
 import * as express from "express";
 
-let appRoutes =  ['./status', './user', './system','./payment'];
+let appRoutes =  [
+    './status', 
+    './user', 
+    './system',
+    './payment'
+    ];
 export default class RouteLoader {
     static use(router?: express.Router) {
         var routings = [];

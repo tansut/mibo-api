@@ -1,7 +1,7 @@
 import { UserDocument, UserModel, UserRoles } from '../db/models/user';
 import db from '../db';
 import apiRoutes from '../route/api';
-import { route } from '../route/api/user';
+import UserRoute from '../route/api/user';
 import * as mocha from 'mocha';
 
 import usertests from './user';
@@ -20,7 +20,9 @@ export let testemail = 'tansut@gmail.com';
 describe('tests', function () {
     before(function () {
         return apiApp().bootstrap().then(() => {
-            return route.retrieveByEMail(testemail).then((user) => {
+            var route = new UserRoute();
+            debugger;    
+            return  route.retrieveByEMail(testemail).then((user) => {
                 if (user) return route.delete(user);
             }).then(() => {
                 return lib.post('/user', {
