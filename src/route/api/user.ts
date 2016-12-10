@@ -50,7 +50,7 @@ class Route extends CrudRoute<UserDocument> {
         return this.model.create(doc);
     }
 
-
+//...
     authenticate(email: string, password: string): Promise<UserDocument> {
         return new Promise((resolve, reject) => {
             this.retrieveByEMail(email).then((doc: UserDocument) => {
