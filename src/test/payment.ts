@@ -1,6 +1,5 @@
 import * as mocha from 'mocha';
 import { testUser } from './init';
-import { route } from '../route/api/payment';
 import * as common from '../lib/common';
 import stripe from '../lib/stripe';
 import * as lib from './lib';

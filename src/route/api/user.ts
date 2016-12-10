@@ -1,3 +1,4 @@
+import { IRequestParams } from './base';
 import * as assert from 'assert';
 import * as process from 'process';
 import { create } from 'nconf';
@@ -9,9 +10,7 @@ import { request } from 'https';
 import * as express from "express";
 import { User, UserDocument, UserModel, UserRoles } from '../../db/models/user';
 import config from '../../config';
-
 import * as um from '../../db/models/user';
-
 import { SignupModel } from '../../models/account';
 import * as http from '../../lib/http';
 import CrudRoute from './crud';
@@ -22,14 +21,14 @@ import * as crud from './crud';
 import * as crypto from 'crypto';
 import emailmanager from '../../lib/email';
 import * as authorization from '../../lib/authorizationToken';
-
+import { Auth } from '../../lib/common';
 
 interface GeneratedTokenData {
     accessToken: authorization.IEncryptedAccessTokenData;
     refreshToken: string;
 }
 
-export default class Route extends CrudRoute<UserDocument> {
+export default class UserRoute extends CrudRoute<UserDocument> {
 
 
     create(model: SignupModel) {
@@ -45,7 +44,7 @@ export default class Route extends CrudRoute<UserDocument> {
         return this.model.create(doc);
     }
 
-    //...
+    @Auth.Anonymous()
     authenticate(email: string, password: string): Promise<UserDocument> {
         return new Promise((resolve, reject) => {
             this.retrieveByEMail(email).then((doc: UserDocument) => {
@@ -164,20 +163,19 @@ export default class Route extends CrudRoute<UserDocument> {
     }
 
     static SetRoutes(router: express.Router) {
-        Route.SetCrudRoutes("/user", router, {
+        UserRoute.SetCrudRoutes("/user", router, {
             create: true,
             update: true
         });
-        router.post("/user/authenticate", Route.BindRequest('authenticateRoute'));
-        router.post("/user/resetpassword", Route.BindRequest('resetPasswordRequestRoute'));
-        router.get('/user/resetpassword', Route.BindRequest('resetPasswordRoute'));
-        router.post("/user/changepassword/:userid", Route.AuthenticateRequest, Route.BindRequest('changePasswordRoute'));
-        router.post("/user/useRefreshToken", Route.BindRequest('useRefreshTokenRoute'));
+        router.post("/user/authenticate", UserRoute.BindRequest('authenticateRoute'));
+        router.post("/user/resetpassword", UserRoute.BindRequest('resetPasswordRequestRoute'));
+        router.get('/user/resetpassword', UserRoute.BindRequest('resetPasswordRoute'));
+        router.post("/user/changepassword/:userid", UserRoute.AuthenticateRequest, UserRoute.BindRequest('changePasswordRoute'));
+        router.post("/user/useRefreshToken", UserRoute.BindRequest('useRefreshTokenRoute'));
     }
 
-    constructor() {
-        var model = UserModel;
-        super(model);
+    constructor(reqParams?: IRequestParams) {
+        super(reqParams, UserModel);
     }
 }
  

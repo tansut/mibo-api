@@ -15,7 +15,7 @@ import * as lib from './lib';
 export let testUser: UserDocument;
 
 export let testemail = 'tansut@gmail.com';
-
+let route = new UserRoute();
 
 describe('tests', function () {
     before(function () {

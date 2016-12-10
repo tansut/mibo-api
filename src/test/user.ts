@@ -1,6 +1,5 @@
 import * as mocha from 'mocha';
 import { testUser, testemail } from './init';
-import UserRoute from '../route/api/user';
 import * as lib from './lib';
 
 export default function () {
