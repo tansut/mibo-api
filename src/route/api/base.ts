@@ -14,15 +14,45 @@ export interface ApiResponse {
     result?: any;
 }
 
-export default class ApiRoute {
+export interface ICredentialIdentifier {
+    _id: string;
+    roles: Array<string>;
+}
 
-    authenticate(req, res, next) {
+export default class ApiRoute {
+    protected req: http.ApiRequest;
+    protected res: express.Response;
+    protected next: Function;
+
+    forceAuthenticate(req, res, next) {
         return auth.force(req, res, next);
     }
 
-    validateOwnership(owner: string | ObjectID) {
+    protected static BindRequest(method: string) {
+        var self = this;
+        return (req, res, next) => ApiRoute.CreateRouterInstance(req, res, next, self, method);
+    }
+
+    protected static CreateRouterInstance(req: http.ApiRequest, res: express.Response, next: Function, constructor: typeof ApiRoute, method: string): ApiRoute {
+        var instance = new constructor();
+        instance.req = req;
+        instance.res = res;
+        instance.next = next;
+        let handler = instance[method];
+        handler.apply(instance);
+        return instance;
+    }
+
+    validateOwnership(ownerOfResource: string | ObjectID) {
         return new Promise((resolve, reject) => {
-            reject(new http.PermissionError());
+            var user = this.req.user;
+            var id = user._id.toString() || user._id;
+            if (ownerOfResource == id)
+                resolve();
+            else if (user.roles.indexOf('admin') >= 0)
+                resolve();
+            else reject(new http.PermissionError());
+
         });
     }
 

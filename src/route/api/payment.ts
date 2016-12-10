@@ -78,9 +78,9 @@ class Route extends ApiBase {
 
     constructor(router?: express.Router) {
         super(router);
-        this.router && router.post("/plan/change/:userid", this.authenticate.bind(this), this.changePlanRoute.bind(this));
-        this.router && router.get("/plan/get/:userid", this.authenticate.bind(this), this.getPlanRoute.bind(this));
-        this.router && router.post("/plan/create/:userid", this.authenticate.bind(this), this.createPlanRoute.bind(this));
+        this.router && router.post("/plan/change/:userid", this.forceAuthenticate.bind(this), this.changePlanRoute.bind(this));
+        this.router && router.get("/plan/get/:userid", this.forceAuthenticate.bind(this), this.getPlanRoute.bind(this));
+        this.router && router.post("/plan/create/:userid", this.forceAuthenticate.bind(this), this.createPlanRoute.bind(this));
     }
 }
 
