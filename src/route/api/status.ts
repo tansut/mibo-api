@@ -14,8 +14,8 @@ export default class Route extends ApiBase {
         });
     }
 
-    statusRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        this.status().then((data) => this.res.send(data)).catch((err) => this.next(err));
+    statusRoute() {
+        return this.status().then((data) => this.res.send(data));
     }
 
     static SetRoutes(router: express.Router) {

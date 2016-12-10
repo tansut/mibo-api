@@ -45,7 +45,7 @@ class Route extends CrudRoute<UserDocument> {
         return this.model.create(doc);
     }
 
-//...
+    //...
     authenticate(email: string, password: string): Promise<UserDocument> {
         return new Promise((resolve, reject) => {
             this.retrieveByEMail(email).then((doc: UserDocument) => {
@@ -159,23 +159,25 @@ class Route extends CrudRoute<UserDocument> {
         });
     }
 
-    protected generateCreateRoute() {
-        this.router.post(this.url, this.createRoute.bind(this));
+    protected static generateCreateRoute(url: string, router: express.Router) {
+        router.post(url, this.BindRequest('createRoute'));
     }
-
-    constructor(router?: express.Router) {
-        var model = UserModel;
-        super(router, model, '/user', {
+    
+    static SetRoutes(router: express.Router) {
+        Route.SetCrudRoutes("/user", router, {
             create: true,
             update: true
         });
-        this.router && this.router.post('/user/authenticate', this.authenticateRoute.bind(this));
-        this.router && this.router.post('/user/resetpassword', this.resetPasswordRequestRoute.bind(this));
-        this.router && this.router.get('/user/resetpassword', this.resetPasswordRoute.bind(this));
-        this.router && this.router.post('/user/changepassword/:userid', this.forceAuthenticate.bind(this), this.changePasswordRoute.bind(this));
-        this.router && this.router.post('/user/useRefreshToken', this.useRefreshTokenRoute.bind(this));
+        router.post("/user/authenticate", Route.BindRequest('authenticateRoute'));
+        router.post("/user/resetpassword", Route.BindRequest('resetPasswordRequestRoute'));
+        router.get('/user/resetpassword', Route.BindRequest('resetPasswordRoute'));
+        router.post("/user/changepassword/:userid", Route.BindRequest('forceAuthenticate'), Route.BindRequest('changePasswordRoute'));
+        router.post("/user/useRefreshToken", Route.BindRequest('useRefreshTokenRoute'));
+
+    }
+
+    constructor() {
+        var model = UserModel;
+        super(model);
     }
 }
-
-export function init(router?: express.Router) { return route = new Route(router) };
-export let route: Route;

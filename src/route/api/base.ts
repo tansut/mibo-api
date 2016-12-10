@@ -39,7 +39,14 @@ export default class ApiRoute {
         instance.res = res;
         instance.next = next;
         let handler = instance[method];
-        handler.apply(instance);
+        var promise = handler.apply(instance);
+
+        if (promise && promise instanceof Promise) {
+            promise.catch((err) => {
+                next(err);
+            });
+        }
+
         return instance;
     }
 
@@ -56,7 +63,7 @@ export default class ApiRoute {
         });
     }
 
-    constructor(public router?: express.Router) {
+    constructor() {
 
     }
 }
