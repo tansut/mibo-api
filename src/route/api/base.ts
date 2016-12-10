@@ -85,7 +85,6 @@ export default class ApiRoute {
             else if (user.roles.indexOf('admin') >= 0)
                 resolve();
             else reject(new http.PermissionError());
-
         });
     }
 

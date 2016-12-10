@@ -48,7 +48,6 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         return this.model.create(doc);
     }
 
-    @Auth.Anonymous()
     authenticate(email: string, password: string): Promise<UserDocument> {
         return new Promise((resolve, reject) => {
             this.retrieveByEMail(email).then((doc: UserDocument) => {
@@ -73,7 +72,8 @@ export default class UserRoute extends CrudRoute<UserDocument> {
             return { accessToken: accessTokenEncrypted, refreshToken: encryptedRefreshToken };
         });
     }
- 
+
+    @Auth.Anonymous()
     authenticateRoute() {
         var email = this.req.body.email;
         var password = this.req.body.password;
@@ -108,64 +108,26 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         })
     }
 
-<<<<<<< HEAD
+
+    @Auth.Anonymous()
     resetPasswordRequestRoute() {
         var email = this.req.body.email;
-=======
-    @Auth.Anonymous()
-    resetPasswordRequestRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        var email = req.body.email;
->>>>>>> 0e4069acffee99c0a181495227ef5f6c4bf9c45a
         if (validator.isEmpty(email) || !validator.isEmail(email))
-            return this.next(new http.ValidationError());
+            return Promise.reject(new http.ValidationError());
         var url = config.webUrl;
-        this.resetPasswordRequest(email, url).then(() => { this.res.sendStatus(200) }).catch((err) => this.next(err));
+        return this.resetPasswordRequest(email, url).then(() => { this.res.sendStatus(200) });
     }
 
-<<<<<<< HEAD
-    resetPasswordRoute() {
-        var resetToken = this.req.body.resetToken;
-        this.model.findOne().where('resetToken', resetToken).then((user) => {
-            if (!user) return Promise.reject(new http.NotFoundError());
-            if (moment.utc().toDate() > user.resetTokenValid)
-                return Promise.reject(new http.ValidationError('Token Expired'));
-            user.resetToken = null;
-            user.resetTokenValid = null;
 
-            var newPass = 'ali';
-            var passwordSalt = bcrypt.genSaltSync(10);
-            var hash = bcrypt.hashSync(newPass, passwordSalt);
-            user.password = hash;
-            return user.save().then((user) => { this.res.sendStatus(200) }, (err) => this.next(err));
-        }, (err) => this.next(err));
-    }
-=======
-    // resetPasswordRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-    //     var resetToken = req.body.resetToken;
-    //     this.model.findOne().where('resetToken', resetToken).then((user) => {
-    //         if (!user) return Promise.reject(new http.NotFoundError());
-    //         if (moment.utc().toDate() > user.resetTokenValid)
-    //             return Promise.reject(new http.ValidationError('Token Expired'));
-    //         user.resetToken = null;
-    //         user.resetTokenValid = null;
-
-    //         var newPass = 'ali';
-    //         var passwordSalt = bcrypt.genSaltSync(10);
-    //         var hash = bcrypt.hashSync(newPass, passwordSalt);
-    //         user.password = hash;
-    //         return user.save().then((user) => { res.sendStatus(200) }, (err) => next(err));
-    //     }, (err) => next(err));
-    // }
->>>>>>> 0e4069acffee99c0a181495227ef5f6c4bf9c45a
 
     changePasswordRoute() {
         var oldPass = this.req.body.oldPass;
         var newPass = this.req.body.newPass;
         if (validator.isEmpty(newPass) || validator.isEmpty(oldPass)) return this.next(new http.ValidationError('Empty Password'));
-        this.retrieve(this.req.params.userid).then((user) => {
-            if (!bcrypt.compareSync(oldPass, user.password)) return this.next(new http.PermissionError());
+        return this.retrieve(this.req.params.userid).then((user) => {
+            if (!bcrypt.compareSync(oldPass, user.password)) return Promise.reject(new http.PermissionError());
             return this.changePassword(user, newPass).then(() => this.res.sendStatus(200));
-        }).catch((err) => this.next(err))
+        })
     }
 
     changePassword(user: UserDocument, newPass: string) {

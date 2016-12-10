@@ -62,7 +62,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
 
     protected retrieveRoute() {
         var dbId = this.toObjectId(this.req.params._id);
-        this.retrieve(dbId).then((result) => this.res.send(result.toClient()), (err) => this.next(err));
+        return this.retrieve(dbId).then((result) => this.res.send(result.toClient()));
     }
 
     create(model: any): Promise<T> {
@@ -87,7 +87,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
     deleteRoute() {
         var dbId = this.toObjectId(this.req.params._id);
         var deleteResult = this.retrieve(dbId, { lean: true }).then((doc) => this.delete(doc));
-        deleteResult.then((result) => this.res.sendStatus(200), (err) => this.next(err));
+        return deleteResult.then((result) => this.res.sendStatus(200));
     }
 
     update(doc: T, updateValues: any) {
@@ -100,7 +100,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
         var dbId = this.toObjectId(this.req.params._id);
         var updateValues = this.req.body;
         var updateResult = this.retrieve(dbId, { lean: true }).then((doc) => this.update(doc, updateValues));
-        updateResult.then((result) => { this.res.send(result || 200) }, (err) => this.next(err));
+        return updateResult.then((result) => { this.res.send(result || 200) });
     }
 
     query() {
