@@ -6,7 +6,7 @@ import { UserModel } from '../../db/models/user';
 import * as fs from 'fs';
 
 
-class Route extends ApiBase {
+export default class Route extends ApiBase {
 
     touRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         this.tou().then((data) => {
@@ -36,14 +36,9 @@ class Route extends ApiBase {
         })
     }
 
-    constructor(router?: express.Router) {
-        super(router);
-        this.router && this.router.get("/tou", this.touRoute.bind(this));
-        this.router && this.router.get("/privacy", this.privacyRoute.bind(this));
+    static SetRoutes(router: express.Router) {
+        router.get("/tou", Route.BindRequest('touRoute'));
+        router.get("/privacy", Route.BindRequest('privacyRoute'));
     }
+
 }
-
-let route: Route;
-export function init(router?: express.Router) { route = new Route(router) };
-
-export default route; 

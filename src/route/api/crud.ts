@@ -107,45 +107,40 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
         res.sendStatus(200);
     }
 
-    protected generateRetrieveRoute() {
-        this.router.get(this.url.concat('/:_id'), this.retrieveRoute.bind(this));
+    protected static generateCreateRoute(url: string, router: express.Router) {
+        router.post(url, this.AuthenticateRequest, this.BindRequest('createRoute'));
+    }
+    protected static generateUpdateRoute(url: string, router: express.Router) {
+        router.get(url.concat('/:_id'), this.AuthenticateRequest, this.BindRequest('updateRoute'));
+    }
+    protected static generateDeleteRoute(url: string, router: express.Router) {
+        router.delete(url.concat('/:_id'), this.AuthenticateRequest, this.BindRequest('deleteRoute'));
+    }
+    protected static generateQueryRoute(url: string, router: express.Router) {
+        router.get(url.concat('/query'), this.BindRequest('query'));
+    }
+    protected static generateRetrieveRoute(url: string, router: express.Router) {
+        router.get(url.concat('/:_id'), this.BindRequest('retrieveRoute'));
     }
 
-    protected generateCreateRoute() {
-        this.router.post(this.url, this.forceAuthenticate.bind(this), this.createRoute.bind(this));
-    }
-
-    protected generateDeleteRoute() {
-        this.router.delete(this.url.concat('/:_id'), this.forceAuthenticate.bind(this), this.deleteRoute.bind(this));
-    }
-
-    protected generateUpdateRoute() {
-        this.router.put(this.url.concat('/:_id'), this.forceAuthenticate.bind(this), this.updateRoute.bind(this));
-    }
-
-    protected generateQueryRoute() {
-        this.router.get(this.url.concat('/query'), this.query.bind(this));
-    }
-
-    protected generateRoutes() {
-        this.routeOptions.retrieve && this.generateRetrieveRoute();
-        this.routeOptions.create && this.generateCreateRoute();
-        this.routeOptions.query && this.generateQueryRoute();
-        this.routeOptions.delete && this.generateDeleteRoute();
-        this.routeOptions.update && this.generateUpdateRoute();
-    }
-
-    constructor(public router: express.Router,
-        public model: mongoose.Model<T>,
-        protected url: string, protected routeOptions?: crudRouteOptions) {
-        super(router);
-        this.routeOptions = this.routeOptions || {
+    protected static SetCrudRoutes(url: string, router: express.Router, routeOptions?: crudRouteOptions) {
+        routeOptions = routeOptions || {
             create: true,
             delete: true,
             retrieve: true,
             query: true,
             update: true
         }
-        this.router && this.generateRoutes();
+
+        routeOptions.create && this.generateCreateRoute(url, router);
+        routeOptions.update && this.generateUpdateRoute(url, router);
+        routeOptions.delete && this.generateDeleteRoute(url, router);
+        routeOptions.query && this.generateDeleteRoute(url, router);
+        routeOptions.retrieve && this.generateRetrieveRoute(url, router);
+
+    }
+
+    constructor(public model: mongoose.Model<T>) {
+        super();
     }
 }

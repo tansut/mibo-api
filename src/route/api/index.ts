@@ -1,13 +1,13 @@
 import * as express from "express";
 
-//let appRoutes = './status', './user'
+let appRoutes =  ['./status', './user', './system','./payment'];
 export default class RouteLoader {
     static use(router?: express.Router) {
-        return [
-            require('./status').default.SetRoutes(router),
-            require('./user').init(router),
-            require('./system').init(router),
-            require('./payment').init(router)
-        ]
+        var routings = [];
+        appRoutes.forEach((file)=> {
+            var routing = require(file).default.SetRoutes(router);
+            routings.push(routing);
+        });
+        return routings;
     }
 }
