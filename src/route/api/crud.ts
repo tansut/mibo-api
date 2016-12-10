@@ -108,19 +108,19 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
     }
 
     protected static generateCreateRoute(url: string, router: express.Router) {
-        router.post(url, this.BindRequest('forceAuthenticate'), this.BindRequest('createRoute'));
+        router.post(url, this.AuthenticateRequest, this.BindRequest('createRoute'));
+    }
+    protected static generateUpdateRoute(url: string, router: express.Router) {
+        router.get(url.concat('/:_id'), this.AuthenticateRequest, this.BindRequest('updateRoute'));
     }
     protected static generateDeleteRoute(url: string, router: express.Router) {
-        router.delete(url.concat('/:_id'), this.BindRequest('forceAuthenticate'), this.BindRequest('deleteRoute'));
+        router.delete(url.concat('/:_id'), this.AuthenticateRequest, this.BindRequest('deleteRoute'));
     }
     protected static generateQueryRoute(url: string, router: express.Router) {
         router.get(url.concat('/query'), this.BindRequest('query'));
     }
     protected static generateRetrieveRoute(url: string, router: express.Router) {
         router.get(url.concat('/:_id'), this.BindRequest('retrieveRoute'));
-    }
-    protected static generateUpdateRoute(url: string, router: express.Router) {
-        router.get(url.concat('/:_id'), this.BindRequest('forceAuthenticate'), this.BindRequest('updateRoute'));
     }
 
     protected static SetCrudRoutes(url: string, router: express.Router, routeOptions?: crudRouteOptions) {

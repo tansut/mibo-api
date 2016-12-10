@@ -41,7 +41,4 @@ export default class Route extends ApiBase {
         router.get("/privacy", Route.BindRequest('privacyRoute'));
     }
 
-    constructor() {
-        super();
-    }
 }

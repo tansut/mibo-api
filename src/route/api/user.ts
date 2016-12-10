@@ -29,7 +29,7 @@ interface GeneratedTokenData {
     refreshToken: string;
 }
 
-class Route extends CrudRoute<UserDocument> {
+export default class Route extends CrudRoute<UserDocument> {
 
 
     create(model: SignupModel) {
@@ -162,7 +162,7 @@ class Route extends CrudRoute<UserDocument> {
     protected static generateCreateRoute(url: string, router: express.Router) {
         router.post(url, this.BindRequest('createRoute'));
     }
-    
+
     static SetRoutes(router: express.Router) {
         Route.SetCrudRoutes("/user", router, {
             create: true,
@@ -171,9 +171,8 @@ class Route extends CrudRoute<UserDocument> {
         router.post("/user/authenticate", Route.BindRequest('authenticateRoute'));
         router.post("/user/resetpassword", Route.BindRequest('resetPasswordRequestRoute'));
         router.get('/user/resetpassword', Route.BindRequest('resetPasswordRoute'));
-        router.post("/user/changepassword/:userid", Route.BindRequest('forceAuthenticate'), Route.BindRequest('changePasswordRoute'));
+        router.post("/user/changepassword/:userid", Route.AuthenticateRequest, Route.BindRequest('changePasswordRoute'));
         router.post("/user/useRefreshToken", Route.BindRequest('useRefreshTokenRoute'));
-
     }
 
     constructor() {
