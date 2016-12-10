@@ -10,10 +10,7 @@ import stripe from '../../lib/stripe';
 import { UserData as StripeData } from '../../lib/stripe';
 import { route as userRoute } from './user';
 
-class Route extends ApiBase {
-
-
-
+export default class Route extends ApiBase {
     createPlan(user: UserDocument, plan: string, source: string) {
         if (user.integrations.stripe && user.integrations.stripe.remoteId)
             return this.changePlan(user, plan);
@@ -76,13 +73,11 @@ class Route extends ApiBase {
 
     }
 
-    constructor(router?: express.Router) {
-        super(router);
-        this.router && router.post("/plan/change/:userid", this.forceAuthenticate.bind(this), this.changePlanRoute.bind(this));
-        this.router && router.get("/plan/get/:userid", this.forceAuthenticate.bind(this), this.getPlanRoute.bind(this));
-        this.router && router.post("/plan/create/:userid", this.forceAuthenticate.bind(this), this.createPlanRoute.bind(this));
+    static SetRoutes(router: express.Router) {
+        router.get("/status", Route.BindRequest('statusRoute'));
+        router.post("/plan/change/:userid", Route.AuthenticateRequest, Route.BindRequest('changePlanRoute'));
+        router.get("/plan/get/:userid", Route.AuthenticateRequest, Route.BindRequest('getPlanRoute'));
+        router.post("/plan/create/:userid", Route.AuthenticateRequest, Route.BindRequest('createPlanRoute'));
+
     }
 }
-
-export let route: Route;
-export function init(router?: express.Router) { route = new Route(router) };
