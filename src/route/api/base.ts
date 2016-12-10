@@ -77,7 +77,6 @@ export default class ApiRoute {
 
     validateOwnership(ownerOfResource: string | ObjectID) {
         return new Promise((resolve, reject) => {
-            debugger;
             var user = this.req.user;
             var id = user._id.toString() || user._id;
             var ownerId = ownerOfResource.toString() || ownerOfResource;

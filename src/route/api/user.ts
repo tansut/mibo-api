@@ -75,7 +75,6 @@ export default class UserRoute extends CrudRoute<UserDocument> {
 
     @Auth.Anonymous()
     authenticateRoute() {
-        debugger;
         var email = this.req.body.email;
         var password = this.req.body.password;
         return this.authenticate(email, password).then((user) => {
