@@ -73,11 +73,11 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
 
     protected createRoute() {
         var itemToAdd = this.req.body;
-        this.create(itemToAdd).then((result) => {
+        return this.create(itemToAdd).then((result) => {
             this.res.send({
                 _id: result._id.toString()
             })
-        }, (err) => this.next(err));
+        });
     }
 
     delete(doc: T) {
