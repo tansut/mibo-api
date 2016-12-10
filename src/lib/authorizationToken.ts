@@ -1,3 +1,4 @@
+import * as http from '../lib/http';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import * as crypto from 'crypto';
@@ -48,16 +49,16 @@ class AuthorizationTokenController {
         return input.toString('utf8');
     }
 
-    private encryptGeneric(item : Object) : string {
+    private encryptGeneric(item: Object): string {
         var encryptionString = JSON.stringify(item);
         var cipher = crypto.createCipher(this.genericCipherAlgorithm, this.genericTokenKey);
         var encrypted = cipher.update(encryptionString, 'utf8', 'hex');
         return encrypted;
     }
 
-    private decryptGeneric(encrypted : string) : Object{
-         var cipher = crypto.createDecipher(this.genericCipherAlgorithm, this.genericTokenKey);
-        var decrypted = cipher.update(encrypted,'hex','utf8');
+    private decryptGeneric(encrypted: string): Object {
+        var cipher = crypto.createDecipher(this.genericCipherAlgorithm, this.genericTokenKey);
+        var decrypted = cipher.update(encrypted, 'hex', 'utf8');
         return JSON.parse(decrypted);
     }
 
@@ -83,11 +84,11 @@ class AuthorizationTokenController {
         return encryption;
     }
 
-    encryptRefreshToken(userId: string, access_token: IAccessTokenData) : Promise<string> {
+    encryptRefreshToken(userId: string, access_token: IAccessTokenData): Promise<string> {
         return new Promise((resolve, reject) => {
             UserModel.findById(userId).exec((err, res) => {
                 if (err) {
-                    reject(new Error("User not found"));
+                    reject(new http.NotFoundError("User not found"));
                     return;
                 }
                 var encryptAccessToken = this.encrypt(access_token, res.ivCode);
@@ -108,16 +109,14 @@ class AuthorizationTokenController {
                 RefreshTokenModel.create(refreshTokenDocument).then((createdDocument: RefreshTokenDocument) => {
                     refreshToken.tokenId = createdDocument._id;
 
-                    var encryptedRefreshToken = this.encryptGeneric(refreshToken); 
+                    var encryptedRefreshToken = this.encryptGeneric(refreshToken);
 
                     resolve(encryptedRefreshToken);
                 }).catch((err) => {
                     reject(new Error("Refresh token couldn't be created"));
                     return;
                 });
-
             });
-
         });
     }
 

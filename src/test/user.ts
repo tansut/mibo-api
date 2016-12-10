@@ -3,30 +3,35 @@ import { testUser, testemail } from './init';
 import { route } from '../route/api/user';
 import * as lib from './lib';
 
-export default function() {
-    describe('account', function() {
+export default function () {
+    describe.only('account', function () {
 
-        it('should signin test user', function() {
+        it('should signin test user', function () {
             return lib.post('/user/authenticate', {
                 body: {
                     email: testemail,
                     password: 'foo'
                 }
             }).then((result) => {
-                result.should.have.property('nickName');
+
+                result.should.have.property('user');
+                result.should.have.property('token');
+                lib.authenticationDone(result.token);
             })
         });
 
-        it('should change password', function() {
-            return lib.post('/user/changepassword/'.concat(testUser._id), {
-                body: {
-                    oldPass: 'foo',
-                    newPass: 'foo2'
-                }
-            });
+        it('should change password', function () {
+            return lib.authenticationDone().then((authhToken => {
+                return lib.post('/user/changepassword/'.concat(testUser._id), {
+                    body: {
+                        oldPass: 'foo',
+                        newPass: 'foo2'
+                    }
+                });
+            }))
         });
 
-        it('should signin with new password', function() {
+        it('should signin with new password', function () {
             return lib.post('/user/authenticate', {
                 body: {
                     email: testemail,
@@ -36,14 +41,14 @@ export default function() {
                 result.should.have.property('nickName');
             })
         });
-        it('should send reset password e-mail', function() {
+        it('should send reset password e-mail', function () {
             return lib.post('/user/resetpassword', {
                 body: {
                     email: testemail
                 }
             })
         });
-        it('should not authorize with incorrect credentials', function() {
+        it('should not authorize with incorrect credentials', function () {
             return new Promise((resolve, reject) => {
                 lib.post('/user/authenticate', {
                     body: {
@@ -58,7 +63,7 @@ export default function() {
                 })
             });
         });
-        it('should not reset with incorrect e-mail', function() {
+        it('should not reset with incorrect e-mail', function () {
             return new Promise((resolve, reject) => {
                 lib.post('/user/resetpassword', {
                     body: {

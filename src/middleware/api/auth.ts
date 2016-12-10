@@ -10,39 +10,31 @@ export var auth: AuthMiddleware;
 
 class AuthMiddleware extends Middleware {
 
-    private loadUser(req: http.ApiRequest, res: express.Response, next: Function) {
+    private tryLoadUser(req: http.ApiRequest, res: express.Response, next: Function) {
+
         var authHeader = req.header("Authorization");
         if (!authHeader) {
-            next();
-            return;
+            return next();
         }
         try {
             var accessToken = authCntroller.default.decryptAccessToken(authHeader);
-            this.validateAccessToken(accessToken, req, next);
+            this.validateAccessToken(accessToken).then((user) => {
+                req.user = user;
+                next();
+            }).catch((err) => next(err));
         } catch (e) {
-            next();
+            next(e);
         }
-
     }
 
-    private validateAccessToken(accessToken: authCntroller.IAccessTokenData, req: http.ApiRequest, next: Function) {
-        if (moment(accessToken.expiration_time).isSameOrAfter(moment().utc())) {
-            UserModel.findById(accessToken.userId).exec((err, res) => {
-                if (err) {
-                    next();
-                    return;
-                } else if (!res) {
-                    next();
-                    return;
-                } else {
-                    req.user = res;
-                    next();
-                }
-
-            });
-        } else {
-            next();
-        }
+    private validateAccessToken(accessToken: authCntroller.IAccessTokenData) {
+        return new Promise((resolve, reject) => {
+            if (moment(accessToken.expiration_time).utc().isSameOrAfter(moment().utc())) {
+                return UserModel.findById(accessToken.userId).then((user) => {
+                    return user ? resolve(user) : Promise.reject(new http.NotFoundError);
+                })
+            } else reject(new http.PermissionError('tokenexpire'));
+        });
     }
 
     public force(req: http.ApiRequest, res: express.Response, next: Function, roles?: Array<string>) {
@@ -53,7 +45,7 @@ class AuthMiddleware extends Middleware {
 
     constructor(app: express.Application) {
         super(app);
-        app.use(this.loadUser.bind(this));
+        app.use(this.tryLoadUser.bind(this));
     }
 }
 
