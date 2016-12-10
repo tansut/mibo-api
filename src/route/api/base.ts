@@ -58,7 +58,6 @@ export default class ApiRoute {
         });
 
         let handler = instance[method];
-        debugger;
         var anonymous = Auth.GetAnonymous(handler);
 
         if (!anonymous && !req.user)
@@ -78,9 +77,11 @@ export default class ApiRoute {
 
     validateOwnership(ownerOfResource: string | ObjectID) {
         return new Promise((resolve, reject) => {
+            debugger;
             var user = this.req.user;
             var id = user._id.toString() || user._id;
-            if (ownerOfResource == id)
+            var ownerId = ownerOfResource.toString() || ownerOfResource;
+            if (ownerId == id)
                 resolve();
             else if (user.roles.indexOf('admin') >= 0)
                 resolve();

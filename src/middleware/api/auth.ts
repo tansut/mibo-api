@@ -31,7 +31,7 @@ class AuthMiddleware extends Middleware {
         return new Promise((resolve, reject) => {
             if (moment(accessToken.expiration_time).utc().isSameOrAfter(moment().utc())) {
                 return UserModel.findById(accessToken.userId).lean().then((user) => {
-                    return user ? resolve(user) : Promise.reject(new http.NotFoundError);
+                    return user ? resolve(user) : Promise.reject(new http.NotFoundError());
                 })
             } else reject(new http.PermissionError('tokenexpire'));
         });

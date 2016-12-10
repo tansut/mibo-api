@@ -70,6 +70,18 @@ class Schema extends DBSchema {
         };
         return tokenData;
     }
+
+    preSave(doc: IDBDocument, next: Function) {
+
+        if (doc.isNew) {
+            var id = mongoose.Types.ObjectId();
+            doc._id = id;
+            doc._meta.owner = id;
+        }
+
+        super.preSave(doc, next);
+    }
+
     inRole(doc: User, role: string) {
         return doc.roles.find((item) => item == role) != undefined;
     }

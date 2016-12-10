@@ -45,7 +45,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
             email: model.email,
             ivCode: (Math.random() * 999999).toString() // todo
         };
-        return this.model.create(doc);
+        return this.insertDb(doc);
     }
 
     authenticate(email: string, password: string): Promise<UserDocument> {
@@ -175,7 +175,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
 
         router.post("/user/authenticate", UserRoute.BindRequest('authenticateRoute'));
         router.post("/user/resetpassword", UserRoute.BindRequest('resetPasswordRequestRoute'));
-        router.post("/user/changepassword/:userid", UserRoute.AuthenticateRequest, UserRoute.BindRequest('changePasswordRoute'));
+        router.post("/user/changepassword/:userid", UserRoute.BindRequest('changePasswordRoute'));
         router.post("/user/useRefreshToken", UserRoute.BindRequest('useRefreshTokenRoute'));
     }
 

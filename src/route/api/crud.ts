@@ -9,6 +9,7 @@ import { ICredentialIdentifier, IRequestParams } from './base';
 import * as http from '../../lib/http';
 import * as _ from 'lodash';
 import { IDBDocument } from '../../db';
+import * as moment from 'moment';
 
 export interface crudRouteOptions {
     create?: boolean,
@@ -30,7 +31,18 @@ export interface RetrieveOptions {
 
 export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
 
+    insertDb(doc: any) {
+        var userid = this.req.user ? this.req.user._id.toString() : undefined;
+        doc._meta = doc._meta || {
+            created: moment.utc().toDate()
+        };
+        userid && (doc._meta.owner = mongoose.Types.ObjectId.createFromHexString(userid));
+        return this.model.create(doc);
+    }
+
+
     validateDocumentOwnership(doc: T) {
+        debugger;
         if (doc._meta.owner)
             return this.validateOwnership(doc._meta.owner);
         else return this.validateOwnership(doc._id);
