@@ -21,6 +21,13 @@ import * as moment from 'moment';
 import * as crud from './crud';
 import * as crypto from 'crypto';
 import emailmanager from '../../lib/email';
+import * as authorization from '../../lib/authorizationToken';
+
+
+interface GeneratedTokenData {
+    accessToken: authorization.IEncryptedAccessTokenData;
+    refreshToken: string;
+}
 
 class Route extends CrudRoute<UserDocument> {
 
@@ -37,7 +44,8 @@ class Route extends CrudRoute<UserDocument> {
         let doc = <SignupModel>{
             nickName: model.nickName,
             password: hash,
-            email: model.email
+            email: model.email,
+            ivCode: (Math.random() * 999999).toString() // todo
         };
         return this.model.create(doc);
     }
@@ -49,7 +57,7 @@ class Route extends CrudRoute<UserDocument> {
                 if (!doc) return reject(new http.PermissionError());
                 if (bcrypt.compareSync(password, doc.password)) {
                     doc.lastLogin = moment.utc().toDate();
-                    doc.save().then(() => resolve(doc.toClient()), (err) => reject(err));
+                    doc.save().then(() => resolve(doc), (err) => reject(err));
                 }
                 else reject(new http.PermissionError())
             })
@@ -60,11 +68,32 @@ class Route extends CrudRoute<UserDocument> {
         return UserModel.findOne().where('email', email);
     }
 
+    private createTokens(user: UserDocument): Promise<GeneratedTokenData> {
+        var accessToken = user.generateAccessToken();
+        var accessTokenEncrypted = authorization.default.encryptAccessToken(accessToken);
+        return authorization.default.encryptRefreshToken(user._id, accessToken).then((encryptedRefreshToken: string) => {
+            return { accessToken: accessTokenEncrypted, refreshToken: encryptedRefreshToken };
+        });
+    }
 
     authenticateRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         var email = req.body.email;
         var password = req.body.password;
-        this.authenticate(email, password).then((user) => { res.send(user) }, (err) => next(err))
+        this.authenticate(email, password).then((user) => {
+            this.createTokens(user).then((generatedTokens: GeneratedTokenData) => {
+                res.send({ user: user.toClient(), tokenData: { generatedTokens } });
+            }).catch((err) => { next(err); });
+        }, (err) => next(err))
+    }
+
+    useRefreshToken(refreshTokenData: authorization.IEncryptedRefreshTokenData) {
+        // todo
+        authorization.default.decryptRefreshToken(refreshTokenData.refresh_token, refreshTokenData.tag);
+    }
+
+    useRefreshTokenRoute(req: http.ApiRequest, res: express.Response, next: Function) {
+        var refreshTokenData = <authorization.IEncryptedRefreshTokenData>req.body.refreshTokenData;
+        this.useRefreshToken(refreshTokenData);
     }
 
     resetPasswordRequest(email: string, url: string) {
@@ -148,7 +177,7 @@ class Route extends CrudRoute<UserDocument> {
         this.router && this.router.post('/user/resetpassword', this.resetPasswordRequestRoute.bind(this));
         this.router && this.router.get('/user/resetpassword', this.resetPasswordRoute.bind(this));
         this.router && this.router.post('/user/changepassword/:userid', this.changePasswordRoute.bind(this));
-
+        this.router && this.router.post('/user/useRefreshToken', this.useRefreshTokenRoute.bind(this));
     }
 }
 
