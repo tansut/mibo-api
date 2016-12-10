@@ -111,17 +111,19 @@ class Route extends CrudRoute<UserDocument> {
         if (validator.isEmpty(newPass) || validator.isEmpty(oldPass)) return next(new http.ValidationError('Empty Password'));
         this.retrieve(req.params.userid).then((user) => {
             if (!bcrypt.compareSync(oldPass, user.password)) return next(new http.PermissionError());
-            return this.changePassword(user, newPass).then((user) => { res.sendStatus(200) });
+            return this.changePassword(user, newPass).then(() => res.sendStatus(200));
         }).catch((err) => next(err))
     }
 
     changePassword(user: UserDocument, newPass: string) {
-        return new Promise((resolve, reject) => {
-            var passwordSalt = bcrypt.genSaltSync(10);
-            var hash = bcrypt.hashSync(newPass, passwordSalt);
-            user.password = hash;
-            return user.save().then((user) => { resolve(user) }, (err) => reject(err));
-        });
+        var passwordSalt = bcrypt.genSaltSync(10);
+        var hash = bcrypt.hashSync(newPass, passwordSalt);
+        user.password = hash;
+        return user.save().then((user) => {
+            return emailmanager.send(user.email, 'Password Change Notification from Mibo', 'passwordchange.ejs', {
+                nickName: user.nickName
+            });
+        })
     }
 
     delete(user: UserDocument) {

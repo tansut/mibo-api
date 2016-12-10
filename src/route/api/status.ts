@@ -15,6 +15,7 @@ class Route extends ApiBase {
 
     statusRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         this.status().then((data) => res.send(data)).catch((err) => next(err));
+
     }
 
     constructor(router?: express.Router) {
