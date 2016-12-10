@@ -20,8 +20,6 @@ let route = new UserRoute();
 describe('tests', function () {
     before(function () {
         return apiApp().bootstrap().then(() => {
-            var route = new UserRoute();
-            debugger;    
             return  route.retrieveByEMail(testemail).then((user) => {
                 if (user) return route.delete(user);
             }).then(() => {

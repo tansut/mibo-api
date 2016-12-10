@@ -118,7 +118,22 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         return this.resetPasswordRequest(email, url).then(() => { this.res.sendStatus(200) });
     }
 
+    resetPasswordRoute() {
+        var resetToken = this.req.body.resetToken;
+        this.model.findOne().where('resetToken', resetToken).then((user) => {
+            if (!user) return Promise.reject(new http.NotFoundError());
+            if (moment.utc().toDate() > user.resetTokenValid)
+                return Promise.reject(new http.ValidationError('Token Expired'));
+            user.resetToken = null;
+            user.resetTokenValid = null;
 
+            var newPass = 'ali';
+            var passwordSalt = bcrypt.genSaltSync(10);
+            var hash = bcrypt.hashSync(newPass, passwordSalt);
+            user.password = hash;
+            return user.save().then((user) => { this.res.sendStatus(200) }, (err) => this.next(err));
+        }, (err) => this.next(err));
+    }
 
     changePasswordRoute() {
         var oldPass = this.req.body.oldPass;
