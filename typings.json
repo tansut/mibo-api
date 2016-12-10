@@ -26,6 +26,7 @@
     "nodemailer-direct-transport": "registry:dt/nodemailer-direct-transport#0.0.0+20160805030905",
     "nodemailer-ses-transport": "registry:dt/nodemailer-ses-transport#1.4.0+20160805030905",
     "nodemailer-smtp-transport": "registry:dt/nodemailer-smtp-transport#0.0.0+20160805030905",
+    "reflect-metadata": "registry:dt/reflect-metadata#0.0.0+20160630155503",
     "request": "registry:dt/request#0.0.0+20161116202412",
     "request-promise-native": "registry:dt/request-promise-native#1.0.3+20161006212032",
     "serve-static": "registry:dt/serve-static#0.0.0+20160606155157",

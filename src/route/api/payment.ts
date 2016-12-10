@@ -11,6 +11,7 @@ import { UserData as StripeData } from '../../lib/stripe';
 import { route as userRoute } from './user';
 
 export default class Route extends ApiBase {
+
     createPlan(user: UserDocument, plan: string, source: string) {
         if (user.integrations.stripe && user.integrations.stripe.remoteId)
             return this.changePlan(user, plan);
@@ -78,6 +79,5 @@ export default class Route extends ApiBase {
         router.post("/plan/change/:userid", Route.AuthenticateRequest, Route.BindRequest('changePlanRoute'));
         router.get("/plan/get/:userid", Route.AuthenticateRequest, Route.BindRequest('getPlanRoute'));
         router.post("/plan/create/:userid", Route.AuthenticateRequest, Route.BindRequest('createPlanRoute'));
-
     }
 }

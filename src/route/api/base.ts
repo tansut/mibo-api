@@ -2,6 +2,7 @@ import * as http from '../../lib/http';
 import * as express from "express";
 import { auth } from '../../middleware/api/auth';
 import { ObjectID } from 'mongodb';
+import { Auth } from '../../lib/common';
 
 export enum ResponseStatus {
     success = 0,
@@ -29,6 +30,7 @@ export default class ApiRoute {
     }
 
     protected static BindRequest(method: string) {
+
         var self = this;
         return (req, res, next) => ApiRoute.CreateRouterInstance(req, res, next, self, method);
     }

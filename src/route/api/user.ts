@@ -9,9 +9,7 @@ import { request } from 'https';
 import * as express from "express";
 import { User, UserDocument, UserModel, UserRoles } from '../../db/models/user';
 import config from '../../config';
-
 import * as um from '../../db/models/user';
-
 import { SignupModel } from '../../models/account';
 import * as http from '../../lib/http';
 import CrudRoute from './crud';
@@ -22,7 +20,7 @@ import * as crud from './crud';
 import * as crypto from 'crypto';
 import emailmanager from '../../lib/email';
 import * as authorization from '../../lib/authorizationToken';
-
+import { Auth } from '../../lib/common';
 
 interface GeneratedTokenData {
     accessToken: authorization.IEncryptedAccessTokenData;
@@ -45,7 +43,7 @@ class Route extends CrudRoute<UserDocument> {
         return this.model.create(doc);
     }
 
-//...
+    @Auth.Anonymous()
     authenticate(email: string, password: string): Promise<UserDocument> {
         return new Promise((resolve, reject) => {
             this.retrieveByEMail(email).then((doc: UserDocument) => {
