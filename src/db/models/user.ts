@@ -77,6 +77,11 @@ class Schema extends DBSchema {
     toClient(doc: IDBDocument) {
         var result = <User>super.toClient(doc);
         delete result.password;
+        delete result.ivCode;
+        delete result.integrations;
+        delete result.resetToken;
+        delete result.resetTokenValid;
+        delete result.verifications;
         return result;
     }
 

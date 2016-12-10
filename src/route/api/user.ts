@@ -31,11 +31,6 @@ interface GeneratedTokenData {
 
 class Route extends CrudRoute<UserDocument> {
 
-    validateOwnership(owner: string | ObjectID) {
-        return new Promise((resolve, reject) => {
-            resolve();
-        });
-    }
 
     create(model: SignupModel) {
         let passwordSalt = bcrypt.genSaltSync(10);
@@ -50,7 +45,7 @@ class Route extends CrudRoute<UserDocument> {
         return this.model.create(doc);
     }
 
-
+//...
     authenticate(email: string, password: string): Promise<UserDocument> {
         return new Promise((resolve, reject) => {
             this.retrieveByEMail(email).then((doc: UserDocument) => {
@@ -80,10 +75,10 @@ class Route extends CrudRoute<UserDocument> {
         var email = req.body.email;
         var password = req.body.password;
         this.authenticate(email, password).then((user) => {
-            this.createTokens(user).then((generatedTokens: GeneratedTokenData) => {
-                res.send({ user: user.toClient(), tokenData: { generatedTokens } });
-            }).catch((err) => { next(err); });
-        }, (err) => next(err))
+            return this.createTokens(user).then((generatedTokens: GeneratedTokenData) => {
+                res.send({ user: user.toClient(), token: generatedTokens });
+            })
+        }).catch((err) => next(err));
     }
 
     useRefreshToken(refreshTokenData: authorization.IEncryptedRefreshTokenData) {
@@ -136,6 +131,7 @@ class Route extends CrudRoute<UserDocument> {
     }
 
     changePasswordRoute(req: http.ApiRequest, res: express.Response, next: Function) {
+        debugger;
         var oldPass = req.body.oldPass;
         var newPass = req.body.newPass;
         if (validator.isEmpty(newPass) || validator.isEmpty(oldPass)) return next(new http.ValidationError('Empty Password'));
@@ -176,7 +172,7 @@ class Route extends CrudRoute<UserDocument> {
         this.router && this.router.post('/user/authenticate', this.authenticateRoute.bind(this));
         this.router && this.router.post('/user/resetpassword', this.resetPasswordRequestRoute.bind(this));
         this.router && this.router.get('/user/resetpassword', this.resetPasswordRoute.bind(this));
-        this.router && this.router.post('/user/changepassword/:userid', this.changePasswordRoute.bind(this));
+        this.router && this.router.post('/user/changepassword/:userid', this.forceAuthenticate.bind(this), this.changePasswordRoute.bind(this));
         this.router && this.router.post('/user/useRefreshToken', this.useRefreshTokenRoute.bind(this));
     }
 }

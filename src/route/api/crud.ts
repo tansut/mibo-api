@@ -5,6 +5,7 @@ import * as express from "express";
 import { auth } from '../../middleware/api/auth';
 import * as mongoose from 'mongoose';
 import ApiRoute from './base';
+import { ICredentialIdentifier } from './base';
 import * as http from '../../lib/http';
 import * as _ from 'lodash';
 import { IDBDocument } from '../../db';
@@ -111,15 +112,15 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
     }
 
     protected generateCreateRoute() {
-        this.router.post(this.url, this.authenticate.bind(this), this.createRoute.bind(this));
+        this.router.post(this.url, this.forceAuthenticate.bind(this), this.createRoute.bind(this));
     }
 
     protected generateDeleteRoute() {
-        this.router.delete(this.url.concat('/:_id'), this.authenticate.bind(this), this.deleteRoute.bind(this));
+        this.router.delete(this.url.concat('/:_id'), this.forceAuthenticate.bind(this), this.deleteRoute.bind(this));
     }
 
     protected generateUpdateRoute() {
-        this.router.put(this.url.concat('/:_id'), this.authenticate.bind(this), this.updateRoute.bind(this));
+        this.router.put(this.url.concat('/:_id'), this.forceAuthenticate.bind(this), this.updateRoute.bind(this));
     }
 
     protected generateQueryRoute() {

@@ -1,3 +1,4 @@
+import * as stream from 'stream';
 import ApiBase from './base';
 import * as express from "express";
 import * as http from '../../lib/http';
@@ -5,7 +6,7 @@ import * as validator from 'validator';
 import * as common from '../../lib/common';
 
 
-class Route extends ApiBase {
+export default class Route extends ApiBase {
 
     status() {
         return new Promise((resolve, reject) => {
@@ -14,16 +15,12 @@ class Route extends ApiBase {
     }
 
     statusRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        this.status().then((data) => res.send(data)).catch((err) => next(err));
-
+        this.status().then((data) => this.res.send(data)).catch((err) => this.next(err));
     }
 
-    constructor(router?: express.Router) {
-        super(router);
-        this.router && this.router.get("/status", this.statusRoute.bind(this));
+    static SetRoutes(router: express.Router) {
+        router.get("/status", Route.BindRequest('statusRoute'));
     }
 }
 
-export let route: Route;
-export function init(router?: express.Router) { route = new Route(router) };
 
