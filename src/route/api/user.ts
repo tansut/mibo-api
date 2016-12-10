@@ -30,6 +30,10 @@ interface GeneratedTokenData {
 
 export default class UserRoute extends CrudRoute<UserDocument> {
 
+    @Auth.Anonymous()
+    createRoute() {
+        return super.createRoute();
+    }
 
     create(model: SignupModel) {
         let passwordSalt = bcrypt.genSaltSync(10);
@@ -70,6 +74,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         });
     }
 
+    @Auth.Anonymous()
     authenticateRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         var email = req.body.email;
         var password = req.body.password;
@@ -104,6 +109,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         })
     }
 
+    @Auth.Anonymous()
     resetPasswordRequestRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         var email = req.body.email;
         if (validator.isEmpty(email) || !validator.isEmail(email))
@@ -112,22 +118,22 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         this.resetPasswordRequest(email, url).then(() => { res.sendStatus(200) }).catch((err) => next(err));
     }
 
-    resetPasswordRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        var resetToken = req.body.resetToken;
-        this.model.findOne().where('resetToken', resetToken).then((user) => {
-            if (!user) return Promise.reject(new http.NotFoundError());
-            if (moment.utc().toDate() > user.resetTokenValid)
-                return Promise.reject(new http.ValidationError('Token Expired'));
-            user.resetToken = null;
-            user.resetTokenValid = null;
+    // resetPasswordRoute(req: http.ApiRequest, res: express.Response, next: Function) {
+    //     var resetToken = req.body.resetToken;
+    //     this.model.findOne().where('resetToken', resetToken).then((user) => {
+    //         if (!user) return Promise.reject(new http.NotFoundError());
+    //         if (moment.utc().toDate() > user.resetTokenValid)
+    //             return Promise.reject(new http.ValidationError('Token Expired'));
+    //         user.resetToken = null;
+    //         user.resetTokenValid = null;
 
-            var newPass = 'ali';
-            var passwordSalt = bcrypt.genSaltSync(10);
-            var hash = bcrypt.hashSync(newPass, passwordSalt);
-            user.password = hash;
-            return user.save().then((user) => { res.sendStatus(200) }, (err) => next(err));
-        }, (err) => next(err));
-    }
+    //         var newPass = 'ali';
+    //         var passwordSalt = bcrypt.genSaltSync(10);
+    //         var hash = bcrypt.hashSync(newPass, passwordSalt);
+    //         user.password = hash;
+    //         return user.save().then((user) => { res.sendStatus(200) }, (err) => next(err));
+    //     }, (err) => next(err));
+    // }
 
     changePasswordRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         debugger;
@@ -169,7 +175,6 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         });
         router.post("/user/authenticate", UserRoute.BindRequest('authenticateRoute'));
         router.post("/user/resetpassword", UserRoute.BindRequest('resetPasswordRequestRoute'));
-        router.get('/user/resetpassword', UserRoute.BindRequest('resetPasswordRoute'));
         router.post("/user/changepassword/:userid", UserRoute.AuthenticateRequest, UserRoute.BindRequest('changePasswordRoute'));
         router.post("/user/useRefreshToken", UserRoute.BindRequest('useRefreshTokenRoute'));
     }

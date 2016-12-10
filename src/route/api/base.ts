@@ -58,7 +58,7 @@ export default class ApiRoute {
         });
 
         let handler = instance[method];
-
+        debugger;
         var anonymous = Auth.GetAnonymous(handler);
 
         if (!anonymous && !req.user)

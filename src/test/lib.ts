@@ -10,9 +10,6 @@ import * as _ from 'lodash';
 
 let authToken = undefined;
 
-var resolveToken;
-var rejectToken;
-
 export let appconfig = {
     baseUrl: 'http://localhost:' + config.port.toString() + '/api/v1'
 }
@@ -71,6 +68,7 @@ export let get = (url, options?: request.CoreOptions) => {
 };
 
 
+let resolveToken, rejectToken;
 
 let authDonePromise = new Promise<any>((resolve, reject) => {
     resolveToken = resolve;
