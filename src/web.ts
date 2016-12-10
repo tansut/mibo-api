@@ -22,6 +22,11 @@ export class WebApp {
             this.app = express();
             this.router = express.Router();
 
+            this.app.use(bp.urlencoded({ extended: true }));
+            this.app.use(bp.json())
+            this.app.use(bp.text());
+            this.app.use(bp.raw());
+
             return db.connect().then(() => {
                 //apiMiddlewares.use(this.app);
                 webRoutes.use(this.router);
