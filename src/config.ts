@@ -17,6 +17,8 @@ class Config {
     public static EMAILSECRETACCESSKEY = "EMAILSECRETACCESSKEY";
     public static EMAILSERVICEURL = "EMAILSERVICEURL";
     public static EMAILRATELIMIT = "EMAILRATELIMIT";
+    public static APIURL = "APIURL";
+    public static WEBURL = "WEBURL";
 
 
     public port: number;
@@ -32,6 +34,8 @@ class Config {
     public emailSecretAccessKey: string;
     public emailServiceUrl: string;
     public emailRateLimit: number;
+    public apiUrl: string;
+    public webUrl: string;
 
 
     public get(key?: string, cb?: nconf.ICallbackFunction) {
@@ -53,6 +57,9 @@ class Config {
         this.emailSecretAccessKey = this.get(Config.EMAILSECRETACCESSKEY) || '';
         this.emailServiceUrl = this.get(Config.EMAILSERVICEURL) || '';
         this.emailRateLimit = this.get(Config.EMAILRATELIMIT) || 15;
+        this.apiUrl = this.get(Config.APIURL) || 'http://localhost:3001';
+        this.webUrl = this.get(Config.WEBURL) || 'http://localhost:3005';
+
     }
 }
 

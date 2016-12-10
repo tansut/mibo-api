@@ -8,6 +8,7 @@ import { ObjectID } from 'mongodb';
 import { request } from 'https';
 import * as express from "express";
 import { User, UserDocument, UserModel, UserRoles } from '../../db/models/user';
+import config from '../../config';
 
 import * as um from '../../db/models/user';
 
@@ -74,7 +75,7 @@ class Route extends CrudRoute<UserDocument> {
             return user.save().then((user) => {
                 return emailmanager.send(user.email, 'Password Reset Request from Mibo', 'resetpassword.ejs', {
                     nickName: user.nickName,
-                    resetLink: url + '/user/resetpassword?token=' + user.resetToken
+                    resetLink: url + '/account/resetpassword?token=' + user.resetToken
                 });
             });
         })
@@ -84,7 +85,7 @@ class Route extends CrudRoute<UserDocument> {
         var email = req.body.email;
         if (validator.isEmpty(email) || !validator.isEmail(email))
             return next(new http.ValidationError());
-        var url = req.protocol + '://' + req.get('host');
+        var url = config.webUrl;
         this.resetPasswordRequest(email, url).then(() => { res.sendStatus(200) }).catch((err) => next(err));
     }
 
