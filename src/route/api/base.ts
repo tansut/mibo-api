@@ -33,6 +33,13 @@ export default class ApiRoute {
         return (req, res, next) => ApiRoute.CreateRouterInstance(req, res, next, self, method);
     }
 
+    protected static AuthenticateRequest() {
+        var self = this;
+        return (req, res, next) => ApiRoute.CreateRouterInstance(req, res, next, self, 'forceAuthenticate');
+    }
+
+
+
     protected static CreateRouterInstance(req: http.ApiRequest, res: express.Response, next: Function, constructor: typeof ApiRoute, method: string): ApiRoute {
         var instance = new constructor();
         instance.req = req;
