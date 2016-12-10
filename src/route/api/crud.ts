@@ -60,9 +60,9 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
         });
     }
 
-    protected retrieveRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        var dbId = this.toObjectId(req.params._id);
-        this.retrieve(dbId).then((result) => res.send(result.toClient()), (err) => next(err));
+    protected retrieveRoute() {
+        var dbId = this.toObjectId(this.req.params._id);
+        this.retrieve(dbId).then((result) => this.res.send(result.toClient()), (err) => this.next(err));
     }
 
     create(model: any): Promise<T> {
@@ -71,23 +71,23 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
         });
     }
 
-    protected createRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        var itemToAdd = req.body;
+    protected createRoute() {
+        var itemToAdd = this.req.body;
         this.create(itemToAdd).then((result) => {
-            res.send({
+            this.res.send({
                 _id: result._id.toString()
             })
-        }, (err) => next(err));
+        }, (err) => this.next(err));
     }
 
     delete(doc: T) {
         return doc.remove();
     }
 
-    deleteRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        var dbId = this.toObjectId(req.params._id);
+    deleteRoute() {
+        var dbId = this.toObjectId(this.req.params._id);
         var deleteResult = this.retrieve(dbId, { lean: true }).then((doc) => this.delete(doc));
-        deleteResult.then((result) => res.sendStatus(200), (err) => next(err));
+        deleteResult.then((result) => this.res.sendStatus(200), (err) => this.next(err));
     }
 
     update(doc: T, updateValues: any) {
@@ -96,25 +96,25 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
         });
     }
 
-    updateRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        var dbId = this.toObjectId(req.params._id);
-        var updateValues = req.body;
+    updateRoute() {
+        var dbId = this.toObjectId(this.req.params._id);
+        var updateValues = this.req.body;
         var updateResult = this.retrieve(dbId, { lean: true }).then((doc) => this.update(doc, updateValues));
-        updateResult.then((result) => { res.send(result || 200) }, (err) => next(err));
+        updateResult.then((result) => { this.res.send(result || 200) }, (err) => this.next(err));
     }
 
-    query(req: http.ApiRequest, res: express.Response, next: Function) {
-        res.sendStatus(200);
+    query() {
+        this.res.sendStatus(200);
     }
 
     protected static generateCreateRoute(url: string, router: express.Router) {
-        router.post(url, this.AuthenticateRequest, this.BindRequest('createRoute'));
+        router.post(url, this.BindRequest('createRoute'));
     }
     protected static generateUpdateRoute(url: string, router: express.Router) {
-        router.get(url.concat('/:_id'), this.AuthenticateRequest, this.BindRequest('updateRoute'));
+        router.get(url.concat('/:_id'), this.BindRequest('updateRoute'));
     }
     protected static generateDeleteRoute(url: string, router: express.Router) {
-        router.delete(url.concat('/:_id'), this.AuthenticateRequest, this.BindRequest('deleteRoute'));
+        router.delete(url.concat('/:_id'), this.BindRequest('deleteRoute'));
     }
     protected static generateQueryRoute(url: string, router: express.Router) {
         router.get(url.concat('/query'), this.BindRequest('query'));

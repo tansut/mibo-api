@@ -70,14 +70,14 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         });
     }
 
-    authenticateRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        var email = req.body.email;
-        var password = req.body.password;
-        this.authenticate(email, password).then((user) => {
+    authenticateRoute() {
+        var email = this.req.body.email;
+        var password = this.req.body.password;
+        return this.authenticate(email, password).then((user) => {
             return this.createTokens(user).then((generatedTokens: GeneratedTokenData) => {
-                res.send({ user: user.toClient(), token: generatedTokens });
+                this.res.send({ user: user.toClient(), token: generatedTokens });
             })
-        }).catch((err) => next(err));
+        });
     }
 
     useRefreshToken(refreshTokenData: authorization.IEncryptedRefreshTokenData) {
@@ -85,8 +85,8 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         authorization.default.decryptRefreshToken(refreshTokenData.refresh_token, refreshTokenData.tag);
     }
 
-    useRefreshTokenRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        var refreshTokenData = <authorization.IEncryptedRefreshTokenData>req.body.refreshTokenData;
+    useRefreshTokenRoute() {
+        var refreshTokenData = <authorization.IEncryptedRefreshTokenData>this.req.body.refreshTokenData;
         this.useRefreshToken(refreshTokenData);
     }
 
@@ -104,16 +104,16 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         })
     }
 
-    resetPasswordRequestRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        var email = req.body.email;
+    resetPasswordRequestRoute() {
+        var email = this.req.body.email;
         if (validator.isEmpty(email) || !validator.isEmail(email))
-            return next(new http.ValidationError());
+            return this.next(new http.ValidationError());
         var url = config.webUrl;
-        this.resetPasswordRequest(email, url).then(() => { res.sendStatus(200) }).catch((err) => next(err));
+        this.resetPasswordRequest(email, url).then(() => { this.res.sendStatus(200) }).catch((err) => this.next(err));
     }
 
-    resetPasswordRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        var resetToken = req.body.resetToken;
+    resetPasswordRoute() {
+        var resetToken = this.req.body.resetToken;
         this.model.findOne().where('resetToken', resetToken).then((user) => {
             if (!user) return Promise.reject(new http.NotFoundError());
             if (moment.utc().toDate() > user.resetTokenValid)
@@ -125,19 +125,18 @@ export default class UserRoute extends CrudRoute<UserDocument> {
             var passwordSalt = bcrypt.genSaltSync(10);
             var hash = bcrypt.hashSync(newPass, passwordSalt);
             user.password = hash;
-            return user.save().then((user) => { res.sendStatus(200) }, (err) => next(err));
-        }, (err) => next(err));
+            return user.save().then((user) => { this.res.sendStatus(200) }, (err) => this.next(err));
+        }, (err) => this.next(err));
     }
 
-    changePasswordRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        debugger;
-        var oldPass = req.body.oldPass;
-        var newPass = req.body.newPass;
-        if (validator.isEmpty(newPass) || validator.isEmpty(oldPass)) return next(new http.ValidationError('Empty Password'));
-        this.retrieve(req.params.userid).then((user) => {
-            if (!bcrypt.compareSync(oldPass, user.password)) return next(new http.PermissionError());
-            return this.changePassword(user, newPass).then(() => res.sendStatus(200));
-        }).catch((err) => next(err))
+    changePasswordRoute() {
+        var oldPass = this.req.body.oldPass;
+        var newPass = this.req.body.newPass;
+        if (validator.isEmpty(newPass) || validator.isEmpty(oldPass)) return this.next(new http.ValidationError('Empty Password'));
+        this.retrieve(this.req.params.userid).then((user) => {
+            if (!bcrypt.compareSync(oldPass, user.password)) return this.next(new http.PermissionError());
+            return this.changePassword(user, newPass).then(() => this.res.sendStatus(200));
+        }).catch((err) => this.next(err))
     }
 
     changePassword(user: UserDocument, newPass: string) {
@@ -167,6 +166,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
             create: true,
             update: true
         });
+
         router.post("/user/authenticate", UserRoute.BindRequest('authenticateRoute'));
         router.post("/user/resetpassword", UserRoute.BindRequest('resetPasswordRequestRoute'));
         router.get('/user/resetpassword', UserRoute.BindRequest('resetPasswordRoute'));
@@ -178,4 +178,3 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         super(reqParams, UserModel);
     }
 }
- 
