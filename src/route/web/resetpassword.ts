@@ -17,7 +17,7 @@ class Route extends ApiBase {
     }
 
     renderGetNewPass(req: http.ApiRequest, res: express.Response, next: Function) {
-        var resetToken = req.params.resetToken;
+        var resetToken = req.query.token;
         res.render('account/resetpassword', {
             title: 'Mibo Password Reset',
             status: 'init',
@@ -79,7 +79,7 @@ class Route extends ApiBase {
 
     constructor(router?: express.Router) {
         super(router);
-        this.router && this.router.get("/account/resetpassword/:resetToken", this.renderGetNewPass.bind(this));
+        this.router && this.router.get("/account/resetpassword*", this.renderGetNewPass.bind(this));
         this.router && this.router.post("/account/resetpassword", this.renderAndReset.bind(this));
     }
 }

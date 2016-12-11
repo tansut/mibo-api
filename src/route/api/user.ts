@@ -102,7 +102,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
             return user.save().then((user) => {
                 return emailmanager.send(user.email, 'Password Reset Request from Mibo', 'resetpassword.ejs', {
                     nickName: user.nickName,
-                    resetLink: url + '/account/resetpassword/' + user.resetToken
+                    resetLink: url + '/account/resetpassword?token=' + user.resetToken
                 });
             });
         })
