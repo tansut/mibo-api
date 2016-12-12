@@ -132,6 +132,17 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         })
     }
 
+    setNick(nickName: string) {
+        return this.retrieve(this.req.params.userid).then((user) => {
+            user.nickName = nickName;
+            return user.save();
+        })
+    }
+
+    setNickRoute() {
+        return this.setNick(this.req.body.nickName).then((user) => this.res.sendStatus(200));
+    }
+
     changePassword(user: UserDocument, newPass: string) {
         var passwordSalt = bcrypt.genSaltSync(10);
         var hash = bcrypt.hashSync(newPass, passwordSalt);
@@ -164,6 +175,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         router.post("/user/resetpassword", UserRoute.BindRequest('resetPasswordRequestRoute'));
         router.post("/user/changepassword/:userid", UserRoute.BindRequest('changePasswordRoute'));
         router.post("/user/useRefreshToken", UserRoute.BindRequest('useRefreshTokenRoute'));
+        router.post("/user/setnick/:userid", UserRoute.BindRequest('setNickRoute'));
     }
 
     constructor(reqParams?: IRequestParams) {

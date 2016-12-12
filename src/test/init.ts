@@ -3,7 +3,6 @@ import db from '../db';
 import apiRoutes from '../route/api';
 import UserRoute from '../route/api/user';
 import * as mocha from 'mocha';
-
 import usertests from './user';
 import paymentests from './payment';
 import consultantests from './consultant';
@@ -29,7 +28,6 @@ describe('tests', function () {
                     body: {
                         email: testemail,
                         password: 'foo',
-                        nickName: 'testuser'
                     }
                 }).then((result) => {
                     result.should.have.property('user');

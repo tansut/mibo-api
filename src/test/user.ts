@@ -75,6 +75,15 @@ export default function () {
                 })
             });
         });
+        it('should set a nickname for user', function () {
+            return lib.authenticationDone().then((authhToken => {
+                return lib.post('/user/setnick/'.concat(testUser._id), {
+                    body: {
+                        nickName: 'testnick'
+                    }
+                })
+            }))
+        });
         // describe('#status()', function () {
         //     it('should send OK status', function () {
         //         return lib.get('/status').then((result) => {

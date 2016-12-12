@@ -106,7 +106,7 @@ class Schema extends DBSchema {
 }
 
 export const UserSchema = new Schema({
-    nickName: { type: String, required: true },
+    nickName: { type: String, required: false },
     email: { type: String, required: true, validate: validator.isEmail },
     password: { type: String, required: true },
     roles: [{ type: String, enum: [common.UserRoles.admin, common.UserRoles.dietition, common.UserRoles.user], default: [common.UserRoles.user] }],
@@ -120,7 +120,6 @@ export const UserSchema = new Schema({
 
 
 UserSchema.index({ 'email': 1 }, { unique: true });
-UserSchema.index({ 'nickName': 1 }, { unique: true });
 
 export let UserModel: DBModel<UserDocument>;
 
