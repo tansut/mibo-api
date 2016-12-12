@@ -8,7 +8,7 @@ import ApiBase from './base';
 import { ObjectID } from 'mongodb';
 import { request } from 'https';
 import * as express from "express";
-import { User, UserDocument, UserModel, UserRoles } from '../../db/models/user';
+import { User, UserDocument, UserModel } from '../../db/models/user';
 import config from '../../config';
 import * as um from '../../db/models/user';
 import { SignupModel } from '../../models/account';
@@ -32,7 +32,11 @@ export default class UserRoute extends CrudRoute<UserDocument> {
 
     @Auth.Anonymous()
     createRoute() {
-        return super.createRoute();
+        return this.create(this.req.body).then((user: any) => {
+            return this.createTokens(user).then((generatedTokens: GeneratedTokenData) => {
+                this.res.send({ user: user.toClient(), token: generatedTokens });
+            })
+        })
     }
 
     create(model: SignupModel) {

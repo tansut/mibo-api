@@ -1,5 +1,12 @@
 import 'reflect-metadata';
 
+export const UserRoles = {
+    admin: 'admin',
+    dietition: 'dietition',
+    user: 'user',
+    sales: 'sales'
+}
+
 export class IntegrationInfo<T> {
     public data?: T;
 

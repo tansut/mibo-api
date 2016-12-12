@@ -37,7 +37,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
             created: moment.utc().toDate()
         };
         userid && (doc._meta.owner = mongoose.Types.ObjectId.createFromHexString(userid));
-        return this.model.create(doc);
+        return this.model.create(doc).then((doc) => doc);
     }
 
 

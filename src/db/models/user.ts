@@ -11,12 +11,7 @@ import * as authorization from '../../lib/authorizationToken';
 import * as moment from 'moment';
 
 
-export const UserRoles = {
-    admin: 'admin',
-    dietition: 'dietition',
-    user: 'user',
-    sales: 'sales'
-}
+
 
 export const Verifications = {
     email: 'email',
@@ -114,7 +109,7 @@ export const UserSchema = new Schema({
     nickName: { type: String, required: true },
     email: { type: String, required: true, validate: validator.isEmail },
     password: { type: String, required: true },
-    roles: [{ type: String, enum: [UserRoles.admin, UserRoles.dietition, UserRoles.user], default: [UserRoles.user] }],
+    roles: [{ type: String, enum: [common.UserRoles.admin, common.UserRoles.dietition, common.UserRoles.user], default: [common.UserRoles.user] }],
     lastLogin: { type: Date, required: false },
     resetToken: { type: String, required: false },
     resetTokenValid: { type: Date, required: false },

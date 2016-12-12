@@ -1,4 +1,4 @@
-import { UserDocument, UserModel, UserRoles } from '../db/models/user';
+import { UserDocument, UserModel } from '../db/models/user';
 import db from '../db';
 import apiRoutes from '../route/api';
 import UserRoute from '../route/api/user';
@@ -6,6 +6,8 @@ import * as mocha from 'mocha';
 
 import usertests from './user';
 import paymentests from './payment';
+import consultantests from './consultant';
+
 import apiApp from '../api';
 import config from '../config';
 import * as request from 'request';
@@ -20,7 +22,7 @@ let route = new UserRoute();
 describe('tests', function () {
     before(function () {
         return apiApp().bootstrap().then(() => {
-            return  route.retrieveByEMail(testemail).then((user) => {
+            return route.retrieveByEMail(testemail).then((user) => {
                 if (user) return route.delete(user);
             }).then(() => {
                 return lib.post('/user', {
@@ -30,14 +32,17 @@ describe('tests', function () {
                         nickName: 'testuser'
                     }
                 }).then((result) => {
-                    result.should.have.property('_id');
+                    result.should.have.property('user');
                     return result;
                 })
-            }).then((user) => {
-                testUser = <UserDocument>user;
+            }).then((result) => {
+                testUser = <UserDocument>result.user;
+                lib.authenticationDone(result.token);
             });
         });
     });
+    consultantests();
     usertests();
     paymentests();
+
 });
