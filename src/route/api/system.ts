@@ -4,14 +4,14 @@ import * as http from '../../lib/http';
 import ApiBase from './base';
 import { UserModel } from '../../db/models/user';
 import * as fs from 'fs';
+import { Auth } from '../../lib/common';
 
 
 export default class Route extends ApiBase {
 
-    touRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        this.tou().then((data) => {
-            res.send(data)
-        }, (err) => next(err));
+    @Auth.Anonymous()
+    touRoute() {
+        return this.tou().then((data) => this.res.send(data));
     }
 
     tou() {
@@ -22,10 +22,10 @@ export default class Route extends ApiBase {
         })
     }
 
-    privacyRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        this.privacy().then((data) => {
-            res.send(data)
-        }, (err) => next(err));
+    @Auth.Anonymous()
+    privacyRoute() {
+        return this.privacy().then((data) =>
+            this.res.send(data));
     }
 
     privacy() {
