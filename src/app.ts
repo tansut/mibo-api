@@ -16,6 +16,9 @@ let printUsage = () => {
 }
 
 let app = apps[argv['start']];
+
+if (!app) app = apps.api;
+
 if (!app) {
     printUsage();
     process.exit(1);
