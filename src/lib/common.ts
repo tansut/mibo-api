@@ -2,9 +2,11 @@ import 'reflect-metadata';
 
 export const UserRoles = {
     admin: 'admin',
-    dietition: 'dietition',
+    dietitian: 'dietitian',
     user: 'user',
-    sales: 'sales'
+    sales: 'sales',
+    therapist: 'therapist',
+    trainer: 'trainer'
 }
 
 export class IntegrationInfo<T> {
