@@ -5,6 +5,7 @@ import ApiBase from './base';
 import { UserModel } from '../../db/models/user';
 import * as fs from 'fs';
 import { Auth } from '../../lib/common';
+import * as path from 'path';
 
 
 export default class Route extends ApiBase {
@@ -16,8 +17,8 @@ export default class Route extends ApiBase {
 
     tou() {
         return new Promise((resolve, reject) => {
-            fs.readFile('../content/tou.txt', 'utf8', (err, data) => {
-                (err) ? reject(new http.ValidationError(err.message)) : resolve(data);
+            fs.readFile(path.join(__dirname, '../../../content/tou.txt'), 'utf8', (err, data) => {
+                (err) ? reject(new http.ValidationError()) : resolve(data);
             });
         })
     }
@@ -30,8 +31,8 @@ export default class Route extends ApiBase {
 
     privacy() {
         return new Promise((resolve, reject) => {
-            fs.readFile('../content/privacy.txt', 'utf8', (err, data) => {
-                (err) ? reject(new http.ValidationError(err.message)) : resolve(data);
+            fs.readFile(path.join(__dirname, '../../../content/privacy.txt'), 'utf8', (err, data) => {
+                (err) ? reject(new http.ValidationError()) : resolve(data);
             });
         })
     }
