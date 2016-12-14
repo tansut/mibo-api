@@ -6,7 +6,7 @@ import * as lib from './lib';
 
 
 export default function () {
-    describe('payment', function () {
+    describe.only('payment', function () {
         it('should create basic-plan for test-user', function () {
             var plan = common.Plans.basicMonthly;
             return stripe.createTokenSample().then((token) => {
