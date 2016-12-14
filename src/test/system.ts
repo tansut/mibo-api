@@ -14,7 +14,12 @@ export default function () {
         });
         it('should get TOU', function () {
             return lib.get('/tou').then((result) => {
-                
+                result.should.have.property('statusCode').be.eql(200);
+            })
+        });
+        it('should get Privacy', function () {
+            return lib.get('/privacy').then((result) => {
+                result.should.have.property('statusCode').be.eql(200);                
             })
         });
     });
