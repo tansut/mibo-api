@@ -39,7 +39,7 @@ module.exports = function (shipit) {
         var self = this
             , script = this.currentPath + '/bin/app.js'
             , startScript = 'source /home/nodejs/{env}; pm2 start {script}'
-            , stopScript = 'pm2 delete {script}'
+            , stopScript = 'pm2 kill'
             , env = this.options.environment
             , envFile = (env === 'production') ? 'production.mibo.api.env' : 'stage.mibo.api.env'
 
