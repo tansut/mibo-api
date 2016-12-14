@@ -17,7 +17,7 @@ export default class Route extends ApiBase {
     tou() {
         return new Promise((resolve, reject) => {
             fs.readFile('../content/tou.txt', 'utf8', (err, data) => {
-                (err) ? reject(new http.ValidationError()) : resolve(data);
+                (err) ? reject(new http.ValidationError(err.message)) : resolve(data);
             });
         })
     }
@@ -31,7 +31,7 @@ export default class Route extends ApiBase {
     privacy() {
         return new Promise((resolve, reject) => {
             fs.readFile('../content/privacy.txt', 'utf8', (err, data) => {
-                (err) ? reject(new http.ValidationError()) : resolve(data);
+                (err) ? reject(new http.ValidationError(err.message)) : resolve(data);
             });
         })
     }
@@ -40,5 +40,4 @@ export default class Route extends ApiBase {
         router.get("/tou", Route.BindRequest('touRoute'));
         router.get("/privacy", Route.BindRequest('privacyRoute'));
     }
-
 }
