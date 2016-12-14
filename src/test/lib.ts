@@ -11,9 +11,9 @@ import * as _ from 'lodash';
 let authToken = undefined;
 
 export let appconfig = {
-    //baseUrl: 'http://stage-api.mibo.io/api/v1'
-    baseUrl: 'http://ec2-52-27-132-104.us-west-2.compute.amazonaws.com:4000/api/v1/'
-    //baseUrl: 'http://localhost:' + config.port.toString() + '/api/v1'
+    // baseUrl: 'http://stage-api.mibo.io/api/v1'
+    //baseUrl: 'http://ec2-52-27-132-104.us-west-2.compute.amazonaws.com:4000/api/v1/'
+    baseUrl: 'http://localhost:' + config.port.toString() + '/api/v1'
 }
 
 interface IResponse {

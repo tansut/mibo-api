@@ -6,6 +6,7 @@ import * as mocha from 'mocha';
 import usertests from './user';
 import paymentests from './payment';
 import consultantests from './consultant';
+import systemtests from './system';
 
 import apiApp from '../api';
 import config from '../config';
@@ -42,5 +43,5 @@ describe('tests', function () {
     consultantests();
     usertests();
     paymentests();
-
+    systemtests();
 });
