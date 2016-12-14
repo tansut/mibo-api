@@ -19,6 +19,8 @@ let app = apps[argv['start']];
 
 if (!app) app = apps.api;
 
+//let promiselist = [apps.api, apps.web]
+
 if (!app) {
     printUsage();
     process.exit(1);

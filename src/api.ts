@@ -7,6 +7,9 @@ import apiRoutes from './route/api';
 import apiMiddlewares from './middleware/api';
 import db from './db';
 import stripe from './lib/stripe';
+import webRoutes from './route/web';
+import * as path from 'path';
+
 
 export class ApiApp {
     app: express.Application;
@@ -30,6 +33,15 @@ export class ApiApp {
                 apiMiddlewares.use(this.app);
                 apiRoutes.use(this.router);
                 this.app.use('/api/v1', this.router);
+
+                webRoutes.use(this.router);
+                this.app.use('/', this.router);
+
+                var staticPath = path.join(__dirname, '/public');
+                this.app.use(express.static(staticPath));
+                this.app.set('view engine', 'ejs');
+                this.app.set('views', path.join(__dirname, '../views'));
+
 
                 const server = http.createServer(this.app);
 
