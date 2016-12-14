@@ -53,16 +53,14 @@ export default class PaymentRoute extends ApiBase {
         });
     }
 
-    getPlanRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        this.userRoute.retrieve(req.params.userid).then((user) => {
+    getPlanRoute() {
+        return this.userRoute.retrieve(this.req.params.userid).then((user) => {
             let plan = user.integrations.stripe && user.integrations.stripe.subscription ?
                 user.integrations.stripe.subscription.plan : undefined;
-            res.send({
+            this.res.send({
                 plan: plan
             });
-        }).catch((err) => next(err));
-
-
+        });
     }
 
     //Below code from Cansu :)
@@ -82,9 +80,9 @@ export default class PaymentRoute extends ApiBase {
 
 
     static SetRoutes(router: express.Router) {
-        router.get("/status", UserRoute.BindRequest('statusRoute'));
-        router.post("/plan/change/:userid", UserRoute.BindRequest('changePlanRoute'));
-        router.get("/plan/get/:userid", UserRoute.BindRequest('getPlanRoute'));
-        router.post("/plan/create/:userid", UserRoute.BindRequest('createPlanRoute'));
+        router.get("/status", PaymentRoute.BindRequest('statusRoute'));
+        router.post("/plan/change/:userid", PaymentRoute.BindRequest('changePlanRoute'));
+        router.get("/plan/get/:userid", PaymentRoute.BindRequest('getPlanRoute'));
+        router.post("/plan/create/:userid", PaymentRoute.BindRequest('createPlanRoute'));
     }
 }
