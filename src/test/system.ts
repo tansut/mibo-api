@@ -14,7 +14,7 @@ export default function () {
         });
         it('should get TOU', function () {
             return lib.get('/tou').then((result) => {
-
+                
             })
         });
     });
