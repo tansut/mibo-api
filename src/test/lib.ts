@@ -10,10 +10,16 @@ import * as _ from 'lodash';
 
 let authToken = undefined;
 
+let urls = {
+}
+
+urls['development'] = 'http://localhost:' + config.port.toString() + '/api/v1';
+urls['production'] = 'http://api.mibo.io/api/v1';
+urls['stage'] = 'http://stage-api.mibo.io/api/v1';
+
+
 export let appconfig = {
-    // baseUrl: 'http://stage-api.mibo.io/api/v1'
-    //baseUrl: 'http://ec2-52-27-132-104.us-west-2.compute.amazonaws.com:4000/api/v1/'
-    baseUrl: 'http://localhost:' + config.port.toString() + '/api/v1'
+    baseUrl: urls[config.get('NODE_ENV')]
 }
 
 interface IResponse {

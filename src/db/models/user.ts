@@ -109,7 +109,7 @@ export const UserSchema = new Schema({
     nickName: { type: String, required: false },
     email: { type: String, required: true, validate: validator.isEmail },
     password: { type: String, required: true },
-    roles: [{ type: String, enum: [common.UserRoles.admin, common.UserRoles.dietition, common.UserRoles.user], default: [common.UserRoles.user] }],
+    roles: [{ type: String, enum: [common.UserRoles.admin, common.UserRoles.dietitian, common.UserRoles.user], default: [common.UserRoles.user] }],
     lastLogin: { type: Date, required: false },
     resetToken: { type: String, required: false },
     resetTokenValid: { type: Date, required: false },

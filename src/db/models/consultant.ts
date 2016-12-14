@@ -39,7 +39,7 @@ export const ConsultantSchema = new ConsultantConfig({
     lastName: { type: String, required: true },
     user: { type: mongoose.Schema['ObjectId'], required: true, ref: 'Users' },
     active: { type: Boolean, required: true, default: true },
-    role: { type: String, required: true, enum: [UserRoles.dietition, UserRoles.sales] }
+    role: { type: String, required: true, enum: [UserRoles.dietitian, UserRoles.sales] }
 });
 
 ConsultantSchema.index({ 'user': 1, 'role': 1 }, { unique: true });
