@@ -18,7 +18,8 @@ export class IntegrationInfo<T> {
 }
 
 export const Plans = {
-    basicMonthly: 'basic-monthly'
+    basicMonthly: 'basic-monthly',
+    messageonly3mly: 'messageonly3mly'
 }
 
 export class Auth {

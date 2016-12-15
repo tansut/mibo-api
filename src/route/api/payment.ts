@@ -47,8 +47,6 @@ export default class PaymentRoute extends ApiBase {
 
     createPlanRoute() {
         return this.userRoute.retrieve(this.req.params.userid).then((user) => {
-            if (!validator.contains(this.req.body.plan, Object.keys(common.Plans).map((k) => common.Plans[k])))
-                return Promise.reject(new http.ValidationError());
             return this.createPlan(user, this.req.body.plan, this.req.body.source).then(() => this.res.sendStatus(200));
         });
     }
@@ -69,8 +67,13 @@ export default class PaymentRoute extends ApiBase {
     //     , i, ğİİ -,ü, ğüğ, -ü - ğ, ü,
     //     üüğ - i c    
 
-    changePlanRoute(req: http.ApiRequest, res: express.Response, next: Function) {
+    changePlanRoute() {
+        return this.userRoute.retrieve(this.req.params.userid).then((user) => {
+            if (user.integrations.stripe && user.integrations.stripe.remoteId)
+                return this.changePlan(user, this.req.body.plan).then(() => this.res.sendStatus(200));
+            else return Promise.reject(new http.ValidationError('no plan for user'));
 
+        });
     }
 
     constructor(reqParams: IRequestParams) {

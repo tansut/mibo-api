@@ -6,7 +6,7 @@ import * as lib from './lib';
 
 
 export default function () {
-    describe('payment', function () {
+    describe.only('payment', function () {
         it('should create basic-plan for test-user', function () {
             var plan = common.Plans.basicMonthly;
             return stripe.createTokenSample().then((token) => {
@@ -26,6 +26,14 @@ export default function () {
                 }).then((result) => {
                     result.should.have.property('plan').be.eql(result.plan);
                 })
+            })
+        })
+        it('should change plan', function () {
+            var plan = common.Plans.messageonly3mly;
+            return lib.post('/plan/change/'.concat(testUser._id), {
+                body: {
+                    plan: plan
+                }
             })
         })
     });
