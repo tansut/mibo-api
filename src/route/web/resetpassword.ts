@@ -35,7 +35,7 @@ class Route extends ApiBase {
             noPassMatch: 'noPassMatch',
             success: 'success'
         }
-        if (newPass1 != newPass2 || newPass1 == "" || newPass2 == "") {
+        if (newPass1 != newPass2 || validator.isEmpty(newPass1) || validator.isEmpty(newPass2)) {
             res.render('account/resetpassword', {
                 title: 'Mibo Password Reset',
                 status: status.noPassMatch,
