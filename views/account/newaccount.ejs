@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <% include ../partials/head.ejs %>
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <% include ../partials/header.ejs %>
+
+      <div class="jumbotron" id="loginPart">
+        <h1>Create New Account</h1>
+        <% if(status == 'noPassMatch') { %>
+              <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Passwords do not Match</h3>
+                </div>
+                <div class="panel-body">Your passwords do not match. Please check and type again.</div>
+            </div>
+        <% } %>
+        <% if(status == 'notFound') { %>
+              <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> E-mail Address is not Valid</h3>
+                </div>
+                <div class="panel-body">Your e-mail address is not valid. Please check and type again.</div>
+            </div>
+        <% } %>
+
+        <% if(status != 'success') { %>        
+        <form class="form-signin" method="post" action="/account/resetpassword">
+          <h4 class="form-signin-heading">Please type in your e-mail address and password</h4>
+          <div class="input-group margin-bottom-sm">
+          <span class="input-group-addon"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i></span>
+          <input class="form-control" type="email" placeholder="E-mail" name="email">
+        </div>
+        <br>
+        <div class="input-group margin-bottom-sm">
+          <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
+          <input class="form-control" type="password" placeholder="Password" name="pass1">
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
+          <input class="form-control" type="password" placeholder="Repeat Password" name="pass2">
+        </div>
+        <br>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Create Account</button>
+        </form>
+        <% } else { %>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Success</h3>
+                </div>
+                <div class="panel-body">Your account has been created. You can login using your new credentials.</div>
+                <button class="btn btn-lg btn-primary btn-block" type="button"><a href="#mibologin">Login</a></button>
+            </div>
+        <% } %>
+        
+      </div>
+
+      
+
+      <% include ../partials/footer.ejs %>
+
+    </div> <!-- /container -->
+    
+
+    <% include ../partials/jsdefaults.ejs %>
+  </body>
+</html>

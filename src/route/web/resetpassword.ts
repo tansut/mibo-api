@@ -6,9 +6,17 @@ import * as validator from 'validator';
 import * as common from '../../lib/common';
 import * as moment from 'moment';
 import * as bcrypt from 'bcryptjs';
+import UserRoute from '../api/user';
 
 
 class Route extends ApiBase {
+
+    errStatus = {
+        notFound: 'notFound',
+        expired: 'expired',
+        noPassMatch: 'noPassMatch',
+        success: 'success'
+    }
 
     status() {
         return new Promise((resolve, reject) => {
@@ -38,7 +46,7 @@ class Route extends ApiBase {
         if (newPass1 != newPass2 || validator.isEmpty(newPass1) || validator.isEmpty(newPass2)) {
             res.render('account/resetpassword', {
                 title: 'Mibo Password Reset',
-                status: status.noPassMatch,
+                status: this.errStatus.noPassMatch,
                 resetToken: resetToken
             });
         } else {
@@ -46,7 +54,7 @@ class Route extends ApiBase {
                 if (!user) {
                     res.render('account/resetpassword', {
                         title: 'Mibo Password Reset',
-                        status: status.notFound,
+                        status: this.errStatus.notFound,
                         resetToken: resetToken
                     });
                     return Promise.reject(new http.NotFoundError())
@@ -54,7 +62,7 @@ class Route extends ApiBase {
                 if (moment.utc().toDate() > user.resetTokenValid) {
                     res.render('account/resetpassword', {
                         title: 'Mibo Password Reset',
-                        status: status.expired,
+                        status: this.errStatus.expired,
                         resetToken: resetToken
                     });
                     return Promise.reject(new http.ValidationError('Token Expired'));
@@ -69,7 +77,7 @@ class Route extends ApiBase {
                 return user.save().then((user) => {
                     res.render('account/resetpassword', {
                         title: 'Mibo Password Reset',
-                        status: status.success,
+                        status: this.errStatus.success,
                         resetToken: resetToken
                     });
                 }).catch((err) => next(err));
@@ -77,10 +85,50 @@ class Route extends ApiBase {
         }
     }
 
+    renderNewAccount(req: http.ApiRequest, res: express.Response, next: Function) {
+        res.render('account/newaccount', {
+            title: 'Register Now',
+            status: 'init'
+        });
+    }
+
+    // createNewAccountRoute(req: http.ApiRequest, res: express.Response, next: Function) {
+    //     var email = req.body.email;
+    //     var pass1 = req.body.pass1;
+    //     var pass2 = req.body.pass2;
+    //     if (validator.isEmpty(email) || !validator.isEmail(email)) {
+    //         res.render('account/newaccount', {
+    //             title: 'Register Now',
+    //             status: this.errStatus.notFound
+    //         });
+    //     } else if (pass1 != pass2 || validator.isEmpty(pass1) || validator.isEmpty(pass2)) {
+    //         res.render('account/newaccount', {
+    //             title: 'Register Now',
+    //             status: this.errStatus.noPassMatch
+    //         });
+    //     } else {
+    //         var newUser = {
+    //             email: email,
+    //             password: pass2
+    //         }
+    //         this.createNewAccount(newUser)
+            
+    //     }
+    // }
+
+    // createNewAccount(newUser) {
+    //     var passwordSalt = bcrypt.genSaltSync(10);
+    //     var hash = bcrypt.hashSync(newUser.password, passwordSalt);
+    //     newUser.password = hash;
+    //     return 
+    // }
+
     constructor(router?: express.Router) {
         super(router);
         this.router && this.router.get("/account/resetpassword*", this.renderGetNewPass.bind(this));
         this.router && this.router.post("/account/resetpassword", this.renderAndReset.bind(this));
+        this.router && this.router.get("/account/createaccount", this.renderNewAccount.bind(this));
+        //this.router && this.router.post("/account/createaccount", this.createNewAccount.bind(this));
     }
 }
 
