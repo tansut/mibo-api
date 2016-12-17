@@ -31,13 +31,15 @@ export interface RetrieveOptions {
 
 export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
 
-    insertDb(doc: any) {
+    insertDb(doc: any): Promise<T> {
         var userid = this.req.user ? this.req.user._id.toString() : undefined;
         doc._meta = doc._meta || {
             created: moment.utc().toDate()
         };
         userid && (doc._meta.owner = mongoose.Types.ObjectId.createFromHexString(userid));
-        return this.model.create(doc).then((doc) => doc);
+        return new Promise<T>((res, rej) => {
+            this.model.create(doc).then((docs) => res(docs[0])).catch((err) => rej(err));
+        })
     }
 
 
@@ -82,7 +84,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
         });
     }
 
-    protected createRoute() {
+    protected createRoute(): Promise<any> {
         var itemToAdd = this.req.body;
         return this.create(itemToAdd).then((result) => {
             this.res.send({
@@ -91,7 +93,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
         });
     }
 
-    delete(doc: T) {
+    delete(doc: T): Promise<any> {
         return doc.remove();
     }
 

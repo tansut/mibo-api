@@ -13,14 +13,10 @@ import UserRoute from '../api/user';
 class Route extends ApiBase {
 
     errStatus = {
-        notFound: 'notFound',
-        expired: 'expired',
-        noPassMatch: 'noPassMatch',
+        emailErr: 'emailErr',
+        passEmpty: 'passEmpty',
         success: 'success'
     }
-
-
-
 
     renderNewAccountRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         res.render('account/newaccount', {
@@ -31,29 +27,31 @@ class Route extends ApiBase {
 
     createNewAccountRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         var email = req.body.email;
-        var pass1 = req.body.pass1;
-        var pass2 = req.body.pass2;
+        var password = req.body.password;
         if (validator.isEmpty(email) || !validator.isEmail(email)) {
             res.render('account/newaccount', {
                 title: 'Register Now',
-                status: this.errStatus.notFound
+                status: this.errStatus.emailErr
             });
-        } else if (pass1 != pass2 || validator.isEmpty(pass1) || validator.isEmpty(pass2)) {
+        } else if (validator.isEmpty(password)) {
             res.render('account/newaccount', {
                 title: 'Register Now',
-                status: this.errStatus.noPassMatch
+                status: this.errStatus.passEmpty
             });
         } else {
             var newUser = <SignupModel>{
                 email: email,
-                password: pass2
+                password: password
             }
             var userRoute = new UserRoute();
-            userRoute.create(newUser);
+            userRoute.create(newUser).then(() => {
+                res.render('account/newaccount', {
+                    title: 'Registeration Complete',
+                    status: this.errStatus.success
+                });
+            });
         }
     }
-
-
 
     constructor(router?: express.Router) {
         super(router);
