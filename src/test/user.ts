@@ -84,49 +84,39 @@ export default function () {
                 })
             }))
         });
-        it('should not register with invalid email', function () {
-            return new Promise((resolve, reject) => {
-                lib.post('/account/new', {
-                    body: {
-                        email: 'incorrect.email.com',
-                        password: 'foo'
-                    }
-                }).then((result) => {
-                    reject();
-                }).catch((err) => {
-                    err.should.have.property('statusCode').be.eql(404);
-                    resolve();
-                })
-            });
-        });
-        it('should not register with invalid password', function () {
-            return new Promise((resolve, reject) => {
-                lib.post('/account/new', {
-                    body: {
-                        email: testemail,
-                        password: ''
-                    }
-                }).then((result) => {
-                    reject();
-                }).catch((err) => {
-                    err.should.have.property('statusCode').be.eql(404);
-                    resolve();
-                })
-            });
-        });
-        it('should register new user', function () {
-            return lib.post('/account/new', {
-                body: {
-                    email: testemail,
-                    password: 'foo'
-                }
-            })
-        });
-        it('should send welcome e-mail', function () {
-            return lib.post('/account/new', {
-                body: {
-                    email: testemail
-                }
+        // it('should not register with existing email', function () {
+        //     return new Promise((resolve, reject) => {
+        //         lib.post('/account/new', {
+        //             body: {
+        //                 email: 'incorrect.email.com',
+        //                 password: 'foo'
+        //             }
+        //         }).then((result) => {
+        //             reject();
+        //         }).catch((err) => {
+        //             err.should.have.property('statusCode').be.eql(404);
+        //             resolve();
+        //         })
+        //     });
+        // });
+        // it('should not register with invalid password', function () {
+        //     return new Promise((resolve, reject) => {
+        //         lib.post('/account/new', {
+        //             body: {
+        //                 email: testemail,
+        //                 password: ''
+        //             }
+        //         }).then((result) => {
+        //             reject();
+        //         }).catch((err) => {
+        //             err.should.have.property('statusCode').be.eql(404);
+        //             resolve();
+        //         })
+        //     });
+        // });
+        it('should get new account page', function () {
+            return lib.get('/account/new', {
+
             })
         });
 
