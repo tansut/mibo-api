@@ -39,7 +39,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         })
     }
 
-    create(model: SignupModel) {
+    create(model: SignupModel): Promise<UserDocument> {
         let passwordSalt = bcrypt.genSaltSync(10);
         let hash = bcrypt.hashSync(model.password, passwordSalt);
 
@@ -50,10 +50,13 @@ export default class UserRoute extends CrudRoute<UserDocument> {
             ivCode: (Math.random() * 999999).toString() // todo
         };
         return this.insertDb(doc).then((doc) => {
-            return emailmanager.send(doc.email, 'Welcome to Mibo', 'welcome.ejs', {
-                title: 'Welcome!',
-                downloadLink: 'http://downloadLink'
-            });
+            return new Promise<UserDocument>((res, rej) => {
+                emailmanager.send(doc.email, 'Welcome to Mibo', 'welcome.ejs', {
+                    title: 'Welcome!',
+                    downloadLink: 'http://downloadLink'
+                }).then(() => res(doc)).catch((err) => rej(err));
+            })
+
         });
     }
 

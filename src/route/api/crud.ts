@@ -38,7 +38,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
         };
         userid && (doc._meta.owner = mongoose.Types.ObjectId.createFromHexString(userid));
         return new Promise<T>((res, rej) => {
-            this.model.create(doc).then((docs) => res(docs[0])).catch((err) => rej(err));
+            this.model.create([doc]).then((docs) => res(docs[0])).catch((err) => rej(err));
         })
     }
 
