@@ -3,7 +3,7 @@ import { testUser, testemail } from './init';
 import * as lib from './lib';
 
 export default function () {
-    //..
+
     describe('account', function () {
         it('should signin test user', function () {
             return lib.post('/user/authenticate', {
