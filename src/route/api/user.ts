@@ -49,7 +49,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
             email: model.email,
             ivCode: (Math.random() * 999999).toString() // todo
         };
-        return this.insertDb(doc).then(() => {
+        return this.insertDb(doc).then((doc) => {
             return emailmanager.send(doc.email, 'Welcome to Mibo', 'welcome.ejs', {
                 title: 'Welcome!',
                 downloadLink: 'http://downloadLink'
