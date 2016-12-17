@@ -14,8 +14,8 @@ let urls = {
 }
 
 urls['development'] = 'http://localhost:' + config.port.toString() + '/api/v1';
-urls['production'] = 'http://api.mibo.io/api/v1';
-urls['stage'] = 'http://stage-api.mibo.io/api/v1';
+urls['production'] = 'http://app.mibo.io/api/v1';
+urls['stage'] = 'http://stage-app.mibo.io/api/v1';
 
 
 export let appconfig = {
