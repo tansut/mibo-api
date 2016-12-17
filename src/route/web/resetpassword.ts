@@ -18,11 +18,6 @@ class Route extends ApiBase {
         success: 'success'
     }
 
-    status() {
-        return new Promise((resolve, reject) => {
-            resolve('Oh yeah!');
-        });
-    }
 
     renderGetNewPass(req: http.ApiRequest, res: express.Response, next: Function) {
         var resetToken = req.query.token;
@@ -85,50 +80,12 @@ class Route extends ApiBase {
         }
     }
 
-    renderNewAccount(req: http.ApiRequest, res: express.Response, next: Function) {
-        res.render('account/newaccount', {
-            title: 'Register Now',
-            status: 'init'
-        });
-    }
 
-    // createNewAccountRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-    //     var email = req.body.email;
-    //     var pass1 = req.body.pass1;
-    //     var pass2 = req.body.pass2;
-    //     if (validator.isEmpty(email) || !validator.isEmail(email)) {
-    //         res.render('account/newaccount', {
-    //             title: 'Register Now',
-    //             status: this.errStatus.notFound
-    //         });
-    //     } else if (pass1 != pass2 || validator.isEmpty(pass1) || validator.isEmpty(pass2)) {
-    //         res.render('account/newaccount', {
-    //             title: 'Register Now',
-    //             status: this.errStatus.noPassMatch
-    //         });
-    //     } else {
-    //         var newUser = {
-    //             email: email,
-    //             password: pass2
-    //         }
-    //         this.createNewAccount(newUser)
-            
-    //     }
-    // }
-
-    // createNewAccount(newUser) {
-    //     var passwordSalt = bcrypt.genSaltSync(10);
-    //     var hash = bcrypt.hashSync(newUser.password, passwordSalt);
-    //     newUser.password = hash;
-    //     return 
-    // }
 
     constructor(router?: express.Router) {
         super(router);
         this.router && this.router.get("/account/resetpassword*", this.renderGetNewPass.bind(this));
         this.router && this.router.post("/account/resetpassword", this.renderAndReset.bind(this));
-        this.router && this.router.get("/account/createaccount", this.renderNewAccount.bind(this));
-        //this.router && this.router.post("/account/createaccount", this.createNewAccount.bind(this));
     }
 }
 

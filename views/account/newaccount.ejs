@@ -11,7 +11,9 @@
       <% include ../partials/header.ejs %>
 
       <div class="jumbotron" id="loginPart">
-        <h1>Create New Account</h1>
+
+
+        <h1>Welcome!</h1>
         <% if(status == 'noPassMatch') { %>
               <div class="panel panel-danger">
                 <div class="panel-heading">
@@ -31,7 +33,7 @@
 
         <% if(status != 'success') { %>        
         <form class="form-signin" method="post" action="/account/resetpassword">
-          <h4 class="form-signin-heading">Please type in your e-mail address and password</h4>
+          <h4 class="form-signin-heading">Please type in your e-mail address and password below.</h4>
           <div class="input-group margin-bottom-sm">
           <span class="input-group-addon"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i></span>
           <input class="form-control" type="email" placeholder="E-mail" name="email">
@@ -41,12 +43,9 @@
           <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
           <input class="form-control" type="password" placeholder="Password" name="pass1">
         </div>
-        <div class="input-group">
-          <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
-          <input class="form-control" type="password" placeholder="Repeat Password" name="pass2">
-        </div>
+
         <br>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Create Account</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Join Mibo</button>
         </form>
         <% } else { %>
             <div class="panel panel-success">

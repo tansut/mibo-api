@@ -1,5 +1,5 @@
 export interface SignupModel {
-    nickName: string;
+    nickName?: string;
     email: string;
     password: string;
 }
