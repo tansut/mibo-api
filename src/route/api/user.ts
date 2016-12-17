@@ -34,10 +34,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
     createRoute() {
         return this.create(this.req.body).then((user: any) => {
             return this.createTokens(user).then((generatedTokens: GeneratedTokenData) => {
-                return emailmanager.send(user.email, 'Welcome to Mibo', 'welcome.ejs', {
-                    title: 'Welcome!',
-                    downloadLink: 'http://downloadLink'
-                }).then(() => this.res.send({ user: user.toClient(), token: generatedTokens }));
+                this.res.send({ user: user.toClient(), token: generatedTokens });
             })
         })
     }
@@ -52,7 +49,12 @@ export default class UserRoute extends CrudRoute<UserDocument> {
             email: model.email,
             ivCode: (Math.random() * 999999).toString() // todo
         };
-        return this.insertDb(doc);
+        return this.insertDb(doc).then(() => {
+            return emailmanager.send(doc.email, 'Welcome to Mibo', 'welcome.ejs', {
+                title: 'Welcome!',
+                downloadLink: 'http://downloadLink'
+            });
+        });
     }
 
     authenticate(email: string, password: string): Promise<UserDocument> {
