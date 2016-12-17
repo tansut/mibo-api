@@ -33,6 +33,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
     @Auth.Anonymous()
     createRoute() {
         return this.create(this.req.body).then((user: any) => {
+            emailmanager
             return this.createTokens(user).then((generatedTokens: GeneratedTokenData) => {
                 this.res.send({ user: user.toClient(), token: generatedTokens });
             })
@@ -69,7 +70,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         return UserModel.findOne().where('email', email);
     }
 
-    private createTokens(user: UserDocument): Promise<GeneratedTokenData> {
+    private createTokens(user: UserDocument): Promise<any> {
         var accessToken = user.generateAccessToken();
         var accessTokenEncrypted = authorization.default.encryptAccessToken(accessToken);
         return authorization.default.encryptRefreshToken(user._id, accessToken).then((encryptedRefreshToken: string) => {
