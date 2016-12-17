@@ -36,7 +36,6 @@ export default class UserRoute extends CrudRoute<UserDocument> {
             return this.createTokens(user).then((generatedTokens: GeneratedTokenData) => {
                 return emailmanager.send(user.email, 'Welcome to Mibo', 'welcome.ejs', {
                     title: 'Welcome!',
-                    nickName: user.nickName,
                     downloadLink: 'http://downloadLink'
                 }).then(() => this.res.send({ user: user.toClient(), token: generatedTokens }));
             })
