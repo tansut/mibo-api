@@ -14,7 +14,7 @@
             <div class="jumbotron" id="loginPart">
 
 
-                <h1>Coach Signup</h1>
+                <h1>Coach Sign up</h1>
                 <% if(status == 'emailErr') { %>
                     <div class="panel panel-danger">
                         <div class="panel-heading">
@@ -53,6 +53,11 @@
                                                     <input class="form-control" type="password" placeholder="Password" name="password">
                                                 </div>
                                                 <br>
+                                                <div class="input-group margin-bottom-sm">
+                                                    <span class="input-group-addon"><i class="fa fa-linkedin fa-fw" aria-hidden="true"></i></span>
+                                                    <input class="form-control" type="text" placeholder="Your LinkedIn url (if any)" name="linkedin">
+                                                </div>
+                                                <br>
                                                 <div class="row">
                                                     <div class="col-lg-6">
                                                         <div class="input-group">
@@ -78,9 +83,10 @@
                                                         <!-- /input-group -->
                                                     </div>
                                                 </div>
+
                                                 <!-- /.row -->
                                                 <br>
-                                                <button class="btn btn-lg btn-primary btn-block" type="submit">Apply Mibo</button>
+                                                <button class="btn btn-lg btn-primary btn-block" type="submit">Apply to Mibo</button>
                                             </form>
 
 

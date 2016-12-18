@@ -33,6 +33,7 @@ class Route extends ApiBase {
         var password = req.body.password;
         var message = req.body.message;
         var position = req.body.position;
+        var linkedIn = req.body.linkedin;
 
         if (validator.isEmpty(email) || !validator.isEmail(email)) {
             res.render('account/newcoach', {
@@ -60,7 +61,8 @@ class Route extends ApiBase {
             var data = {
                 message: message,
                 position: position,
-                email: email
+                email: email,
+                linkedIn: linkedIn
             }
             var userRoute = new UserRoute();
             userRoute.createCoach(newCoach, data).then(() => {

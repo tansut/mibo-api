@@ -81,9 +81,10 @@ export default class UserRoute extends CrudRoute<UserDocument> {
                         title: 'New Application',
                         position: data.position,
                         message: data.message,
-                        email: data.email
+                        email: data.email,
+                        linkedIn: data.linkedIn
                     })
-                    res(doc)
+                    res(doc);
                 }).catch(err => rej(err))
             })
         });
