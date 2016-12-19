@@ -80,8 +80,8 @@ class Route extends ApiBase {
                         status: this.errStatus.success,
 
                     });
-                })
-            });
+                }).catch(err => console.log(err));
+            }).catch(err => console.log(err));
         }
     }
 
