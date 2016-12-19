@@ -74,6 +74,12 @@ class Route extends ApiBase {
                     email: data.email,
                     linkedIn: data.linkedIn,
                     name: fullName
+                }).then(() => {
+                    res.render('account/newcoach', {
+                        title: 'Coach Application',
+                        status: this.errStatus.success,
+
+                    });
                 })
             });
         }
