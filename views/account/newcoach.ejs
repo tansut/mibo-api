@@ -14,7 +14,7 @@
             <div class="jumbotron" id="loginPart">
 
 
-                <h1>Coach Sign up</h1>
+                <h1>Coach Sign Up</h1>
                 <% if(status == 'emailErr') { %>
                     <div class="panel panel-danger">
                         <div class="panel-heading">
@@ -46,9 +46,10 @@
                                             <form class="form-signin" method="post" action="/coach/apply">
                                                 <h4 class="form-signin-heading">Please fill in your information to get started!</h4>
                                                 <div class="input-group margin-bottom-sm">
-                                                    <span class="input-group-addon"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i></span>
+                                                    <span class="input-group-addon"><i class="fa fa-user-circle fa-fw" aria-hidden="true"></i></span>
                                                     <input class="form-control" type="text" placeholder="Full Name" name="fullName">
                                                 </div>
+                                                <br>
                                                 <div class="input-group margin-bottom-sm">
                                                     <span class="input-group-addon"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i></span>
                                                     <input class="form-control" type="email" placeholder="E-mail" name="email">
