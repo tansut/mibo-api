@@ -273,12 +273,12 @@
           <%= position %> <br>
             <strong>E - mail Address: </strong>
             <%= email %> <br>
-              <% if (message.length) { %>
+              <% if (!message || message.length) { %>
                 <strong>Message: </strong>
                 <%= message %>
                   <% } %>
-                    <% if (linkedIn.length) { %>
-                      <strong>LinkedIn: </strong>
+                    <% if (!linkedIn || linkedIn.length) { %>
+                      <strong>LinkedIn Account: </strong>
                       <%= linkedIn %>
                         <% } %>
 

@@ -63,7 +63,7 @@ class Route extends ApiBase {
             }
             emailmanager.send(email, 'Your Application to Mibo', 'newcoach.ejs', {
                 title: 'Your Application',
-                position: data.position,
+                position: data.position
             }).then(() => {
                 emailmanager.send('turkoglu.utku@gmail.com', 'Mibo - New Coach Application', 'application.ejs', {
                     title: 'New Application',
