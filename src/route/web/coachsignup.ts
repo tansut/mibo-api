@@ -58,7 +58,8 @@ class Route extends ApiBase {
                 message: message,
                 position: position,
                 email: email,
-                linkedIn: linkedIn
+                linkedIn: linkedIn,
+                fullName: fullName
             }
             emailmanager.send(email, 'Your Application to Mibo', 'newcoach.ejs', {
                 title: 'Your Application',
@@ -70,7 +71,7 @@ class Route extends ApiBase {
                     message: data.message,
                     email: data.email,
                     linkedIn: data.linkedIn,
-                    name: fullName
+                    name: data.fullName
                 }).then(() => {
                     res.render('account/newcoach', {
                         title: 'Coach Application',
