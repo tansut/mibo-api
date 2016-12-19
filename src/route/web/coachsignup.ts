@@ -42,19 +42,16 @@ class Route extends ApiBase {
             res.render('account/newcoach', {
                 title: 'Coach Application',
                 status: this.errStatus.emailErr,
-                downloadLink: this.downloadLink
             });
         } else if (validator.isEmpty(fullName)) {
             res.render('account/newcoach', {
                 title: 'Coach Application',
                 status: this.errStatus.nameEmpty,
-                downloadLink: this.downloadLink
             });
         } else if (position == '-- Apply As --') {
             res.render('account/newcoach', {
                 title: 'Coach Application',
                 status: this.errStatus.noPosition,
-                downloadLink: this.downloadLink
             });
         } else {
             var data = {
