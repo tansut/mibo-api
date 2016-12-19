@@ -8,6 +8,8 @@ import * as common from '../../lib/common';
 import * as moment from 'moment';
 import * as bcrypt from 'bcryptjs';
 import UserRoute from '../api/user';
+import emailmanager from '../../lib/email';
+
 
 
 class Route extends ApiBase {
@@ -16,6 +18,7 @@ class Route extends ApiBase {
         emailErr: 'emailErr',
         passEmpty: 'passEmpty',
         noPosition: 'noPosition',
+        nameEmpty: 'nameEmpty',
         success: 'success'
     }
     downloadLink: string = 'http://#downloadLink';
@@ -30,10 +33,10 @@ class Route extends ApiBase {
 
     coachSignupRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         var email = req.body.email;
-        var password = req.body.password;
         var message = req.body.message;
         var position = req.body.position;
         var linkedIn = req.body.linkedin;
+        var fullName = req.body.fullName;
 
         if (validator.isEmpty(email) || !validator.isEmail(email)) {
             res.render('account/newcoach', {
@@ -41,10 +44,10 @@ class Route extends ApiBase {
                 status: this.errStatus.emailErr,
                 downloadLink: this.downloadLink
             });
-        } else if (validator.isEmpty(password)) {
+        } else if (validator.isEmpty(fullName)) {
             res.render('account/newcoach', {
                 title: 'Coach Application',
-                status: this.errStatus.passEmpty,
+                status: this.errStatus.nameEmpty,
                 downloadLink: this.downloadLink
             });
         } else if (position == '-- Apply As --') {
@@ -54,23 +57,24 @@ class Route extends ApiBase {
                 downloadLink: this.downloadLink
             });
         } else {
-            var newCoach = <SignupModel>{
-                email: email,
-                password: password
-            }
             var data = {
                 message: message,
                 position: position,
                 email: email,
                 linkedIn: linkedIn
             }
-            var userRoute = new UserRoute();
-            userRoute.createCoach(newCoach, data).then(() => {
-                res.render('account/newcoach', {
-                    title: 'Application Complete',
-                    status: this.errStatus.success,
-                    downloadLink: this.downloadLink
-                });
+            emailmanager.send(email, 'Your Application to Mibo', 'newcoach.ejs', {
+                title: 'Your Application',
+                position: data.position,
+            }).then(() => {
+                emailmanager.send('turkoglu.utku@gmail.com', 'Mibo - New Coach Application', 'application.ejs', {
+                    title: 'New Application',
+                    position: data.position,
+                    message: data.message,
+                    email: data.email,
+                    linkedIn: data.linkedIn,
+                    name: fullName
+                })
             });
         }
     }

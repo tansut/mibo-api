@@ -60,36 +60,6 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         });
     }
 
-    createCoach(model: SignupModel, data: any): Promise<UserDocument> {
-        let passwordSalt = bcrypt.genSaltSync(10);
-        let hash = bcrypt.hashSync(model.password, passwordSalt);
-
-        let doc = <SignupModel>{
-            nickName: model.nickName,
-            password: hash,
-            email: model.email,
-            ivCode: (Math.random() * 999999).toString() // todo
-        };
-        return this.insertDb(doc).then((doc) => {
-            return new Promise<UserDocument>((res, rej) => {
-                emailmanager.send(doc.email, 'Your Application to Mibo', 'newcoach.ejs', {
-                    title: 'Your Application',
-                    position: data.position,
-                    downloadLink: 'http://downloadLink'
-                }).then(() => {
-                    emailmanager.send('hello@wellbit.io', 'Mibo - New Coach Application', 'application.ejs', {
-                        title: 'New Application',
-                        position: data.position,
-                        message: data.message,
-                        email: data.email,
-                        linkedIn: data.linkedIn
-                    })
-                    res(doc);
-                }).catch(err => rej(err))
-            })
-        });
-    }
-
     authenticate(email: string, password: string): Promise<UserDocument> {
         return new Promise((resolve, reject) => {
             this.retrieveByEMail(email).then((doc: UserDocument) => {
