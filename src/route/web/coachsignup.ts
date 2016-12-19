@@ -61,25 +61,24 @@ class Route extends ApiBase {
                 linkedIn: linkedIn,
                 fullName: fullName
             }
-
             emailmanager.send(email, 'Your Application to Mibo', 'newcoach.ejs', {
                 title: 'Your Application',
                 position: data.position
-            }).catch(err => console.log(err));
-
-            emailmanager.send('turkoglu.utku@gmail.com', 'Mibo - New Coach Application', 'application.ejs', {
-                title: 'New Application',
-                position: data.position,
-                message: data.message,
-                email: data.email,
-                linkedIn: data.linkedIn,
-                name: data.fullName
             }).then(() => {
-                res.render('account/newcoach', {
-                    title: 'Coach Application',
-                    status: this.errStatus.success,
+                emailmanager.send('turkoglu.utku@gmail.com', 'Mibo - New Coach Application', 'application.ejs', {
+                    title: 'New Application',
+                    position: data.position,
+                    message: data.message,
+                    email: data.email,
+                    linkedIn: data.linkedIn,
+                    fullName: data.fullName
+                }).then(() => {
+                    res.render('account/newcoach', {
+                        title: 'Coach Application',
+                        status: this.errStatus.success,
 
-                });
+                    });
+                }).catch(err => console.log(err));
             }).catch(err => console.log(err));
         }
     }
