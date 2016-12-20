@@ -1,4 +1,4 @@
-// printDelayed is a 'Promise<void>'
+
 async function printDelayed(elements: string[]) {
     for (const element of elements) {
         await delay(200);
