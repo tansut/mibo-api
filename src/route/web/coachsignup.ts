@@ -9,6 +9,7 @@ import * as moment from 'moment';
 import * as bcrypt from 'bcryptjs';
 import UserRoute from '../api/user';
 import emailmanager from '../../lib/email';
+import PageRenderer from './renderer';
 
 
 
@@ -23,46 +24,26 @@ class Route extends ApiBase {
     }
 
     renderCoachSignup(req: http.ApiRequest, res: express.Response, next: Function) {
-        res.render('account/newcoach', {
-            title: 'Coach Application',
-            status: 'init',
-        });
+        PageRenderer.renderPage(res, 'account/newcoach', 'Coach Application', 'init');
     }
 
     coachSignupRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        var email = req.body.email;
-        var message = req.body.message;
-        var position = req.body.position;
-        var linkedIn = req.body.linkedin;
-        var fullName = req.body.fullName;
+        var data = {
+            message: req.body.message,
+            position: req.body.position,
+            email: req.body.email,
+            linkedIn: req.body.linkedIn,
+            fullName: req.body.fullName
+        }
 
-        if (validator.isEmpty(email) || !validator.isEmail(email)) {
-            res.render('account/newcoach', {
-                title: 'Coach Application',
-                status: this.errStatus.emailErr,
-            });
-        } else if (validator.isEmpty(fullName)) {
-            res.render('account/newcoach', {
-                title: 'Coach Application',
-                status: this.errStatus.nameEmpty,
-            });
-        } else if (position == '-- Apply As --') {
-            res.render('account/newcoach', {
-                title: 'Coach Application',
-                status: this.errStatus.noPosition,
-            });
+        if (validator.isEmpty(data.email) || !validator.isEmail(data.email)) {
+            PageRenderer.renderPage(res, 'account/newcoach', 'Coach Application', this.errStatus.emailErr, null);
+        } else if (validator.isEmpty(data.fullName)) {
+            PageRenderer.renderPage(res, 'account/newcoach', 'Coach Application', this.errStatus.nameEmpty, null);
+        } else if (data.position == '-- Apply As --') {
+            PageRenderer.renderPage(res, 'account/newcoach', 'Coach Application', this.errStatus.noPosition, null);
         } else {
-            var data = {
-                message: message,
-                position: position,
-                email: email,
-                linkedIn: linkedIn,
-                fullName: fullName
-            }
-            // emailmanager.send(email, 'Your Application to Mibo', 'newcoach.ejs', {
-            //     title: 'Your Application',
-            //     position: data.position
-            // }).then(() => {
+            PageRenderer.renderPage(res, 'account/newcoach', 'Coach Application', this.errStatus.success, null);
             emailmanager.send('hello@wellbit.io', 'Mibo - New Coach Application', 'application.ejs', {
                 title: 'New Application',
                 position: data.position,
@@ -71,11 +52,13 @@ class Route extends ApiBase {
                 linkedIn: data.linkedIn,
                 fullName: data.fullName
             }).then(() => {
-                res.render('account/newcoach', {
-                    title: 'Coach Application',
-                    status: this.errStatus.success,
-
-                });
+                console.log('Successful.');
+            }).catch(err => console.log(err));
+            emailmanager.send(data.email, 'Your Application to Mibo', 'newcoach.ejs', {
+                title: 'Your Application',
+                position: data.position
+            }).then(() => {
+                console.log('Successful.');
             }).catch(err => console.log(err));
         }
     }

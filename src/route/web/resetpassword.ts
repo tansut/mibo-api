@@ -7,6 +7,7 @@ import * as common from '../../lib/common';
 import * as moment from 'moment';
 import * as bcrypt from 'bcryptjs';
 import UserRoute from '../api/user';
+import PageRenderer from './renderer';
 
 
 class Route extends ApiBase {
@@ -21,45 +22,24 @@ class Route extends ApiBase {
 
     renderGetNewPass(req: http.ApiRequest, res: express.Response, next: Function) {
         var resetToken = req.query.token;
-        res.render('account/resetpassword', {
-            title: 'Mibo Password Reset',
-            status: 'init',
-            resetToken: resetToken
-        });
+        PageRenderer.renderPage(res, 'account/resetpassword', 'Mibo Password Reset', 'init', resetToken);
     }
 
     renderAndReset(req: http.ApiRequest, res: express.Response, next: Function) {
         var resetToken = req.body.resetToken;
         var newPass1 = req.body.newPass1;
         var newPass2 = req.body.newPass2;
-        var status = {
-            notFound: 'notFound',
-            expired: 'expired',
-            noPassMatch: 'noPassMatch',
-            success: 'success'
-        }
+
         if (newPass1 != newPass2 || validator.isEmpty(newPass1) || validator.isEmpty(newPass2)) {
-            res.render('account/resetpassword', {
-                title: 'Mibo Password Reset',
-                status: this.errStatus.noPassMatch,
-                resetToken: resetToken
-            });
+            PageRenderer.renderPage(res, 'account/resetpassword', 'Mibo Password Reset', this.errStatus.noPassMatch, resetToken);
         } else {
             UserModel.findOne().where('resetToken', resetToken).then((user) => {
                 if (!user) {
-                    res.render('account/resetpassword', {
-                        title: 'Mibo Password Reset',
-                        status: this.errStatus.notFound,
-                        resetToken: resetToken
-                    });
+                    PageRenderer.renderPage(res, 'account/resetpassword', 'Mibo Password Reset', this.errStatus.notFound, resetToken);
                     return Promise.reject(new http.NotFoundError())
                 }
                 if (moment.utc().toDate() > user.resetTokenValid) {
-                    res.render('account/resetpassword', {
-                        title: 'Mibo Password Reset',
-                        status: this.errStatus.expired,
-                        resetToken: resetToken
-                    });
+                    PageRenderer.renderPage(res, 'account/resetpassword', 'Mibo Password Reset', this.errStatus.expired, resetToken);
                     return Promise.reject(new http.ValidationError('Token Expired'));
                 }
                 user.resetToken = null;
@@ -70,11 +50,7 @@ class Route extends ApiBase {
                 var hash = bcrypt.hashSync(newPass, passwordSalt);
                 user.password = hash;
                 return user.save().then((user) => {
-                    res.render('account/resetpassword', {
-                        title: 'Mibo Password Reset',
-                        status: this.errStatus.success,
-                        resetToken: resetToken
-                    });
+                    PageRenderer.renderPage(res, 'account/resetpassword', 'Mibo Password Reset', this.errStatus.success, resetToken);
                 }).catch((err) => next(err));
             }).catch((err) => next(err));
         }
