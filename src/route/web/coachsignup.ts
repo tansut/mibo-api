@@ -21,13 +21,11 @@ class Route extends ApiBase {
         nameEmpty: 'nameEmpty',
         success: 'success'
     }
-    downloadLink: string = 'http://#downloadLink';
 
     renderCoachSignup(req: http.ApiRequest, res: express.Response, next: Function) {
         res.render('account/newcoach', {
             title: 'Coach Application',
             status: 'init',
-            downloadLink: this.downloadLink
         });
     }
 
