@@ -53,7 +53,6 @@ export default class UserRoute extends CrudRoute<UserDocument> {
             return new Promise<UserDocument>((res, rej) => {
                 emailmanager.send(doc.email, 'Welcome to Mibo', 'welcome.ejs', {
                     title: 'Welcome!',
-                    downloadLink: 'http://downloadLink'
                 }).then(() => res(doc)).catch((err) => rej(err));
             })
 
