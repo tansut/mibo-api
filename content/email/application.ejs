@@ -9,7 +9,7 @@
   <style type="text/css">
     /* Take care of image borders and formatting, client hacks */
     img { max-width: 50px; border-radius: 2px; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;}
-    .appstore {width: 40%;}
+    .appstore, .screenshots {width: 40%;}
     a img { border: none; }
     table { border-collapse: collapse !important;}
     #outlook a { padding:0; }
@@ -266,15 +266,30 @@
       </td>
     </tr>
     <tr>
-      <td class="free-text">
-        Hello, welcome to Mibo!
-        <br><br> You are now added to the pre-launch list. You will be emailed when the MiBo app is live! Stay tight!
+      <td class="pull-left">
+        A new application has been received. The information about the application is as follows: <br><br>
+        <strong>Name: </strong>
+        <%= fullName %> <br><br>
+          <strong>Position: </strong>
+          <%= position %> <br><br>
+            <strong>E - mail Address: </strong>
+            <%= email %> <br><br>
+              <% if (!message || message.length) { %>
+                <strong>Message: </strong>
+                <%= message %>
+                  <br><br>
+                  <% } %>
+                    <% if (!linkedIn || linkedIn.length) { %>
+                      <strong>LinkedIn Account: </strong>
+                      <%= linkedIn %>
+                        <% } %>
+
       </td>
     </tr>
   </table>
   <tr>
-    <td style="padding-bottom: 35px;" class="free-text"> Best, <br>
-<strong>Mibo Team</strong>
+    <td style="padding-bottom: 35px;" class="free-text"> Cheers, <br>
+<strong>MiBo Team</strong>
 </td>
 </tr>
 </center>

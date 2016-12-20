@@ -29,6 +29,8 @@ export class ApiApp {
             this.app.use(bp.text());
             this.app.use(bp.raw());
 
+            this.app.use(express.static(path.join(__dirname, '../public')));
+
             return db.connect().then(() => {
                 apiMiddlewares.use(this.app);
                 apiRoutes.use(this.router);

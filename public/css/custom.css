@@ -1,0 +1,12 @@
+.container {
+    width: 70%;
+}
+
+img {
+    max-width: 75px;
+    border-radius: 2px;
+}
+
+.application {
+    text-align: center;
+}

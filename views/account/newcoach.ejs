@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../partials/head.ejs %>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <% include ../partials/header.ejs %>
+
+            <div class="jumbotron" id="loginPart">
+                <img src="/img/mibo.png" alt="MiBo">
+
+                <h1>Coach Sign Up</h1>
+                <% if(status == 'emailErr') { %>
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> E-mail Address is not Valid</h3>
+                        </div>
+                        <div class="panel-body">Your e-mail address is not valid. Please check and type again.</div>
+                    </div>
+                    <% } %>
+                        <% if(status == 'noPosition') { %>
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Invalid Position</h3>
+                                </div>
+                                <div class="panel-body">You have not selected a position to apply as. Please select a position and continue.</div>
+                            </div>
+                            <% } %>
+
+                                <% if(status == 'nameEmpty') { %>
+                                    <div class="panel panel-danger">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Full Name Empty
+                                            </h3>
+                                        </div>
+                                        <div class="panel-body">Please provide your full name to continue.</div>
+                                    </div>
+                                    <% } %>
+
+                                        <% if(status != 'success') { %>
+                                            <form class="form-signin" method="post" action="/coach/apply">
+                                                <h4 class="form-signin-heading">Please fill in your information to get started!</h4>
+                                                <div class="input-group margin-bottom-sm">
+                                                    <span class="input-group-addon"><i class="fa fa-user-circle fa-fw" aria-hidden="true"></i></span>
+                                                    <input class="form-control" type="text" placeholder="Full Name" name="fullName">
+                                                </div>
+                                                <br>
+                                                <div class="input-group margin-bottom-sm">
+                                                    <span class="input-group-addon"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i></span>
+                                                    <input class="form-control" type="email" placeholder="E-mail" name="email">
+                                                </div>
+                                                <br>
+
+                                                <br>
+                                                <div class="input-group margin-bottom-sm">
+                                                    <span class="input-group-addon"><i class="fa fa-linkedin fa-fw" aria-hidden="true"></i></span>
+                                                    <input class="form-control" type="text" placeholder="Your LinkedIn url (if any)" name="linkedin">
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                        Message
+        <input type="checkbox" aria-label="..."> 
+      </span>
+                                                            <input maxlength="250" type="text" name="message" class="form-control" placeholder="Message to forward" aria-label="...">
+                                                        </div>
+                                                        <!-- /input-group -->
+                                                    </div>
+                                                    <!-- /.col-lg-6 -->
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group">
+                                                            <select class="form-control" name="position">
+  <option>-- Apply As --</option>
+  <option>Therapist</option>
+  <option>Dietitian</option>
+  <option>Personal Trainer</option>
+</select>
+
+                                                        </div>
+                                                        <!-- /input-group -->
+                                                    </div>
+                                                </div>
+
+                                                <!-- /.row -->
+                                                <br>
+                                                <button class="btn btn-lg btn-primary btn-block" type="submit">Apply to Mibo</button>
+                                            </form>
+                                            <% } else { %>
+                                                <div class="panel panel-success">
+                                                    <div class="panel-heading">
+                                                        <h3 class="panel-title"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Success</h3>
+                                                    </div>
+                                                    <div class="panel-body">Your application has been taken. An e-mail has been sent to your address.
+                                                        We will be in touch regarding your application.</div>
+                                                </div>
+                                                <% } %>
+
+            </div>
+
+
+
+            <% include ../partials/footer.ejs %>
+
+    </div>
+    <!-- /container -->
+
+
+    <% include ../partials/jsdefaults.ejs %>
+</body>
+
+</html>
