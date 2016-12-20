@@ -5,6 +5,7 @@ let appRoutes = [
     './user',
     './system',
     './payment',
+    './chatapi',
     './consultant'
 ];
 export default class RouteLoader {

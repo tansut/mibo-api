@@ -1,3 +1,6 @@
+import { debug } from 'util';
+import { ConsultantDocument } from '../../db/models/consultant';
+import ConsultantRoute from './consultant';
 import { IRequestParams } from './base';
 import * as assert from 'assert';
 import * as process from 'process';
@@ -21,7 +24,7 @@ import * as crud from './crud';
 import * as crypto from 'crypto';
 import emailmanager from '../../lib/email';
 import * as authorization from '../../lib/authorizationToken';
-import { Auth } from '../../lib/common';
+import { Auth, UserRoles } from '../../lib/common';
 
 interface GeneratedTokenData {
     accessToken: authorization.IEncryptedAccessTokenData;
@@ -34,7 +37,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
     createRoute() {
         return this.create(this.req.body).then((user: any) => {
             return this.createTokens(user).then((generatedTokens: GeneratedTokenData) => {
-                this.res.send({ user: user.toClient(), token: generatedTokens });
+                this.res.send({ user: user.toClient(), token: generatedTokens, consultants: user['consultants'] });
             })
         })
     }
@@ -49,14 +52,37 @@ export default class UserRoute extends CrudRoute<UserDocument> {
             email: model.email,
             ivCode: (Math.random() * 999999).toString() // todo
         };
+        if (model.roles && config.nodeenv != 'production')
+            doc.roles = model.roles;
         return this.insertDb(doc).then((doc) => {
             return new Promise<UserDocument>((res, rej) => {
                 emailmanager.send(doc.email, 'Welcome to Mibo', 'welcome.ejs', {
                     title: 'Welcome!',
                     downloadLink: 'http://downloadLink'
-                }).then(() => res(doc)).catch((err) => rej(err));
-            })
+                }).then(() => {
+                    if (doc.roles && doc.roles.length > 0) {
+                        var list = [];
+                        doc.roles.forEach((role) => {
+                            var consultantRoute = new ConsultantRoute(this.constructorParams);
+                            if ([UserRoles.dietitian, UserRoles.sales, UserRoles.therapist, UserRoles.trainer].indexOf(role) >= 0)
+                                list.push(
+                                    consultantRoute.create({
+                                        user: doc._id,
+                                        active: true,
+                                        firstName: 'Set a name',
+                                        lastName: 'Surname',
+                                        role: role,
 
+                                    }, doc)
+                                )
+                            Promise.all(list).then((results: Array<ConsultantDocument>) => {
+                                doc['consultants'] = results.map((c) => c.toClient());
+                                res(doc)
+                            }).catch((err) => rej(err));
+                        })
+                    } else res(doc);
+                }).catch((err) => rej(err));
+            })
         });
     }
 
@@ -163,10 +189,12 @@ export default class UserRoute extends CrudRoute<UserDocument> {
     }
 
     delete(user: UserDocument) {
-        return super.delete(user).then(() => {
-            if (user.integrations.stripe && user.integrations.stripe.remoteId)
-                stripe.deleteCustomer(user.integrations.stripe.remoteId)
-        });
+        var promiseList = [];
+        if (user.integrations.stripe && user.integrations.stripe.remoteId)
+            promiseList.push(stripe.deleteCustomer(user.integrations.stripe.remoteId));
+        var consultantRoute = new ConsultantRoute(this.constructorParams);
+        promiseList.push(consultantRoute.deleteByUser(user));
+        return Promise.all(promiseList).then(() => super.delete(user));
     }
 
     protected static generateCreateRoute(url: string, router: express.Router) {

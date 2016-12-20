@@ -39,11 +39,16 @@ export const ConsultantSchema = new ConsultantConfig({
     lastName: { type: String, required: true },
     user: { type: mongoose.Schema['ObjectId'], required: true, ref: 'Users' },
     active: { type: Boolean, required: true, default: true },
-    role: { type: String, required: true, enum: [UserRoles.dietitian, UserRoles.sales] }
+    role: { type: String, required: true, enum: [UserRoles.dietitian, UserRoles.sales, UserRoles.therapist, UserRoles.trainer] }
 });
 
 ConsultantSchema.index({ 'user': 1, 'role': 1 }, { unique: true });
 
 export var ConsultantModel: DBModel<ConsultantDocument>;
 
-export default (conn: mongoose.Connection) => (ConsultantModel = conn.model<ConsultantDocument>('consultant', ConsultantSchema));
+
+
+
+export default (conn: mongoose.Connection) => {
+    ConsultantModel = conn.model<ConsultantDocument>('consultant', ConsultantSchema);
+};

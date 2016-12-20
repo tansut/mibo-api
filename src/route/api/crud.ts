@@ -43,8 +43,8 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
     }
 
 
-    validateDocumentOwnership(doc: T) {
-        if (doc._meta.owner)
+    validateDocumentOwnership(doc: T, op: CrudOperation) {
+        if (doc._meta && doc._meta.owner)
             return this.validateOwnership(doc._meta.owner);
         else return this.validateOwnership(doc._id);
     }
@@ -65,7 +65,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
             baseQuery = baseQuery.select(select);
         return baseQuery.then((doc: T) => {
             if (!doc) return Promise.reject(new http.NotFoundError());
-            return this.validateDocumentOwnership(doc).then(() => {
+            return this.validateDocumentOwnership(doc, CrudOperation.read).then(() => {
                 if (options.toClient)
                     return doc.toClient()
                 else return doc;
@@ -99,7 +99,10 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
 
     deleteRoute() {
         var dbId = this.toObjectId(this.req.params._id);
-        var deleteResult = this.retrieve(dbId, { lean: true }).then((doc) => this.delete(doc));
+        var deleteResult = this.retrieve(dbId, { lean: true }).then((doc) => {
+            return this.validateDocumentOwnership(doc, CrudOperation.delete).then(() => this.delete(doc));
+        });
+
         return deleteResult.then((result) => this.res.sendStatus(200));
     }
 
@@ -112,7 +115,9 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
     updateRoute() {
         var dbId = this.toObjectId(this.req.params._id);
         var updateValues = this.req.body;
-        var updateResult = this.retrieve(dbId, { lean: true }).then((doc) => this.update(doc, updateValues));
+        var updateResult = this.retrieve(dbId, { lean: true }).then((doc) => {
+            return this.validateDocumentOwnership(doc, CrudOperation.update).then(() => this.update(doc, updateValues));
+        });
         return updateResult.then((result) => { this.res.send(result || 200) });
     }
 
@@ -136,14 +141,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
         router.get(url.concat('/:_id'), this.BindRequest('retrieveRoute'));
     }
 
-    protected static SetCrudRoutes(url: string, router: express.Router, routeOptions?: crudRouteOptions) {
-        routeOptions = routeOptions || {
-            create: true,
-            delete: true,
-            retrieve: true,
-            query: true,
-            update: true
-        }
+    protected static SetCrudRoutes(url: string, router: express.Router, routeOptions: crudRouteOptions) {
 
         routeOptions.create && this.generateCreateRoute(url, router);
         routeOptions.update && this.generateUpdateRoute(url, router);

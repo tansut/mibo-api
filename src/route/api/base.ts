@@ -32,6 +32,8 @@ export default class ApiRoute {
     protected res: express.Response;
     protected next: Function;
 
+    protected constructorParams: any;
+
     forceAuthenticate(req, res, next) {
         return auth.force(req, res, next);
     }
@@ -94,5 +96,6 @@ export default class ApiRoute {
             this.res = reqParams.res;
             this.next = reqParams.next;
         }
+        this.constructorParams = reqParams;
     }
 }

@@ -4,6 +4,7 @@ import { union } from "lodash";
 import * as nconf from "nconf";
 
 class Config {
+    public static NODEENV = "NODE_ENV";
     public static PORT = "PORT";
     public static DBADDRESS = "DBADDRESS";
     public static DBPORT = "DBPORT";
@@ -20,7 +21,7 @@ class Config {
     public static APIURL = "APIURL";
     public static WEBURL = "WEBURL";
 
-
+    public nodeenv: string;
     public port: number;
     public dbaddress: string;
     public dbport: number;
@@ -44,6 +45,7 @@ class Config {
 
     constructor() {
         nconf.argv().env();
+        this.nodeenv = this.get(Config.NODEENV) || 'development';
         this.port = this.get(Config.PORT) || 3000;
         this.dbaddress = this.get(Config.DBADDRESS) || '127.0.0.1';
         this.dbport = this.get(Config.DBPORT) || 27017;

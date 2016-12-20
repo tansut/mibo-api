@@ -1,5 +1,4 @@
 import * as mocha from 'mocha';
-import { testUser, testemail } from './init';
 import * as lib from './lib';
 
 export default function () {
@@ -8,42 +7,42 @@ export default function () {
         it('should signin test user', function () {
             return lib.post('/user/authenticate', {
                 body: {
-                    email: testemail,
+                    email: lib.activeConfig.user.testemail,
                     password: 'foo'
                 }
             }).then((result) => {
                 result.should.have.property('user');
                 result.should.have.property('token');
-                lib.authenticationDone(result.token);
             })
         });
 
         it('should change password', function () {
-            return lib.authenticationDone().then((authhToken => {
-                return lib.post('/user/changepassword/'.concat(testUser._id), {
+            return lib.forceAuthentication('user').then(() => {
+                lib.post('/user/changepassword/'.concat(lib.authData.user.doc._id), {
                     body: {
                         oldPass: 'foo',
-                        newPass: 'foo2'
+                        newPass: 'foo'
                     }
-                });
-            }))
+                }, 'user');
+            })
         });
 
         it('should signin with new password', function () {
             return lib.post('/user/authenticate', {
                 body: {
-                    email: testemail,
-                    password: 'foo2'
+                    email: lib.activeConfig.user.testemail,
+                    password: 'foo'
                 }
-            }).then((result) => {
+            }, 'user').then((result) => {
                 result.should.have.property('user');
                 result.should.have.property('token');
             })
+
         });
         it('should send reset password e-mail', function () {
             return lib.post('/user/resetpassword', {
                 body: {
-                    email: testemail
+                    email: lib.activeConfig.user.testemail
                 }
             })
         });
@@ -77,56 +76,18 @@ export default function () {
             });
         });
         it('should set a nickname for user', function () {
-            return lib.authenticationDone().then((authhToken => {
-                return lib.post('/user/setnick/'.concat(testUser._id), {
-                    body: {
-                        nickName: 'testnick'
-                    }
-                })
-            }))
+            return lib.post('/user/setnick/'.concat(lib.authData.user.doc._id), {
+                body: {
+                    nickName: 'testnick'
+                }
+            }, 'user')
         });
-        // it('should not register with existing email', function () {
-        //     return new Promise((resolve, reject) => {
-        //         lib.post('/account/new', {
-        //             body: {
-        //                 email: 'incorrect.email.com',
-        //                 password: 'foo'
-        //             }
-        //         }).then((result) => {
-        //             reject();
-        //         }).catch((err) => {
-        //             err.should.have.property('statusCode').be.eql(404);
-        //             resolve();
-        //         })
-        //     });
-        // });
-        // it('should not register with invalid password', function () {
-        //     return new Promise((resolve, reject) => {
-        //         lib.post('/account/new', {
-        //             body: {
-        //                 email: testemail,
-        //                 password: ''
-        //             }
-        //         }).then((result) => {
-        //             reject();
-        //         }).catch((err) => {
-        //             err.should.have.property('statusCode').be.eql(404);
-        //             resolve();
-        //         })
-        //     });
-        // });
+
         it('should get new account page', function () {
             return lib.get('/account/new', {
 
             })
         });
 
-        // describe('#status()', function () {
-        //     it('should send OK status', function () {
-        //         return lib.get('/status').then((result) => {
-        //             result.should.be.exactly('Oh yeah!');
-        //         })
-        //     });
-        // });
     });
 }
