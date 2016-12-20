@@ -44,7 +44,7 @@ class Route extends ApiBase {
                 password: password
             }
             var userRoute = new UserRoute();
-            userRoute.createRoute().then(() => {
+            userRoute.create(newUser).then(() => {
                 res.render('account/newaccount', {
                     title: 'Registeration Complete',
                     status: this.errStatus.success
