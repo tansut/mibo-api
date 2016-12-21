@@ -5,7 +5,7 @@ import * as lib from './lib';
 
 
 export default function () {
-    describe('#status()', function () {
+    describe('status', function () {
         it('should send OK status', function () {
             return lib.get('/status').then((result) => {
                 result.should.be.exactly('Oh yeah!');

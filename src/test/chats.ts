@@ -6,7 +6,7 @@ import * as lib from './lib';
 
 export default function () {
     let chatId: string;
-    describe.only('chat', function () {
+    describe('chat', function () {
         it('should create a chat session for user', function () {
             return lib.forceAuthenticationAll(['user', 'sales']).then(() => {
                 return lib.post('/chat', {
