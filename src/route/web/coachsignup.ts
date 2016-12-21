@@ -44,7 +44,7 @@ class Route extends ApiBase {
             PageRenderer.renderPage(res, 'account/newcoach', 'Coach Application', this.errStatus.noPosition, null);
         } else {
             PageRenderer.renderPage(res, 'account/newcoach', 'Coach Application', this.errStatus.success, null);
-            emailmanager.send('hello@wellbit.io', 'Mibo - New Coach Application', 'application.ejs', {
+            emailmanager.send('hello@wellbit.io', 'MiBo - New Coach Application', 'application.ejs', {
                 title: 'New Application',
                 position: data.position,
                 message: data.message,
@@ -54,7 +54,7 @@ class Route extends ApiBase {
             }).then(() => {
                 console.log('Successful.');
             }).catch(err => console.log(err));
-            emailmanager.send(data.email, 'Your Application to Mibo', 'newcoach.ejs', {
+            emailmanager.send(data.email, 'Your Application to MiBo', 'newcoach.ejs', {
                 title: 'Your Application',
                 position: data.position
             }).then(() => {

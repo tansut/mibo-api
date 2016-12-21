@@ -22,7 +22,7 @@ class Route extends ApiBase {
 
     renderGetNewPass(req: http.ApiRequest, res: express.Response, next: Function) {
         var resetToken = req.query.token;
-        PageRenderer.renderPage(res, 'account/resetpassword', 'Mibo Password Reset', 'init', resetToken);
+        PageRenderer.renderPage(res, 'account/resetpassword', 'MiBo Password Reset', 'init', resetToken);
     }
 
     renderAndReset(req: http.ApiRequest, res: express.Response, next: Function) {
@@ -31,15 +31,15 @@ class Route extends ApiBase {
         var newPass2 = req.body.newPass2;
 
         if (newPass1 != newPass2 || validator.isEmpty(newPass1) || validator.isEmpty(newPass2)) {
-            PageRenderer.renderPage(res, 'account/resetpassword', 'Mibo Password Reset', this.errStatus.noPassMatch, resetToken);
+            PageRenderer.renderPage(res, 'account/resetpassword', 'MiBo Password Reset', this.errStatus.noPassMatch, resetToken);
         } else {
             UserModel.findOne().where('resetToken', resetToken).then((user) => {
                 if (!user) {
-                    PageRenderer.renderPage(res, 'account/resetpassword', 'Mibo Password Reset', this.errStatus.notFound, resetToken);
+                    PageRenderer.renderPage(res, 'account/resetpassword', 'MiBo Password Reset', this.errStatus.notFound, resetToken);
                     return Promise.reject(new http.NotFoundError())
                 }
                 if (moment.utc().toDate() > user.resetTokenValid) {
-                    PageRenderer.renderPage(res, 'account/resetpassword', 'Mibo Password Reset', this.errStatus.expired, resetToken);
+                    PageRenderer.renderPage(res, 'account/resetpassword', 'MiBo Password Reset', this.errStatus.expired, resetToken);
                     return Promise.reject(new http.ValidationError('Token Expired'));
                 }
                 user.resetToken = null;
