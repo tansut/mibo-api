@@ -16,7 +16,7 @@ import * as request from 'request';
 import * as lib from './lib';
 
 
-export let testemail = 'tansut@gmail.com';
+export let testemail = 'turkoglu.utku@gmail.com';
 
 
 
