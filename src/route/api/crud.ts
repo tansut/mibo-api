@@ -33,7 +33,7 @@ export interface RetrieveOptions {
 export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
 
     insertDb(doc: any): Promise<T> {
-        var userid = this.req.user ? this.req.user._id.toString() : undefined;
+        var userid = this.req ? (this.req.user ? this.req.user._id.toString() : undefined) : undefined;
         doc._meta = doc._meta || {
             created: moment.utc().toDate()
         };
