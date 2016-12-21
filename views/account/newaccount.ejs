@@ -12,7 +12,7 @@
         <% include ../partials/header.ejs %>
 
             <div class="jumbotron" id="loginPart">
-                <img src="/img/mibo.png" alt="MiBo">
+                <a href="www.mibo.io"><img src="/img/mibo.png" alt="MiBo"></a>
 
 
                 <h1>Welcome!</h1>
@@ -32,32 +32,39 @@
                                 <div class="panel-body">Your password cannot be empty. Please type a password.</div>
                             </div>
                             <% } %>
+                                <% if(status == 'error') { %>
+                                    <div class="panel panel-danger">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Error</h3>
+                                        </div>
+                                        <div class="panel-body">Error creating account. Please try again in a moment.</div>
+                                    </div>
+                                    <% } %>
+                                        <% if(status != 'success') { %>
+                                            <form class="form-signin" method="post" action="/account/new">
+                                                <h4 class="form-signin-heading">Please type in your email and password to get started!</h4>
+                                                <div class="input-group margin-bottom-sm">
+                                                    <span class="input-group-addon"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i></span>
+                                                    <input class="form-control" type="email" placeholder="E-mail" name="email">
+                                                </div>
+                                                <br>
+                                                <div class="input-group margin-bottom-sm">
+                                                    <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
+                                                    <input class="form-control" type="password" placeholder="Password" name="password">
+                                                </div>
 
-                                <% if(status != 'success') { %>
-                                    <form class="form-signin" method="post" action="/account/new">
-                                        <h4 class="form-signin-heading">Please type in your email and password to get started!</h4>
-                                        <div class="input-group margin-bottom-sm">
-                                            <span class="input-group-addon"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i></span>
-                                            <input class="form-control" type="email" placeholder="E-mail" name="email">
-                                        </div>
-                                        <br>
-                                        <div class="input-group margin-bottom-sm">
-                                            <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
-                                            <input class="form-control" type="password" placeholder="Password" name="password">
-                                        </div>
-
-                                        <br>
-                                        <button class="btn btn-lg btn-primary btn-block" type="submit">Join MiBo</button>
-                                    </form>
-                                    <% } else { %>
-                                        <div class="panel panel-success">
-                                            <div class="panel-heading">
-                                                <h3 class="panel-title"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Success</h3>
-                                            </div>
-                                            <div class="panel-body">Your account has been created. An e-mail has been sent to your address. Please
-                                                follow the instructions in the e-mail.</div>
-                                        </div>
-                                        <% } %>
+                                                <br>
+                                                <button class="btn btn-lg btn-primary btn-block" type="submit">Join MiBo</button>
+                                            </form>
+                                            <% } else { %>
+                                                <div class="panel panel-success">
+                                                    <div class="panel-heading">
+                                                        <h3 class="panel-title"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Success</h3>
+                                                    </div>
+                                                    <div class="panel-body">Your account has been created. An e-mail has been sent to your address.
+                                                        Please follow the instructions in the e-mail.</div>
+                                                </div>
+                                                <% } %>
 
             </div>
 

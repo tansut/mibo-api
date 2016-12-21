@@ -15,7 +15,8 @@ class Route extends ApiBase {
     errStatus = {
         emailErr: 'emailErr',
         passEmpty: 'passEmpty',
-        success: 'success'
+        success: 'success',
+        error: 'error'
     }
 
     renderNewAccountRoute(req: http.ApiRequest, res: express.Response, next: Function) {
@@ -49,7 +50,13 @@ class Route extends ApiBase {
                     title: 'Registeration Complete',
                     status: this.errStatus.success
                 });
-            });
+            }).catch((err) => {
+                console.log(err);
+                res.render('account/newaccount', {
+                    title: 'Registeration Complete',
+                    status: this.errStatus.error
+                });
+            })
         }
     }
 
