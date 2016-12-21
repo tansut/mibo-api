@@ -18,7 +18,7 @@ export class IntegrationInfo<T> {
 }
 
 export const Plans = {
-    basicMonthly: 'basic-monthly',
+    messageonly6mlyT: 'messageonly6mlyT',
     messageonly3mly: 'messageonly3mly'
 }
 

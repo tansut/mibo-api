@@ -7,7 +7,7 @@ import * as lib from './lib';
 export default function () {
     describe('payment', function () {
         it('should create basic-plan for test-user', function () {
-            var plan = common.Plans.basicMonthly;
+            var plan = common.Plans.messageonly6mlyT;
             return stripe.createTokenSample().then((token) => {
                 return lib.post('/plan/create/'.concat(lib.authData.user.doc._id), {
                     body: {
@@ -18,7 +18,7 @@ export default function () {
             })
         })
         it('should get basic-plan for test-user', function () {
-            var plan = common.Plans.basicMonthly;
+            var plan = common.Plans.messageonly3mly;
             return stripe.createTokenSample().then((token) => {
                 return lib.get('/plan/get/'.concat(lib.authData.user.doc._id), {
                     json: true

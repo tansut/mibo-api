@@ -27,6 +27,7 @@ export interface RetrieveOptions {
     lean?: boolean,
     fields?: string;
     toClient?: boolean;
+    disableOwnership?: boolean
 }
 
 export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
@@ -65,7 +66,12 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
             baseQuery = baseQuery.select(select);
         return baseQuery.then((doc: T) => {
             if (!doc) return Promise.reject(new http.NotFoundError());
-            return this.validateDocumentOwnership(doc, CrudOperation.read).then(() => {
+            if (options.disableOwnership) {
+                if (options.toClient)
+                    return doc.toClient()
+                else return doc;
+            }
+            else return this.validateDocumentOwnership(doc, CrudOperation.read).then(() => {
                 if (options.toClient)
                     return doc.toClient()
                 else return doc;

@@ -1,6 +1,7 @@
 import { debug } from 'util';
 import { ConsultantDocument } from '../../db/models/consultant';
 import ConsultantRoute from './consultant';
+import ChatRoute from './chatapi';
 import { IRequestParams } from './base';
 import * as assert from 'assert';
 import * as process from 'process';
@@ -194,6 +195,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
             promiseList.push(stripe.deleteCustomer(user.integrations.stripe.remoteId));
         var consultantRoute = new ConsultantRoute(this.constructorParams);
         promiseList.push(consultantRoute.deleteByUser(user));
+        promiseList.push(new ChatRoute(this.constructorParams).deleteByUser(user));
         return Promise.all(promiseList).then(() => super.delete(user));
     }
 

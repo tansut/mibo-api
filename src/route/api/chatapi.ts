@@ -16,6 +16,24 @@ import { CrudOperation } from './crud';
 import * as _ from 'lodash';
 import ConsultantRoute from './consultant';
 
+interface UserChatSummary {
+    role: string;
+    count: number;
+    last: Date;
+    consultant: {
+        _id: string;
+        firstName: string;
+        lastName: string
+    }
+}
+
+interface ConsultantChatSummary {
+    user: UserDocument;
+    count: number;
+    last: Date;
+    role: string;
+}
+
 export default class ChatRoute extends CrudRoute<ChatDocument> {
 
     private userRoute: UserRoute;
@@ -29,6 +47,18 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
                     resolve();
                 else reject(new http.PermissionError());
             })
+        });
+    }
+
+    deleteByUser(user: UserDocument) {
+        return this.model.remove({
+            user: user._id
+        });
+    }
+
+    deleteByConsultant(consultant: ConsultantDocument) {
+        return this.model.remove({
+            consultant: consultant._id
         });
     }
 
@@ -83,12 +113,75 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
         return consultantRoute.retrieve(this.req.params.consultantid).then((consultant) => this.getChatsOfConsultant(consultant, this.req.query.userid, this.req.query.role).then((Chats) => this.res.send(Chats.map((c) => c.toClient()))));
     }
 
-    getSummaryChatsOfUserRoute() {
-        return this.userRoute.retrieve(this.req.params.userid).then((user) => this.getChatsOfUser(user, this.req.query.consultantid, this.req.query.role).then((Chats) => {
-            return Chats.map((Chat) => {
-                return Chat;
+    getSummaryChatsOfConsultant(consultantid: string, userid?: string, role?: string) {
+        var consultantRoute = new ConsultantRoute(this.constructorParams);
+        return consultantRoute.retrieve(consultantid).then((consultant) => this.getChatsOfConsultant(consultant, userid, role).then((chats) => {
+            var result: Array<ConsultantChatSummary> = [];
+            var promiseList = [];
+            debugger;
+            var group = _.groupBy(chats, 'user._id');
+            Object.keys(group).forEach((key) => {
+                let list = group[key];
+                let dateSorted = _.sortBy(list, 'start', 'desc');
+                let lastChat = dateSorted[0];
+                promiseList.push(
+                    this.userRoute.retrieve(lastChat.user, {
+                        disableOwnership: true
+                    }).then((user) => {
+                        return <ConsultantChatSummary>{
+                            role: lastChat.role,
+                            user: user.toClient(),
+                            count: list.length,
+                            last: lastChat.start
+                        }
+                    }));
             })
+            return new Promise((resolve, reject) => {
+                Promise.all(promiseList).then((results: Array<ConsultantChatSummary>) => {
+                    resolve(results)
+                }).catch((err) => reject(err))
+            });
         }));
+    };
+
+
+    getSummaryChatsOfConsultantRoute() {
+
+        return this.getSummaryChatsOfConsultant(this.req.params.consultantid, this.req.query.userid, this.req.query.role).then((res) => this.res.send(res));
+
+    }
+
+    getSummaryChatsOfUser(userid: string, consultantid: string, role: string) {
+        return this.userRoute.retrieve(userid).then((user) => this.getChatsOfUser(user, consultantid, role).then((chats) => {
+            var consultantRoute = new ConsultantRoute(this.constructorParams);
+            var result: Array<UserChatSummary> = [];
+            var promiseList = [];
+            var group = _.groupBy(chats, 'role');
+            Object.keys(group).forEach((key) => {
+                let list = group[key];
+                let dateSorted = _.sortBy(list, 'start', 'desc');
+                let lastChat = dateSorted[0];
+                promiseList.push(
+                    consultantRoute.retrieve(lastChat.consultant).then((consultant) => {
+                        return <UserChatSummary>{
+                            role: key,
+                            last: lastChat.start,
+                            count: list.length,
+                            consultant: consultant.toClient()
+                        }
+                    }));
+
+            })
+            return new Promise((resolve, reject) => {
+                Promise.all(promiseList).then((results: Array<UserChatSummary>) => {
+                    resolve(results)
+                }).catch((err) => reject(err))
+            });
+        }));
+    }
+
+    getSummaryChatsOfUserRoute() {
+        return this.getSummaryChatsOfUser(this.req.params.userid, this.req.query.consultantid, this.req.query.role).then((result) => this.res.send(result))
     }
 
     locate(role: string) {

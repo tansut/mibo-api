@@ -11,6 +11,7 @@ import * as validator from 'validator';
 import * as common from '../../lib/common';
 import CrudRoute from './crud';
 import { CrudOperation } from './crud';
+import ChatRoute from './chatapi';
 
 export default class Route extends CrudRoute<ConsultantDocument> {
 
@@ -30,10 +31,15 @@ export default class Route extends CrudRoute<ConsultantDocument> {
         return this.insertDb(doc);
     }
 
+    delete(doc: ConsultantDocument) {
+        var chatRoute = new ChatRoute()
+        return chatRoute.deleteByConsultant(doc).then(() => super.delete(doc));
+    }
+
     deleteByUser(user: UserDocument) {
-        return this.model.remove({
-            user: user._id
-        });
+        return this.model.find().where('user', user._id).then((docs) => {
+            return Promise.all(docs.map((doc) => this.delete(doc)));
+        })
     }
 
     locate(role: string) {

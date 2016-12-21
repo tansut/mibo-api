@@ -6,7 +6,7 @@ import * as lib from './lib';
 
 export default function () {
     let chatId: string;
-    describe.only('session', function () {
+    describe.only('chat', function () {
         it('should create a chat session for user', function () {
             return lib.forceAuthenticationAll(['user', 'sales']).then(() => {
                 return lib.post('/chat', {
@@ -31,19 +31,33 @@ export default function () {
             );
         })
 
-        it('should search tests by consultant', function () {
+        it('should search chats by consultant', function () {
             return lib.forceAuthenticationAll(['user', 'sales']).then(() => {
                 return lib.get(`/chat/search/consultant/${lib.authData.sales.consultant._id}`, {
                 }, 'user').then((result) => {
-                    debugger;
                 })
             }
             );
         })
-        it('should search tests by user', function () {
+        it('should search chats by user', function () {
             return lib.forceAuthenticationAll(['user', 'sales']).then(() => {
                 return lib.get(`/chat/search/user/${lib.authData.user.doc._id}`, {
                 }, 'user')
+            }
+            );
+        })
+        it('should summarize chats for user', function () {
+            return lib.forceAuthenticationAll(['user', 'sales']).then(() => {
+                return lib.get(`/chat/search/user/${lib.authData.user.doc._id}/summary`, {
+                }, 'user')
+            }
+            );
+        })
+        it('should summarize chats by consultant', function () {
+            return lib.forceAuthenticationAll(['user', 'sales']).then(() => {
+                return lib.get(`/chat/search/consultant/${lib.authData.sales.consultant._id}/summary`, {
+                }, 'user').then((result) => {
+                })
             }
             );
         })
