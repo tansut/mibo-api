@@ -17,6 +17,18 @@ export default class Route extends CrudRoute<ConsultantDocument> {
 
     private userRoute: UserRoute;
 
+    searchConsultantRoute() {
+        debugger;
+        var promise = this.req.query.userid ? this.userRoute.retrieve(this.req.query.userid) : Promise.resolve(null);
+        return promise.then((user) => {
+            var q = this.model.find();
+            if (user)
+                q.where('user', (<UserDocument>user)._id)
+            return q.then((results) => this.res.send(results.map((consultant) => consultant.toClient())));
+        })
+
+    }
+
     validateDocumentOwnership(doc: ConsultantDocument, op: CrudOperation) {
         if (op == CrudOperation.read)
             return Promise.resolve();
@@ -74,6 +86,8 @@ export default class Route extends CrudRoute<ConsultantDocument> {
     static SetRoutes(router: express.Router) {
         router.get("/consultant/locate", Route.BindRequest('locateRoute'));
         router.post("/consultant/:consultantid/statusupdate", Route.BindRequest('statusupdateRoute'));
+        router.get("/consultant/search", Route.BindRequest('searchConsultantRoute'));
+
         Route.SetCrudRoutes(`/consultant`, router, {
             retrieve: true
         })
