@@ -22,6 +22,9 @@ class Route extends ApiBase {
 
     renderGetNewPass(req: http.ApiRequest, res: express.Response, next: Function) {
         var resetToken = req.query.token;
+        if (typeof resetToken === 'undefined') {
+            res.sendStatus(401);
+        }
         PageRenderer.renderPage(res, 'account/resetpassword', 'MiBo Password Reset', 'init', resetToken);
     }
 
