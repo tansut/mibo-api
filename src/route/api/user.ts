@@ -57,7 +57,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
             doc.roles = model.roles;
         return this.insertDb(doc).then((doc) => {
             return new Promise<UserDocument>((res, rej) => {
-                emailmanager.send(doc.email, 'Welcome to Mibo', 'welcome.ejs', {
+                emailmanager.send(doc.email, 'Welcome to MiBo', 'welcome.ejs', {
                     title: 'Welcome!',
                     downloadLink: 'http://downloadLink'
                 }).then(() => {
@@ -139,7 +139,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
             user.resetToken = crypto.randomBytes(32).toString('hex');
             user.resetTokenValid = moment.utc().add(1, 'days').toDate();
             return user.save().then((user) => {
-                return emailmanager.send(user.email, 'Password Reset Request from Mibo', 'resetpassword.ejs', {
+                return emailmanager.send(user.email, 'Password Reset Request from MiBo', 'resetpassword.ejs', {
                     nickName: user.nickName,
                     resetLink: url + '/account/resetpassword?token=' + user.resetToken
                 });
@@ -183,7 +183,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         var hash = bcrypt.hashSync(newPass, passwordSalt);
         user.password = hash;
         return user.save().then((user) => {
-            return emailmanager.send(user.email, 'Password Change Notification from Mibo', 'passwordchange.ejs', {
+            return emailmanager.send(user.email, 'Password Change Notification from MiBo', 'passwordchange.ejs', {
                 nickName: user.nickName
             });
         })
