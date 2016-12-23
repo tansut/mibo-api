@@ -13,51 +13,54 @@ import UserRoute from './user';
 
 export default class PaymentRoute extends ApiBase {
     private userRoute: UserRoute;
-    createPlan(user: UserDocument, plan: string, source: string) {
+
+    createSubscription(user: UserDocument, plan: string, source: string, role: string) {
         if (user.integrations.stripe && user.integrations.stripe.remoteId)
-            return this.changePlan(user, plan);
+            return this.changeSubscription(user, plan, role);
         return stripe.createUser(user._id.toString(), user.email, source).then((striperes) => {
             user.integrations.stripe = new StripeData(striperes.id);
             user.integrations.stripe.source = source;
-            return user.save().then(() => this.changePlan(user, plan));
+            return user.save().then(() => this.changeSubscription(user, plan, role));
         })
     }
 
-    changePlan(user: UserDocument, plan: string) {
-        if (user.integrations.stripe && user.integrations.stripe.subscription) {
-            return stripe.updateSubscription(user.integrations.stripe.subscription.id, plan).then((sres) => {
-                user.integrations.stripe.subscription = {
+    changeSubscription(user: UserDocument, plan: string, role: string, source?: string) {
+        if (user.integrations.stripe && user.integrations.stripe.subscriptions[role]) {
+            return stripe.updateSubscription(user.integrations.stripe.subscriptions[role].id, plan, source).then((sres) => {
+                user.integrations.stripe.subscriptions[role] = {
                     plan: plan,
                     id: sres.id
                 };
+                if (source)
+                    user.integrations.stripe.source = source;
                 user.markModified('integrations.stripe');
                 return user.save();
             })
         } else {
             return stripe.subscripe(user.integrations.stripe.remoteId, plan).then((sres) => {
-                user.integrations.stripe.subscription = {
+                user.integrations.stripe.subscriptions[role] = {
                     plan: plan,
                     id: sres.id
                 };
+                if (source)
+                    user.integrations.stripe.source = source;
                 user.markModified('integrations.stripe');
                 return user.save();
             });
         }
     }
 
-    createPlanRoute() {
+    createSubscriptionRoute() {
         return this.userRoute.retrieve(this.req.params.userid).then((user) => {
-            return this.createPlan(user, this.req.body.plan, this.req.body.source).then(() => this.res.sendStatus(200));
+            return this.createSubscription(user, this.req.body.plan, this.req.body.source, this.req.params.role).then(() => this.res.sendStatus(200));
         });
     }
 
-    getPlanRoute() {
+    getSubscriptionsRoute() {
         return this.userRoute.retrieve(this.req.params.userid).then((user) => {
-            let plan = user.integrations.stripe && user.integrations.stripe.subscription ?
-                user.integrations.stripe.subscription.plan : undefined;
-            this.res.send({
-                plan: plan
-            });
+            let result = user.integrations.stripe && user.integrations.stripe.subscriptions ?
+                user.integrations.stripe.subscriptions : [];
+            this.res.send(result);
         });
     }
 
@@ -67,12 +70,11 @@ export default class PaymentRoute extends ApiBase {
     //     , i, ğİİ -,ü, ğüğ, -ü - ğ, ü,
     //     üüğ - i c    
 
-    changePlanRoute() {
+    changeSubscriptionRoute() {
         return this.userRoute.retrieve(this.req.params.userid).then((user) => {
             if (user.integrations.stripe && user.integrations.stripe.remoteId)
-                return this.changePlan(user, this.req.body.plan).then(() => this.res.sendStatus(200));
+                return this.changeSubscription(user, this.req.body.plan, this.req.params.role).then(() => this.res.sendStatus(200));
             else return Promise.reject(new http.ValidationError('no plan for user'));
-
         });
     }
 
@@ -83,9 +85,8 @@ export default class PaymentRoute extends ApiBase {
 
 
     static SetRoutes(router: express.Router) {
-        router.get("/status", PaymentRoute.BindRequest('statusRoute'));
-        router.post("/plan/change/:userid", PaymentRoute.BindRequest('changePlanRoute'));
-        router.get("/plan/get/:userid", PaymentRoute.BindRequest('getPlanRoute'));
-        router.post("/plan/create/:userid", PaymentRoute.BindRequest('createPlanRoute'));
+        router.post("/subscription/change/:userid/:role", PaymentRoute.BindRequest('changeSubscriptionRoute'));
+        router.get("/subscription/get/:userid", PaymentRoute.BindRequest('getSubscriptionsRoute'));
+        router.post("/subscription/create/:userid/:role", PaymentRoute.BindRequest('createSubscriptionRoute'));
     }
 }

@@ -118,7 +118,6 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
         return consultantRoute.retrieve(consultantid).then((consultant) => this.getChatsOfConsultant(consultant, userid, role).then((chats) => {
             var result: Array<ConsultantChatSummary> = [];
             var promiseList = [];
-            debugger;
             var group = _.groupBy(chats, 'user._id');
             Object.keys(group).forEach((key) => {
                 let list = group[key];

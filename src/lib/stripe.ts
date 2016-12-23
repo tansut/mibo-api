@@ -18,7 +18,7 @@ interface ISubscription {
 }
 
 export class UserData extends IntegrationInfo<IStripeData> {
-    public subscription: ISubscription;
+    public subscriptions: { [role: string]: ISubscription } = {};
     public source: string;
     constructor(remoteId: string) {
         super(remoteId);
@@ -59,10 +59,13 @@ class StripeManager {
         });
     }
 
-    updateSubscription(subsId: string, plan: string) {
-        return lib.subscriptions.update(subsId, {
+    updateSubscription(subsId: string, plan: string, source?: string) {
+        var data = {
             plan: plan
-        });
+        };
+        if (source)
+            data['source'] = source;
+        return lib.subscriptions.update(subsId, data);
     }
 }
 

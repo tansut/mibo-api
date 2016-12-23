@@ -19,7 +19,7 @@ export class IntegrationInfo<T> {
 
 export const Plans = {
     messageonly6mlyT: 'messageonly6mlyT',
-    messageonly3mly: 'messageonly3mly'
+    message1vidperm6mlyT: 'message1vidperm6mlyT'
 }
 
 export class Auth {
