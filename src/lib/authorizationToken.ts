@@ -31,14 +31,13 @@ export interface IRefreshTokenData {
 
 
 export interface IEncryptedRefreshTokenData {
-    tag: string;
     refresh_token: string;
 }
 
 class AuthorizationTokenController {
     private genericCipherAlgorithm = 'aes-256-ctr';
     private cipherAlgorithm = 'aes-256-gcm';
-    private genericTokenKey = '3zTvzr3p67VC61jmV54rIYu1545x4TlY';
+    private genericTokenKey = '3zTvzr3p67vC61kmd54rIYu1545x4TlY';
     private genericTokenIV = '60ih0h6vcoEa';
 
     private convertUtfStringToBuffer(input: string): Buffer {
@@ -93,7 +92,7 @@ class AuthorizationTokenController {
                 }
                 var encryptAccessToken = this.encrypt(access_token, res.ivCode);
                 var tagDataString = this.convertBufferToUtfString(encryptAccessToken.tag);
-                var encryptedAccessToken = <IEncryptedAccessTokenData>{ tokenData: encryptAccessToken.encryptedData, tag: tagDataString };
+                var encryptedAccessToken = <IEncryptedAccessTokenData>{ tokenData: encryptAccessToken.encryptedData };
                 var refreshToken = <IRefreshTokenData>{
                     access_token: encryptedAccessToken,
                     expire_time: moment().add('year', 1).toDate(),
@@ -125,20 +124,28 @@ class AuthorizationTokenController {
         return decryptedData;
     }
 
-    decryptRefreshToken(refreshTokenData: string, tag: string) {
+    decryptRefreshToken(refreshTokenData: string) {
         return new Promise((resolve, reject) => {
-            var tagBuffer = this.convertUtfStringToBuffer(tag);
-            var refreshTokenUnDecrypted = <IRefreshTokenData>this.decrypt(<any>(refreshTokenData), tagBuffer, this.genericTokenIV);
-            UserModel.findById(refreshTokenUnDecrypted.userId).exec((userErr, user) => {
-                if (userErr) {
-                    reject(userErr);
-                    return;
+            var refreshTokenUnDecrypted = <IRefreshTokenData>this.decryptGeneric(refreshTokenData);
+            var userCall = UserModel.findById(refreshTokenUnDecrypted.userId);
+            var tokenCall = RefreshTokenModel.findById(refreshTokenUnDecrypted.tokenId);
+            Promise.all([userCall, tokenCall]).then((retrieveData) => {
+                var user = retrieveData[0];
+                var token = retrieveData[1];
+                try {
+                   var userAccessToken : IAccessTokenData = JSON.parse(this.decrypt(refreshTokenUnDecrypted.access_token.tokenData, token.tag, user.ivCode));
+                   if(userAccessToken.userId == token.userId){
+                      RefreshTokenModel.remove(token).then(()=> {
+                        resolve(token.userId);                
+                      }).catch((err)=> {
+                          reject(err);
+                      });
+                   }
+                } catch (e) {
+                    reject("Token does not match");
                 }
-
-                tagBuffer = this.convertUtfStringToBuffer(refreshTokenUnDecrypted.access_token.tag);
-                var tokenData = <IAccessTokenData>this.decrypt(refreshTokenUnDecrypted.access_token.tokenData, tagBuffer, user.ivCode);
-
-                resolve(tokenData);
+            }).catch((err) => {
+                reject(err);
             });
         });
     }

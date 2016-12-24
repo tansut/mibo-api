@@ -124,13 +124,28 @@ export default class UserRoute extends CrudRoute<UserDocument> {
     }
 
     useRefreshToken(refreshTokenData: authorization.IEncryptedRefreshTokenData) {
-        // todo
-        authorization.default.decryptRefreshToken(refreshTokenData.refresh_token, refreshTokenData.tag);
+        return new Promise((resolve, reject) => {
+            authorization.default.decryptRefreshToken(refreshTokenData.refresh_token).then((userId) => {
+                return UserModel.findById(userId);
+            }).then((user: UserDocument) => {
+                return this.createTokens(user);
+            }).then((generatedTokens: GeneratedTokenData) => {
+                this.res.send({ token: generatedTokens });
+                resolve();
+            }).catch((err) => {
+                this.next(new http.PermissionError(JSON.stringify({ message: 'Refresh Token Not Validated Msg :' + err, PermissionErrorType: 'refreshTokenNotValidated' })));
+                reject();
+            });
+        });
     }
 
     useRefreshTokenRoute() {
         var refreshTokenData = <authorization.IEncryptedRefreshTokenData>this.req.body.refreshTokenData;
-        this.useRefreshToken(refreshTokenData);
+        if (!refreshTokenData) {
+            this.next(new http.PermissionError(JSON.stringify({ message: 'Refresh Token Not Granted', PermissionErrorType: 'refreshTokenRequired' })));
+        } else {
+            return this.useRefreshToken(refreshTokenData);
+        }
     }
 
     resetPasswordRequest(email: string, url: string) {

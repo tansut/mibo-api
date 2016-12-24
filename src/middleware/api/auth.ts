@@ -33,7 +33,7 @@ class AuthMiddleware extends Middleware {
                 return UserModel.findById(accessToken.userId).lean().then((user) => {
                     return user ? resolve(user) : Promise.reject(new http.NotFoundError());
                 })
-            } else reject(new http.PermissionError('tokenexpire'));
+            } else reject(new http.PermissionError(JSON.stringify({ message : 'Token Expired' , PermissionErrorType : 'tokenExpire' })));
         });
     }
 
