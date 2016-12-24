@@ -132,18 +132,25 @@ class AuthorizationTokenController {
             Promise.all([userCall, tokenCall]).then((retrieveData) => {
                 var user = retrieveData[0];
                 var token = retrieveData[1];
+
+                if (!token || !user) {
+                    reject("Refresh token is invalid or used already");
+                    return;
+                }
+
                 try {
-                   var userAccessToken : IAccessTokenData = JSON.parse(this.decrypt(refreshTokenUnDecrypted.access_token.tokenData, token.tag, user.ivCode));
-                   if(userAccessToken.userId == token.userId){
-                      RefreshTokenModel.remove(token).then(()=> {
-                        resolve(token.userId);                
-                      }).catch((err)=> {
-                          reject(err);
-                      });
-                   }
+                    var userAccessToken = <IAccessTokenData>this.decrypt(refreshTokenUnDecrypted.access_token.tokenData, token.tag, user.ivCode);
+                    if (userAccessToken.userId == token.userId) {
+                        RefreshTokenModel.remove(token).then(() => {
+                            resolve(user);
+                        }).catch((err) => {
+                            reject(err);
+                        });
+                    }
                 } catch (e) {
                     reject("Token does not match");
                 }
+
             }).catch((err) => {
                 reject(err);
             });
