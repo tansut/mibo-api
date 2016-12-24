@@ -1,5 +1,5 @@
 import { UserModel } from '../../db/models/user';
-import ApiBase from './base';
+import WebBase from './base';
 import * as express from "express";
 import * as http from '../../lib/http';
 import * as validator from 'validator';
@@ -8,9 +8,10 @@ import * as moment from 'moment';
 import * as bcrypt from 'bcryptjs';
 import UserRoute from '../api/user';
 import PageRenderer from './renderer';
+import { Auth } from '../../lib/common';
 
 
-class Route extends ApiBase {
+class Route extends WebBase {
 
     errStatus = {
         notFound: 'notFound',
@@ -19,8 +20,8 @@ class Route extends ApiBase {
         success: 'success'
     }
 
-
-    renderGetNewPass(req: http.ApiRequest, res: express.Response, next: Function) {
+    @Auth.Anonymous()
+    renderGetNewPassRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         var resetToken = req.query.token;
         if (typeof resetToken === 'undefined') {
             res.sendStatus(401);
@@ -28,7 +29,7 @@ class Route extends ApiBase {
         PageRenderer.renderPage(res, 'account/resetpassword', 'MiBo Password Reset', 'init', resetToken);
     }
 
-    renderAndReset(req: http.ApiRequest, res: express.Response, next: Function) {
+    renderAndResetRoute(req: http.ApiRequest, res: express.Response, next: Function) {
         var resetToken = req.body.resetToken;
         var newPass1 = req.body.newPass1;
         var newPass2 = req.body.newPass2;
@@ -59,15 +60,12 @@ class Route extends ApiBase {
         }
     }
 
-
-
-    constructor(router?: express.Router) {
-        super(router);
-        this.router && this.router.get("/account/resetpassword*", this.renderGetNewPass.bind(this));
-        this.router && this.router.post("/account/resetpassword", this.renderAndReset.bind(this));
+    static SetRoutes(router: express.Router) {
+        router.get("/account/resetpassword*", Route.BindRequest('renderGetNewPassRoute'));
+        router.post("/account/resetpassword", Route.BindRequest('renderAndResetRoute'));
     }
+
+
 }
 
-export let route: Route;
-export function init(router?: express.Router) { route = new Route(router) };
 

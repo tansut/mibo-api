@@ -1,6 +1,6 @@
 import { SignupModel } from '../../models/account';
 import { UserModel } from '../../db/models/user';
-import ApiBase from './base';
+import WebBase from './base';
 import * as express from "express";
 import * as http from '../../lib/http';
 import * as validator from 'validator';
@@ -13,7 +13,7 @@ import PageRenderer from './renderer';
 
 
 
-class Route extends ApiBase {
+class Route extends WebBase {
 
     errStatus = {
         emailErr: 'emailErr',
@@ -63,13 +63,11 @@ class Route extends ApiBase {
         }
     }
 
-    constructor(router?: express.Router) {
-        super(router);
-        this.router && this.router.get("/coach/apply", this.renderCoachSignup.bind(this));
-        this.router && this.router.post("/coach/apply", this.coachSignupRoute.bind(this));
+    static SetRoutes(router: express.Router) {
+        router.get("/coach/apply", Route.BindRequest('renderCoachSignup'));
+        router.post("/coach/apply", Route.BindRequest('coachSignupRoute'));
     }
+
 }
 
-export let route: Route;
-export function init(router?: express.Router) { route = new Route(router) };
 

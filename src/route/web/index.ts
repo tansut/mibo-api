@@ -1,11 +1,20 @@
 import * as express from "express";
 
+let appRoutes = [
+    './resetpassword',
+    './register',
+    './coachsignup'
+];
 export default class RouteLoader {
     static use(router?: express.Router) {
-        return [
-            require('./resetpassword').init(router),
-            require('./register').init(router),
-            require('./coachsignup').init(router)
-        ]
+        var routings = [];
+        appRoutes.forEach((file) => {
+            var routing = require(file).default.SetRoutes(router);
+            routings.push(routing);
+        });
+        return routings;
     }
 }
+
+
+
