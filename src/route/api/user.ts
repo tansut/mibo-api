@@ -133,8 +133,9 @@ export default class UserRoute extends CrudRoute<UserDocument> {
                 this.res.send({ token: generatedTokens });
                 resolve();
             }).catch((err) => {
-                this.next(new http.PermissionError(JSON.stringify({ message: 'Refresh Token Not Validated Msg :' + err, PermissionErrorType: 'refreshTokenNotValidated' })));
-                reject();
+                var errorDetail = { message: 'Refresh Token Not Validated Msg :' + err, PermissionErrorType: 'refreshTokenNotValidated' };
+                var generatedError = new http.PermissionError(JSON.stringify(errorDetail));
+                reject(generatedError);
             });
         });
     }
@@ -142,7 +143,8 @@ export default class UserRoute extends CrudRoute<UserDocument> {
     useRefreshTokenRoute() {
         var refreshTokenData = <authorization.IEncryptedRefreshTokenData>this.req.body.refreshTokenData;
         if (!refreshTokenData) {
-            this.next(new http.PermissionError(JSON.stringify({ message: 'Refresh Token Not Granted', PermissionErrorType: 'refreshTokenRequired' })));
+            var errorDetail = { message: 'Refresh Token Not Granted', PermissionErrorType: 'refreshTokenRequired' };
+            return Promise.reject(new http.PermissionError(JSON.stringify(errorDetail)));
         } else {
             return this.useRefreshToken(refreshTokenData);
         }
