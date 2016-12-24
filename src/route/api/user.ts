@@ -2,7 +2,7 @@ import { debug } from 'util';
 import { ConsultantDocument } from '../../db/models/consultant';
 import ConsultantRoute from './consultant';
 import ChatRoute from './chatapi';
-import { IRequestParams } from './base';
+import { IRequestParams } from '../baserouter';
 import * as assert from 'assert';
 import * as process from 'process';
 import { create } from 'nconf';

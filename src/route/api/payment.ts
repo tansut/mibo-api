@@ -1,4 +1,4 @@
-import { IRequestParams } from './base';
+import { IRequestParams } from '../baserouter';
 import { ObjectID } from 'mongodb';
 import { request } from 'https';
 import * as express from "express";

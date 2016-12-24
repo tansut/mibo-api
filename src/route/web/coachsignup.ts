@@ -1,6 +1,6 @@
 import { SignupModel } from '../../models/account';
 import { UserModel } from '../../db/models/user';
-import ApiBase from './base';
+import WebBase from './base';
 import * as express from "express";
 import * as http from '../../lib/http';
 import * as validator from 'validator';
@@ -10,10 +10,11 @@ import * as bcrypt from 'bcryptjs';
 import UserRoute from '../api/user';
 import emailmanager from '../../lib/email';
 import PageRenderer from './renderer';
+import { Auth } from '../../lib/common';
 
 
 
-class Route extends ApiBase {
+export default class Route extends WebBase {
 
     errStatus = {
         emailErr: 'emailErr',
@@ -23,27 +24,29 @@ class Route extends ApiBase {
         success: 'success'
     }
 
-    renderCoachSignup(req: http.ApiRequest, res: express.Response, next: Function) {
-        PageRenderer.renderPage(res, 'account/newcoach', 'Coach Application', 'init');
+    @Auth.Anonymous()
+    renderCoachSignupRoute() {
+        PageRenderer.renderPage(this.res, 'account/newcoach', 'Coach Application', 'init');
     }
 
-    coachSignupRoute(req: http.ApiRequest, res: express.Response, next: Function) {
+    @Auth.Anonymous()
+    coachSignupRoute() {
         var data = {
-            message: req.body.message,
-            position: req.body.position,
-            email: req.body.email,
-            linkedIn: req.body.linkedIn,
-            fullName: req.body.fullName
+            message: this.req.body.message,
+            position: this.req.body.position,
+            email: this.req.body.email,
+            linkedIn: this.req.body.linkedIn,
+            fullName: this.req.body.fullName
         }
 
         if (validator.isEmpty(data.email) || !validator.isEmail(data.email)) {
-            PageRenderer.renderPage(res, 'account/newcoach', 'Coach Application', this.errStatus.emailErr, null);
+            PageRenderer.renderPage(this.res, 'account/newcoach', 'Coach Application', this.errStatus.emailErr, null);
         } else if (validator.isEmpty(data.fullName)) {
-            PageRenderer.renderPage(res, 'account/newcoach', 'Coach Application', this.errStatus.nameEmpty, null);
+            PageRenderer.renderPage(this.res, 'account/newcoach', 'Coach Application', this.errStatus.nameEmpty, null);
         } else if (data.position == '-- Apply As --') {
-            PageRenderer.renderPage(res, 'account/newcoach', 'Coach Application', this.errStatus.noPosition, null);
+            PageRenderer.renderPage(this.res, 'account/newcoach', 'Coach Application', this.errStatus.noPosition, null);
         } else {
-            PageRenderer.renderPage(res, 'account/newcoach', 'Coach Application', this.errStatus.success, null);
+            PageRenderer.renderPage(this.res, 'account/newcoach', 'Coach Application', this.errStatus.success, null);
             emailmanager.send('hello@wellbit.io', 'MiBo - New Coach Application', 'application.ejs', {
                 title: 'New Application',
                 position: data.position,
@@ -53,23 +56,21 @@ class Route extends ApiBase {
                 fullName: data.fullName
             }).then(() => {
                 console.log('Successful.');
-            }).catch(err => console.log(err));
+            });
             emailmanager.send(data.email, 'Your Application to MiBo', 'newcoach.ejs', {
                 title: 'Your Application',
                 position: data.position
             }).then(() => {
                 console.log('Successful.');
-            }).catch(err => console.log(err));
+            })
         }
     }
 
-    constructor(router?: express.Router) {
-        super(router);
-        this.router && this.router.get("/coach/apply", this.renderCoachSignup.bind(this));
-        this.router && this.router.post("/coach/apply", this.coachSignupRoute.bind(this));
+    static SetRoutes(router: express.Router) {
+        router.get("/coach/apply", Route.BindRequest('renderCoachSignupRoute'));
+        router.post("/coach/apply", Route.BindRequest('coachSignupRoute'));
     }
+
 }
 
-export let route: Route;
-export function init(router?: express.Router) { route = new Route(router) };
 
