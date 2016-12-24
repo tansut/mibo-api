@@ -4,7 +4,7 @@ import { ConsultantDocument, ConsultantModel } from '../../db/models/consultant'
 import UserRoute from './user';
 import { Auth } from '../../lib/common';
 import * as stream from 'stream';
-import { default as ApiBase, IRequestParams } from './base';
+import { default as ApiBase, IRequestParams } from '../baserouter';
 import * as express from 'express';
 import * as http from '../../lib/http';
 import * as validator from 'validator';
@@ -31,7 +31,7 @@ export default class Route extends CrudRoute<ConsultantDocument> {
 
     validateDocumentOwnership(doc: ConsultantDocument, op: CrudOperation) {
         if (op == CrudOperation.read)
-            return Promise.resolve();
+            return Promise.resolve(doc);
         return super.validateDocumentOwnership(doc, op);
     }
 

@@ -9,9 +9,10 @@ import * as moment from 'moment';
 import * as bcrypt from 'bcryptjs';
 import UserRoute from '../api/user';
 import PageRenderer from './renderer';
+import { Auth } from '../../lib/common';
 
 
-class Route extends WebBase {
+export default class Route extends WebBase {
 
     errStatus = {
         emailErr: 'emailErr',
@@ -20,17 +21,19 @@ class Route extends WebBase {
         error: 'error'
     }
 
-    renderNewAccountRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        PageRenderer.renderPage(res, 'account/newaccount', 'Register Now', 'init', null);
+    @Auth.Anonymous()
+    renderNewAccountRoute() {
+        PageRenderer.renderPage(this.res, 'account/newaccount', 'Register Now', 'init', null);
     }
 
-    createNewAccountRoute(req: http.ApiRequest, res: express.Response, next: Function) {
-        var email = req.body.email;
-        var password = req.body.password;
+    @Auth.Anonymous()
+    createNewAccountRoute() {
+        var email = this.req.body.email;
+        var password = this.req.body.password;
         if (validator.isEmpty(email) || !validator.isEmail(email)) {
-            PageRenderer.renderPage(res, 'account/newaccount', 'Registeration Now', this.errStatus.emailErr, null);
+            PageRenderer.renderPage(this.res, 'account/newaccount', 'Registeration Now', this.errStatus.emailErr, null);
         } else if (validator.isEmpty(password)) {
-            PageRenderer.renderPage(res, 'account/newaccount', 'Register Now', this.errStatus.passEmpty, null);
+            PageRenderer.renderPage(this.res, 'account/newaccount', 'Register Now', this.errStatus.passEmpty, null);
         } else {
             var newUser = <SignupModel>{
                 email: email,
@@ -38,10 +41,10 @@ class Route extends WebBase {
             }
             var userRoute = new UserRoute();
             userRoute.create(newUser).then(() => {
-                PageRenderer.renderPage(res, 'account/newaccount', 'Registeration Complete', this.errStatus.success, null);
+                PageRenderer.renderPage(this.res, 'account/newaccount', 'Registeration Complete', this.errStatus.success, null);
             }).catch((err) => {
                 console.log(err);
-                PageRenderer.renderPage(res, 'account/newaccount', 'Registeration Error', this.errStatus.error, null);
+                PageRenderer.renderPage(this.res, 'account/newaccount', 'Registeration Error', this.errStatus.error, null);
             })
         }
     }

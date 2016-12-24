@@ -5,9 +5,7 @@ import { ObjectID } from 'mongodb';
 import BaseRouter from '../baserouter';
 
 
+
 export default class WebRoute extends BaseRouter {
 
-    authenticate(req, res, next) {
-        return auth.force(req, res, next);
-    }
 }

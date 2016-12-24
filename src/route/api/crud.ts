@@ -5,7 +5,7 @@ import * as express from "express";
 import { auth } from '../../middleware/api/auth';
 import * as mongoose from 'mongoose';
 import ApiRoute from './base';
-import { ICredentialIdentifier, IRequestParams } from './base';
+import { ICredentialIdentifier, IRequestParams } from '../baserouter';
 import * as http from '../../lib/http';
 import * as _ from 'lodash';
 import { IDBDocument } from '../../db';
