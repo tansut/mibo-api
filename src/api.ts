@@ -44,6 +44,12 @@ export class ApiApp {
                 this.app.set('view engine', 'ejs');
                 this.app.set('views', path.join(__dirname, '../views'));
 
+                this.app.use((req, res, next) => {
+                    res.status(404).render('404')
+                });
+                this.app.use((req, res, next) => {
+                    res.status(500).render('500')
+                });
 
                 const server = http.createServer(this.app);
 

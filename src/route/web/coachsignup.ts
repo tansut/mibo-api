@@ -46,7 +46,6 @@ export default class Route extends WebBase {
         } else if (data.position == '-- Apply As --') {
             PageRenderer.renderPage(this.res, 'account/newcoach', 'Coach Application', this.errStatus.noPosition, null);
         } else {
-            PageRenderer.renderPage(this.res, 'account/newcoach', 'Coach Application', this.errStatus.success, null);
             emailmanager.send('hello@wellbit.io', 'MiBo - New Coach Application', 'application.ejs', {
                 title: 'New Application',
                 position: data.position,
@@ -55,14 +54,17 @@ export default class Route extends WebBase {
                 linkedIn: data.linkedIn,
                 fullName: data.fullName
             }).then(() => {
-                console.log('Successful.');
+                emailmanager.send(data.email, 'Your Application to MiBo', 'newcoach.ejs', {
+                    title: 'Your Application',
+                    position: data.position
+                }).then(() => {
+                    PageRenderer.renderPage(this.res, 'account/newcoach', 'Coach Application', this.errStatus.success, null);
+                }).catch((err) => {
+                    this.res.sendStatus(500);
+                })
+            }).catch((err) => {
+                this.res.sendStatus(500);
             });
-            emailmanager.send(data.email, 'Your Application to MiBo', 'newcoach.ejs', {
-                title: 'Your Application',
-                position: data.position
-            }).then(() => {
-                console.log('Successful.');
-            })
         }
     }
 

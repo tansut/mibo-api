@@ -55,7 +55,7 @@ export default class Route extends WebBase {
                 amount: result.amount,
                 currency: result.currency,
                 source: this.req.body.stripeToken,
-                description: "Customer Charged for " + result.name
+                description: result.name
             }, (err, charge) => {
                 if (err) {
                     this.res.render('account/stripe', {
@@ -67,19 +67,25 @@ export default class Route extends WebBase {
                 emailmanager.send('hello@wellbit.io', 'MiBo - New Purchase Notification', 'purchase.ejs', {
                     title: 'New Plan Purchase',
                     plan: charge.description,
-                    amount: charge.amount,
-                    currency: charge.currency,
+                    amount: (charge.amount / 100).toFixed(2),
+                    currency: charge.currency.toUpperCase(),
                     email: charge.source.name
-                });
-                emailmanager.send(charge.source.name, 'MiBo - Your Subscription', 'purchase.ejs', {
-                    title: 'Your Subscription',
-                    amount: charge.amount,
-                    currency: charge.currency,
-                    plan: charge.description
-                });
-                this.res.render('account/stripe', {
-                    title: 'Subscription Success',
-                    status: this.errStatus.success
+                }).then(() => {
+                    emailmanager.send(charge.source.name, 'MiBo - Your Subscription', 'customerpurchase.ejs', {
+                        title: 'Your Subscription',
+                        amount: (charge.amount / 100).toFixed(2),
+                        currency: charge.currency.toUpperCase(),
+                        plan: charge.description
+                    }).then(() => {
+                        this.res.render('account/stripe', {
+                            title: 'Subscription Success',
+                            status: this.errStatus.success
+                        });
+                    }).catch((err) => {
+                        this.res.sendStatus(500);
+                    });
+                }).catch((err) => {
+                    this.res.sendStatus(500);
                 });
             });
         });

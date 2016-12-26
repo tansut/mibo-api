@@ -53,7 +53,7 @@ class Config {
         this.dbuser = this.get(Config.DBUSER) || '';
         this.dbpwd = this.get(Config.DBPWD) || '';
         this.authdb = this.get(Config.AUTHDB) || 'admin';
-        this.stripeApi = this.get(Config.STRIPEAPIKEY) || 'sk_test_iqDQw12R1RLQzb3OgfibTxgN';
+        this.stripeApi = this.get(Config.STRIPEAPIKEY) || '';
         this.sinchApi = this.get(Config.SINCHAPIKEY) || '';
         this.emailAccessKey = this.get(Config.EMAILACCESSKEY) || '';
         this.emailSecretAccessKey = this.get(Config.EMAILSECRETACCESSKEY) || '';

@@ -55,6 +55,7 @@ export default class Route extends WebBase {
                 var hash = bcrypt.hashSync(newPass, passwordSalt);
                 user.password = hash;
                 return user.save().then((user) => {
+
                     PageRenderer.renderPage(this.res, 'account/resetpassword', 'Mibo Password Reset', this.errStatus.success, resetToken);
                 })
             });
