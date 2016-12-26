@@ -3,7 +3,8 @@ import * as express from "express";
 let appRoutes = [
     './resetpassword',
     './register',
-    './coachsignup'
+    './coachsignup',
+    './stripe'
 ];
 export default class RouteLoader {
     static use(router?: express.Router) {

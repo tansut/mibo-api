@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../partials/head.ejs %>
+</head>
+
+<body>
+
+    <div class="container">
+        <% include ../partials/header.ejs %>
+            <div class="jumbotron">
+                <a href="http://www.mibo.io"><img src="/img/mibo.png" alt="MiBo"></a>
+                <h1>MiBo Plan Subscription</h1>
+                <% if(status == 'planErr') { %>
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Error</h3>
+                        </div>
+                        <div class="panel-body">You have requested an invalid plan. Please check and try again.</div>
+                    </div>
+                    <% } %>
+                        <% if(status == 'stripeErr') { %>
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Error</h3>
+                                </div>
+                                <div class="panel-body">Error requesting subscription. Please try again.</div>
+                            </div>
+                            <% } %>
+                                <% if (status != 'planErr') { %>
+                                    <% if(status != 'success') { %>
+
+                                        <h3>Subscribe for Plan: </h3>
+                                        <h4>
+                                            <%= planName %>
+                                        </h4>
+                                        <br>
+                                        <form action="/purchase" method="POST">
+                                            <input type="hidden" name="planid" value="<%= planId %>">
+                                            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="pk_test_hPH7qb5SnrfJ5OHxYptB6Gk4" data-amount="<%= planAmount %>"
+                                                data-name="<%= planName %>" data-description="Test" data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                                                data-locale="auto" data-currency="<%= planCurrency %>">
+                                                </script>
+</form>
+<% } else { %>
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Success!</h3>
+        </div>
+        <div class="panel-body">Your subscription was successful!</div>
+    </div>
+    <% } %>
+        <% } %>
+
+            <br>
+            <% include ../partials/footer.ejs %>
+                </div>
+                </div>
+                <!-- /container -->
+                <% include ../partials/jsdefaults.ejs %>
+                    </body>
+
+                    </html>

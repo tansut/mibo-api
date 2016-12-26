@@ -10,3 +10,11 @@ img {
 .application {
     text-align: center;
 }
+
+#stripe-alert {
+    display: none;
+}
+
+#stripe-success {
+    display: none;
+}
