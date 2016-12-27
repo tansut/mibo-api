@@ -39,7 +39,7 @@
                                         <form action="/purchase" method="POST">
                                             <input type="hidden" name="planid" value="<%= planId %>">
                                             <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="pk_test_hPH7qb5SnrfJ5OHxYptB6Gk4" data-amount="<%= planAmount %>"
-                                                data-name="<%= planName %>" data-description="Test" data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                                                data-name="Plan Subscription" data-description="<%= planName %>" data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
                                                 data-locale="auto" data-currency="<%= planCurrency %>">
                                                 </script>
 </form>
@@ -59,6 +59,7 @@
                 </div>
                 <!-- /container -->
                 <% include ../partials/jsdefaults.ejs %>
+                    <script src="/js/index.js"></script>
                     </body>
 
                     </html>
