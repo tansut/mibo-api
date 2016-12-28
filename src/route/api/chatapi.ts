@@ -1,3 +1,4 @@
+import * as console from 'console';
 import { UserDocument } from '../../db/models/user';
 import { ConsultantCreateModel, ChatCreateModel } from '../../models/account';
 import { ChatModel, ChatDocument } from '../../db/models/chat';
@@ -115,10 +116,12 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
 
     getSummaryChatsOfConsultant(consultantid: string, userid?: string, role?: string) {
         var consultantRoute = new ConsultantRoute(this.constructorParams);
+        debugger;
         return consultantRoute.retrieve(consultantid).then((consultant) => this.getChatsOfConsultant(consultant, userid, role).then((chats) => {
             var result: Array<ConsultantChatSummary> = [];
             var promiseList = [];
-            var group = _.groupBy(chats, 'user._id');
+            var group = _.groupBy(chats, 'user.id');
+            console.log(group);
             Object.keys(group).forEach((key) => {
                 let list = group[key];
                 let dateSorted = _.sortBy(list, 'start', 'desc');

@@ -53,10 +53,14 @@ export default function () {
             }
             );
         })
-        it('should summarize chats by consultant', function () {
+        it.only('should summarize chats by consultant', function () {
             return lib.forceAuthenticationAll(['user', 'sales']).then(() => {
+                // var consultantId = "58579e2361dd5d045cc23f3e";
+                // return lib.get(`/chat/search/consultant/${consultantId}/summary`, {
+
                 return lib.get(`/chat/search/consultant/${lib.authData.sales.consultant._id}/summary`, {
                 }, 'user').then((result) => {
+
                 })
             }
             );
