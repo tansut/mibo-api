@@ -60,7 +60,7 @@ export default function () {
 
                 return lib.get(`/chat/search/consultant/${lib.authData.sales.consultant._id}/summary`, {
                 }, 'user').then((result) => {
-
+                    debugger;
                 })
             }
             );

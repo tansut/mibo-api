@@ -116,7 +116,6 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
 
     getSummaryChatsOfConsultant(consultantid: string, userid?: string, role?: string) {
         var consultantRoute = new ConsultantRoute(this.constructorParams);
-        debugger;
         return consultantRoute.retrieve(consultantid).then((consultant) => this.getChatsOfConsultant(consultant, userid, role).then((chats) => {
             var result: Array<ConsultantChatSummary> = [];
             var promiseList = [];
