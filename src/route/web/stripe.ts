@@ -37,7 +37,8 @@ export default class Route extends WebBase {
                     planAmount: results.amount,
                     planCurrency: results.currency,
                     status: 'init',
-                    planId: results.id
+                    planId: results.id,
+                    publicKey: config.stripePublic
                 });
             }).catch((err) => {
                 this.res.render('account/stripe', {

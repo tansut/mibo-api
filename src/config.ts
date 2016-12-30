@@ -13,6 +13,7 @@ class Config {
     public static DBPWD = "DBPWD";
     public static AUTHDB = "AUTHDB";
     public static STRIPEAPIKEY = "STRIPEAPIKEY";
+    public static STRIPEPUBLICKEY = "STRIPEPUBLICKEY";
     public static SINCHAPIKEY = "SINCHAPIKEY";
     public static EMAILACCESSKEY = "EMAILACCESSKEY";
     public static EMAILSECRETACCESSKEY = "EMAILSECRETACCESSKEY";
@@ -30,6 +31,7 @@ class Config {
     public dbpwd: string;
     public authdb: string;
     public stripeApi: string;
+    public stripePublic: string;
     public sinchApi: string;
     public emailAccessKey: string;
     public emailSecretAccessKey: string;
@@ -54,6 +56,7 @@ class Config {
         this.dbpwd = this.get(Config.DBPWD) || '';
         this.authdb = this.get(Config.AUTHDB) || 'admin';
         this.stripeApi = this.get(Config.STRIPEAPIKEY) || '';
+        this.stripePublic = this.get(Config.STRIPEPUBLICKEY) || '';
         this.sinchApi = this.get(Config.SINCHAPIKEY) || '';
         this.emailAccessKey = this.get(Config.EMAILACCESSKEY) || '';
         this.emailSecretAccessKey = this.get(Config.EMAILSECRETACCESSKEY) || '';

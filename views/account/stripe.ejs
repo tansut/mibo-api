@@ -38,7 +38,7 @@
                                         <br>
                                         <form action="/purchase" method="POST">
                                             <input type="hidden" name="planid" value="<%= planId %>">
-                                            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="pk_test_hPH7qb5SnrfJ5OHxYptB6Gk4" data-amount="<%= planAmount %>"
+                                            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="<%= publicKey %>" data-amount="<%= planAmount %>"
                                                 data-name="Plan Subscription" data-description="<%= planName %>" data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
                                                 data-locale="auto" data-currency="<%= planCurrency %>">
                                                 </script>
