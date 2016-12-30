@@ -12,6 +12,8 @@ import * as common from '../../lib/common';
 import CrudRoute from './crud';
 import { CrudOperation } from './crud';
 import ChatRoute from './chatapi';
+import config from '../../config';
+import * as _ from 'lodash';
 
 export default class Route extends CrudRoute<ConsultantDocument> {
 
@@ -58,7 +60,13 @@ export default class Route extends CrudRoute<ConsultantDocument> {
         var q = this.model.find().where('active', true);
         role && q.where('role', role);
         return q.then((list: Array<ConsultantDocument>) => {
-            let item = list.length > 0 ? list[0].toClient() : undefined;
+            let item = undefined;
+            if (config.nodeenv == 'stage') {
+                if (this.req && this.req.user.email.indexOf('mibo.io') >= 0) {
+                    item = _.find(list, (i) => i.firstName == 'Mibo');
+                }
+            }
+            item = item || list.length > 0 ? list[0].toClient() : undefined;
             return item;
         })
     }

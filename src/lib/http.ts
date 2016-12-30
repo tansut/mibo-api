@@ -1,3 +1,4 @@
+import { UserDocument } from '../db/models/user';
 
 import * as express from 'express';
 
@@ -45,5 +46,5 @@ export class ValidationError extends HttpError {
 }
 
 export interface ApiRequest extends express.Request {
-    user: any;
+    user: UserDocument;
 }
