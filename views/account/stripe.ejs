@@ -36,30 +36,40 @@
                                             <%= planName %>
                                         </h4>
                                         <br>
-                                        <form action="/purchase" method="POST">
-                                            <input type="hidden" name="planid" value="<%= planId %>">
-                                            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="<%= publicKey %>" data-amount="<%= planAmount %>"
-                                                data-name="Plan Subscription" data-description="<%= planName %>" data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-                                                data-locale="auto" data-currency="<%= planCurrency %>">
-                                                </script>
+                                        <% if(oneTime === false) {%>
+                                            <form action="/subscribe" method="POST">
+                                                <input type="hidden" name="planid" value="<%= planId %>">
+                                                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="<%= publicKey %>" data-amount="<%= planAmount %>"
+                                                    data-name="Plan Subscription" data-description="<%= planName %>" data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                                                    data-locale="auto" data-currency="<%= planCurrency %>">
+                                                    </script>
 </form>
-<% } else { %>
-    <div class="panel panel-success">
-        <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Success!</h3>
+<%} else { %>
+    <form action="/purchase" method="POST">
+        <input type="hidden" name="planid" value="<%= planId %>">
+        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="<%= publicKey %>" data-amount="<%= planAmount %>"
+            data-name="Plan Subscription" data-description="<%= planName %>" data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+            data-locale="auto" data-currency="<%= planCurrency %>">
+            </script>
+</form>
+<% } %>
+    <% } else { %>
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Success!</h3>
+            </div>
+            <div class="panel-body">Your subscription was successful!</div>
         </div>
-        <div class="panel-body">Your subscription was successful!</div>
-    </div>
-    <% } %>
         <% } %>
+            <% } %>
 
-            <br>
-            <% include ../partials/footer.ejs %>
-                </div>
-                </div>
-                <!-- /container -->
-                <% include ../partials/jsdefaults.ejs %>
-                    <script src="/js/index.js"></script>
-                    </body>
+                <br>
+                <% include ../partials/footer.ejs %>
+                    </div>
+                    </div>
+                    <!-- /container -->
+                    <% include ../partials/jsdefaults.ejs %>
+                        <script src="/js/index.js"></script>
+                        </body>
 
-                    </html>
+                        </html>
