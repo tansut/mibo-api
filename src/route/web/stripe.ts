@@ -61,15 +61,6 @@ export default class Route extends WebBase {
                         status: this.errStatus.planErr
                     });
                 }
-                this.res.render('account/stripe', {
-                    title: 'MiBo Subscriptions',
-                    planName: results.name,
-                    planAmount: results.amount,
-                    planCurrency: results.currency,
-                    status: 'init',
-                    planId: results.id,
-                    publicKey: config.stripePublic
-                });
             }).catch((err) => {
                 this.res.render('account/stripe', {
                     title: 'Error',
