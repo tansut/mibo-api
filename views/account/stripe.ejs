@@ -36,7 +36,7 @@
                                             <%= planName %>
                                         </h4>
                                         <br>
-                                        <% if(oneTime === false) {%>
+                                        <% if(oneTime === false) { %>
                                             <form action="/subscribe" method="POST">
                                                 <input type="hidden" name="planid" value="<%= planId %>">
                                                 <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="<%= publicKey %>" data-amount="<%= planAmount %>"
@@ -44,7 +44,7 @@
                                                     data-locale="auto" data-currency="<%= planCurrency %>">
                                                     </script>
 </form>
-<%} else { %>
+<% } else { %>
     <form action="/purchase" method="POST">
         <input type="hidden" name="planid" value="<%= planId %>">
         <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="<%= publicKey %>" data-amount="<%= planAmount %>"
