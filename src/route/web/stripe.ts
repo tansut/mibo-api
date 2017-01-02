@@ -52,12 +52,12 @@ export default class Route extends WebBase {
     @Auth.Anonymous()
     purchaseRoute() {
         return lib.plans.retrieve(this.req.body.planid).then((result) => {
-            return lib.charges.create({
-                amount: result.amount,
-                currency: result.currency,
-                source: this.req.body.stripeToken,
-                description: result.name
-            }, (err, charge) => {
+            var token = this.req.body.stripeToken;
+            return lib.customers.create({
+                email: this.req.body.stripeEmail,
+                plan: this.req.body.planid,
+                source: token
+            }, (err, customer) => {
                 if (err) {
                     this.res.render('account/stripe', {
                         title: 'Subscription Completed',
@@ -65,18 +65,18 @@ export default class Route extends WebBase {
                         planName: result.name
                     });
                 }
-                emailmanager.send('hello@wellbit.io', 'MiBo - New Purchase Notification', 'purchase.ejs', {
+                return emailmanager.send('hello@wellbit.io', 'MiBo - New Purchase Notification', 'purchase.ejs', {
                     title: 'New Plan Purchase',
-                    plan: charge.description,
-                    amount: (charge.amount / 100).toFixed(2),
-                    currency: charge.currency.toUpperCase(),
-                    email: charge.source.name
+                    plan: result.name,
+                    amount: (result.amount / 100).toFixed(2),
+                    currency: result.currency.toUpperCase(),
+                    email: this.req.body.stripeEmail
                 }).then(() => {
-                    emailmanager.send(charge.source.name, 'MiBo - Your Subscription', 'customerpurchase.ejs', {
+                    return emailmanager.send(customer.email, 'MiBo - Your Subscription', 'customerpurchase.ejs', {
                         title: 'Your Subscription',
-                        amount: (charge.amount / 100).toFixed(2),
-                        currency: charge.currency.toUpperCase(),
-                        plan: charge.description
+                        amount: (result.amount / 100).toFixed(2),
+                        currency: result.currency.toUpperCase(),
+                        plan: result.name
                     }).then(() => {
                         this.res.render('account/stripe', {
                             title: 'Subscription Success',
@@ -88,9 +88,8 @@ export default class Route extends WebBase {
                 }).catch((err) => {
                     this.res.sendStatus(500);
                 });
-            });
-        });
-
+            })
+        })
     }
 
     static SetRoutes(router: express.Router) {

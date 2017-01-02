@@ -55,8 +55,8 @@ class Config {
         this.dbuser = this.get(Config.DBUSER) || '';
         this.dbpwd = this.get(Config.DBPWD) || '';
         this.authdb = this.get(Config.AUTHDB) || 'admin';
-        this.stripeApi = this.get(Config.STRIPEAPIKEY) || '';
-        this.stripePublic = this.get(Config.STRIPEPUBLICKEY) || '';
+        this.stripeApi = this.get(Config.STRIPEAPIKEY) || 'sk_test_iqDQw12R1RLQzb3OgfibTxgN';
+        this.stripePublic = this.get(Config.STRIPEPUBLICKEY) || 'pk_test_hPH7qb5SnrfJ5OHxYptB6Gk4';
         this.sinchApi = this.get(Config.SINCHAPIKEY) || '';
         this.emailAccessKey = this.get(Config.EMAILACCESSKEY) || '';
         this.emailSecretAccessKey = this.get(Config.EMAILSECRETACCESSKEY) || '';
