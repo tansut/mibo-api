@@ -120,7 +120,6 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
             var result: Array<ConsultantChatSummary> = [];
             var promiseList = [];
             var group = _.groupBy(chats, 'user.id');
-            console.log(group);
             Object.keys(group).forEach((key) => {
                 let list = group[key];
                 let dateSorted = _.sortBy(list, 'start', 'desc');

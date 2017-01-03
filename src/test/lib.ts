@@ -121,7 +121,7 @@ let Configurations: ITestConfig = {
         sales: {
             testemail: 'tansu.turkoglu@kalitte.com.tr'
         },
-        url: 'http://app.mibo.io/api/v1'
+        url: 'https://app.mibo.io/api/v1'
     }
 }
 

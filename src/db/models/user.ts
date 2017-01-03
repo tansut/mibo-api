@@ -28,8 +28,8 @@ export interface Verifications {
 }
 
 export interface Integrations {
-    stripe: stripe.UserData,
-    sinch: sinch.UserData
+    stripe?: stripe.UserData,
+    sinch?: sinch.UserData
 }
 
 
@@ -83,12 +83,28 @@ class Schema extends DBSchema {
 
     toClient(doc: IDBDocument) {
         var result = <User>super.toClient(doc);
+        var integrations = result.integrations;
         delete result.password;
         delete result.ivCode;
         delete result.integrations;
         delete result.resetToken;
         delete result.resetTokenValid;
         delete result.verifications;
+        if (integrations) {
+            Object.keys(integrations).forEach((key) => {
+                result.integrations = result.integrations || {};
+                if (key == 'stripe') {
+                    var stripe: any = result.integrations[key] = {};
+                    stripe.subscriptions = {};
+
+                    if (integrations[key].subscriptions) {
+                        Object.keys(integrations[key].subscriptions).forEach((s) => {
+                            stripe.subscriptions[s] = { plan: integrations[key].subscriptions[s].plan }
+                        })
+                    }
+                }
+            });
+        }
         return result;
     }
 

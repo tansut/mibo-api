@@ -12,6 +12,10 @@ export const UserRoles = {
 export class IntegrationInfo<T> {
     public data?: T;
 
+    toClient(): any {
+        return {};
+    }
+
     constructor(public remoteId: string) {
 
     }

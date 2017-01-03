@@ -23,6 +23,20 @@ export class UserData extends IntegrationInfo<IStripeData> {
     constructor(remoteId: string) {
         super(remoteId);
     }
+
+    toClient() {
+        var result = super.toClient();
+        result.subscriptions = {};
+
+        if (this.subscriptions) {
+
+            Object.keys(this.subscriptions).forEach((key) => {
+                result.subscriptions[key] = { plan: this.subscriptions[key].plan }
+            })
+        }
+
+        return result;
+    }
 }
 
 

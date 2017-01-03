@@ -20,7 +20,6 @@ export default class Route extends CrudRoute<ConsultantDocument> {
     private userRoute: UserRoute;
 
     searchConsultantRoute() {
-        debugger;
         var promise = this.req.query.userid ? this.userRoute.retrieve(this.req.query.userid) : Promise.resolve(null);
         return promise.then((user) => {
             var q = this.model.find();
