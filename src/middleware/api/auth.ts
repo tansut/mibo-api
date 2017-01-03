@@ -19,7 +19,7 @@ class AuthMiddleware extends Middleware {
         try {
             var accessToken = authCntroller.default.decryptAccessToken(authHeader);
             this.validateAccessToken(accessToken).then((user) => {
-                req.user = user;
+                req.user = <any>user;
                 return next();
             }).catch((err) => next(err));
         } catch (e) {
