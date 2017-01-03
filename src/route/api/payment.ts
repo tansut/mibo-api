@@ -48,10 +48,9 @@ export default class PaymentRoute extends ApiBase {
                     user.integrations.stripe.source = source;
                 user.markModified('integrations.stripe');
                 return user.save().then((userRes) => {
-                    return emailmanager.send(userRes.email, 'MiBo - Your Subscription', 'purchasereply.ejs', {
-                        title: 'Congratulations!',
+                    return emailmanager.send(userRes.email, 'MiBo - Thank You for Your Order', 'purchasereply.ejs', {
+                        title: 'Congrats!',
                         customer: userRes.nickName,
-                        plan: plan
                     }).then(() => {
                         this.res.sendStatus(200);
                     });
