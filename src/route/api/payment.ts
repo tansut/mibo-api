@@ -10,6 +10,8 @@ import { User, UserDocument, UserModel } from '../../db/models/user';
 import stripe from '../../lib/stripe';
 import { UserData as StripeData } from '../../lib/stripe';
 import UserRoute from './user';
+import emailmanager from '../../lib/email';
+
 
 export default class PaymentRoute extends ApiBase {
     private userRoute: UserRoute;
@@ -45,7 +47,15 @@ export default class PaymentRoute extends ApiBase {
                 if (source)
                     user.integrations.stripe.source = source;
                 user.markModified('integrations.stripe');
-                return user.save();
+                return user.save().then((userRes) => {
+                    return emailmanager.send(userRes.email, 'MiBo - Your Subscription', 'purchasereply.ejs', {
+                        title: 'Congratulations!',
+                        customer: userRes.nickName,
+                        plan: plan
+                    }).then(() => {
+                        this.res.sendStatus(200);
+                    });
+                })
             });
         }
     }
