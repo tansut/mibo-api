@@ -4,6 +4,10 @@ import * as moment from 'moment';
 import * as mongoose from 'mongoose';
 import { DBModel, DBSchema, IDBDocument } from '../';
 
+export const ChatStatus = {
+    assigned: 'assigned',
+    started: 'started'
+}
 
 export class Chat {
     user: string | ObjectID;
@@ -11,6 +15,8 @@ export class Chat {
     start: Date;
     finish: Date;
     role: string;
+    status: string;
+    initializedBy: string | ObjectID;
 }
 
 export interface ChatDocument extends Chat, IDBDocument { }
@@ -40,7 +46,9 @@ export const ChatSchema = new Schema({
     consultant: { type: mongoose.Schema['ObjectId'], required: true, ref: 'Consultants' },
     start: { type: Date, required: true },
     finish: { type: Date, required: false },
-    role: { type: String, required: true, enum: [UserRoles.dietitian, UserRoles.sales, UserRoles.therapist, UserRoles.trainer] }
+    role: { type: String, required: true, enum: [UserRoles.dietitian, UserRoles.sales, UserRoles.therapist, UserRoles.trainer] },
+    status: { type: String, required: true, enum: [ChatStatus.assigned, ChatStatus.started] },
+    initializedBy: { type: mongoose.Schema['ObjectId'], required: true, ref: 'Users' }
 });
 
 ChatSchema.index({ 'user': 1, 'consultant': 1 });

@@ -39,6 +39,14 @@ interface IAuthData {
         promise?: undefined,
         resolve?: undefined,
         reject?: undefined
+    },
+    trainer: {
+        doc?: UserDocument,
+        token?: undefined,
+        consultant?: ConsultantDocument,
+        promise?: undefined,
+        resolve?: undefined,
+        reject?: undefined
     }
 }
 
@@ -53,6 +61,9 @@ interface ITestConfig {
         sales: {
             testemail?: string,
         },
+        trainer: {
+            testemail?: string,
+        },
         url: string
     },
 
@@ -66,6 +77,9 @@ interface ITestConfig {
         sales: {
             testemail?: string,
         },
+        trainer: {
+            testemail?: string,
+        },
         url: string
     },
 
@@ -77,6 +91,9 @@ interface ITestConfig {
             testemail?: string,
         },
         sales: {
+            testemail?: string,
+        },
+        trainer: {
             testemail?: string,
         },
         url: string
@@ -87,39 +104,48 @@ interface ITestConfig {
 let Configurations: ITestConfig = {
     development: {
         user: {
-            testemail: 'tansut@gmail.com'
+            testemail: 'test-user@mibo.io'
         },
         admin: {
-            testemail: 'kalitte@gmail.com'
+            testemail: 'test-admin@mibo.io'
         },
         sales: {
-            testemail: 'tansu.turkoglu@kalitte.com.tr'
+            testemail: 'test-sales@mibo.io'
+        },
+        trainer: {
+            testemail: 'test-trainer@mibo.io'
         },
         url: 'http://localhost:' + config.port.toString() + '/api/v1'
     },
 
     stage: {
         user: {
-            testemail: 'tansut@gmail.com'
+            testemail: 'test-user@mibo.io'
         },
         admin: {
-            testemail: 'kalitte@gmail.com'
+            testemail: 'test-admin@mibo.io'
         },
         sales: {
-            testemail: 'tansu.turkoglu@kalitte.com.tr'
+            testemail: 'test-sales@mibo.io'
+        },
+        trainer: {
+            testemail: 'test-trainer@mibo.io'
         },
         url: 'http://stage-app.mibo.io/api/v1'
     },
 
     production: {
         user: {
-            testemail: 'tansut@gmail.com'
+            testemail: 'test-user@mibo.io'
         },
         admin: {
-            testemail: 'kalitte@gmail.com'
+            testemail: 'test-admin@mibo.io'
         },
         sales: {
-            testemail: 'tansu.turkoglu@kalitte.com.tr'
+            testemail: 'test-sales@mibo.io'
+        },
+        trainer: {
+            testemail: 'test-trainer@mibo.io'
         },
         url: 'https://app.mibo.io/api/v1'
     }
@@ -167,6 +193,9 @@ export let authData: IAuthData = {
 
     },
     sales: {
+
+    },
+    trainer: {
 
     }
 };

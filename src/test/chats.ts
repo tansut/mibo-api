@@ -1,3 +1,4 @@
+import { ChatStatus } from '../db/models/chat';
 import { json } from 'body-parser';
 import { debug } from 'util';
 import * as mocha from 'mocha';
@@ -39,6 +40,23 @@ export default function () {
             }
             );
         })
+
+        it('should initialize chat session by sales for user & consultant', function () {
+            return lib.forceAuthenticationAll(['sales', 'trainer', 'user']).then(() => {
+                return lib.post('/chat', {
+                    body: {
+                        user: lib.authData.user.doc._id,
+                        consultant: lib.authData.trainer.consultant._id,
+                        role: 'trainer',
+                        status: ChatStatus.assigned
+                    }
+                }, 'sales').then((res) => {
+                    chatId = res._id;
+                })
+            }
+            );
+        })
+
         it('should search chats by user', function () {
             return lib.forceAuthenticationAll(['user', 'sales']).then(() => {
                 return lib.get(`/chat/search/user/${lib.authData.user.doc._id}`, {

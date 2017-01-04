@@ -51,8 +51,6 @@ export default class PaymentRoute extends ApiBase {
                     return emailmanager.send(userRes.email, 'MiBo - Thank You for Your Order', 'purchasereply.ejs', {
                         title: 'Congrats!',
                         customer: userRes.nickName,
-                    }).then(() => {
-                        this.res.sendStatus(200);
                     });
                 })
             });

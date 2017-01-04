@@ -16,7 +16,7 @@ export default function () {
             })
         });
 
-        it.only('should set a desired consultant', function () {
+        it('should set a desired consultant', function () {
             return lib.forceAuthentication('user').then(() => {
                 return lib.post('/user/setrequestedrole/'.concat(lib.authData.user.doc._id), {
                     body: {

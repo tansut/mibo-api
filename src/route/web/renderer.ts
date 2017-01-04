@@ -7,12 +7,14 @@ export default class PageRenderer {
                 title: title,
                 resetToken: resetToken
             });
+            return;
         }
         if (status && !resetToken) {
             res.render(template, {
                 title: title,
                 status: status
             });
+            return;
         }
         res.render(template, {
             title: title,

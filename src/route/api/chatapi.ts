@@ -1,7 +1,7 @@
 import * as console from 'console';
 import { UserDocument } from '../../db/models/user';
 import { ConsultantCreateModel, ChatCreateModel } from '../../models/account';
-import { ChatModel, ChatDocument } from '../../db/models/chat';
+import { ChatDocument, ChatModel, ChatStatus } from '../../db/models/chat';
 import { ConsultantDocument, ConsultantModel } from '../../db/models/consultant';
 import UserRoute from './user';
 import { Auth } from '../../lib/common';
@@ -21,6 +21,7 @@ interface UserChatSummary {
     role: string;
     count: number;
     last: Date;
+    status: string;
     consultant: {
         _id: string;
         firstName: string;
@@ -33,6 +34,7 @@ interface ConsultantChatSummary {
     count: number;
     last: Date;
     role: string;
+    status: string;
 }
 
 export default class ChatRoute extends CrudRoute<ChatDocument> {
@@ -64,8 +66,11 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
     }
 
     create(doc: ChatCreateModel): Promise<ChatDocument> {
+        var userid = this.req ? (this.req.user ? this.req.user._id.toString() : undefined) : undefined;
         _.extend(doc, {
-            start: moment.utc().toDate()
+            start: moment.utc().toDate(),
+            initializedBy: userid,
+            status: doc.status || ChatStatus.started
         })
         return this.insertDb(doc);
     }
@@ -132,7 +137,8 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
                             role: lastChat.role,
                             user: user.toClient(),
                             count: list.length,
-                            last: lastChat.start
+                            last: lastChat.start,
+                            status: lastChat.status
                         }
                     }));
             })
@@ -166,6 +172,7 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
                         return <UserChatSummary>{
                             role: key,
                             last: lastChat.start,
+                            status: lastChat.status,
                             count: list.length,
                             consultant: consultant.toClient()
                         }
