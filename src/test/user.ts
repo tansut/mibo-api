@@ -16,6 +16,18 @@ export default function () {
             })
         });
 
+        it.only('should set a desired consultant', function () {
+            return lib.forceAuthentication('user').then(() => {
+                return lib.post('/user/setrequestedrole/'.concat(lib.authData.user.doc._id), {
+                    body: {
+                        role: 'trainer'
+                    }
+                }, 'user')
+            });
+
+        });
+
+
         it('should change password', function () {
             return lib.forceAuthentication('user').then(() => {
                 lib.post('/user/changepassword/'.concat(lib.authData.user.doc._id), {
