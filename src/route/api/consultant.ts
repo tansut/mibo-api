@@ -1,3 +1,4 @@
+import { ObjectID } from 'mongodb';
 import { UserDocument } from '../../db/models/user';
 import { ConsultantCreateModel } from '../../models/account';
 import { ConsultantDocument, ConsultantModel } from '../../db/models/consultant';
@@ -10,7 +11,7 @@ import * as http from '../../lib/http';
 import * as validator from 'validator';
 import * as common from '../../lib/common';
 import CrudRoute from './crud';
-import { CrudOperation } from './crud';
+import { CrudOperation, RetrieveOptions } from './crud';
 import ChatRoute from './chatapi';
 import config from '../../config';
 import * as _ from 'lodash';
@@ -42,6 +43,12 @@ export default class Route extends CrudRoute<ConsultantDocument> {
                 owner: ownerUser._id
             }
         return this.insertDb(doc);
+    }
+
+    retrieveUser(consultantid: string | ObjectID, options?: RetrieveOptions) {
+        return this.retrieve(consultantid, options).then((consultant) => {
+            return this.userRoute.retrieve(consultant.user, options);
+        })
     }
 
     delete(doc: ConsultantDocument) {
