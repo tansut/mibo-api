@@ -16,6 +16,8 @@ import CrudRoute from './crud';
 import { CrudOperation } from './crud';
 import * as _ from 'lodash';
 import ConsultantRoute from './consultant';
+import emailmanager from '../../lib/email';
+
 
 interface UserChatSummary {
     role: string;
@@ -72,7 +74,17 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
             initializedBy: userid,
             status: doc.status || ChatStatus.started
         })
-        return this.insertDb(doc);
+        if (doc.status == ChatStatus.assigned) {
+            //TODO: Utku doc.user'dan adamı bul, doc.consultant dan danışmanı ve emailş adresini
+            // userRoute ve Consultant Route'u kullan
+            //return emailmanager.send('foo@mibo.com', 'Assigned', 'passwordchange.ejs', {
+
+            //}).then(() => this.insertDb(doc));
+
+            // iş bitince alttaki satyırı sil
+            return this.insertDb(doc);
+        }
+        else return this.insertDb(doc);
     }
 
     endChat(doc: ChatDocument) {
