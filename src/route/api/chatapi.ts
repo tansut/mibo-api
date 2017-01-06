@@ -78,13 +78,17 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
 
             var consultantRoute = new ConsultantRoute(this.constructorParams);
             var userRoute = new UserRoute(this.constructorParams);
-            userRoute.retrieve(doc.user, {
+
+            consultantRoute.retrieveUser(doc.consultant, {
                 disableOwnership: true
             }).then((user) => {
-                return consultantRoute.retrieveUser(user._id).then((consultant) => {
-                    var consultantEmail = consultant.email;
+                return consultantRoute.retrieve(doc.consultant, {
+                    disableOwnership: true
+                }).then((consult) => {
+                    var consultRole = consult.role;
                     return emailmanager.send(user.email, 'MiBo - New Consultant!', 'userconsultantnotice.ejs', {
-                        title: 'Congrats!'
+                        title: 'Congrats!',
+                        role: consultRole
                     }).then(() => {
                         return emailmanager.send(consultantEmail, 'MiBo - New Client!', 'consultantnotice.ejs', {
                             title: 'New Client!',
@@ -92,7 +96,6 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
                         }).then(() => this.insertDb(doc));
                     })
                 })
-
             })
         }
         else return this.insertDb(doc);
