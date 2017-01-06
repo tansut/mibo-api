@@ -76,27 +76,30 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
         })
         if (doc.status == ChatStatus.assigned) {
 
-            var consultantRoute = new ConsultantRoute(this.constructorParams);
-            var userRoute = new UserRoute(this.constructorParams);
+            //
+            //             var consultantRoute = new ConsultantRoute(this.constructorParams);
+            //             var userRoute = new UserRoute(this.constructorParams);
 
-            consultantRoute.retrieveUser(doc.consultant, {
-                disableOwnership: true
-            }).then((user) => {
-                return consultantRoute.retrieve(doc.consultant, {
-                    disableOwnership: true
-                }).then((consult) => {
-                    var consultRole = consult.role;
-                    return emailmanager.send(user.email, 'MiBo - New Consultant!', 'userconsultantnotice.ejs', {
-                        title: 'Congrats!',
-                        role: consultRole
-                    }).then(() => {
-                        return emailmanager.send(consultantEmail, 'MiBo - New Client!', 'consultantnotice.ejs', {
-                            title: 'New Client!',
-                            nickName: user.nickName
-                        }).then(() => this.insertDb(doc));
-                    })
-                })
-            })
+            //             consultantRoute.retrieveUser(doc.consultant, {
+            //                 disableOwnership: true
+            //             }).then((user) => {
+            //                 return consultantRoute.retrieve(doc.consultant, {
+            //                     disableOwnership: true
+            //                 }).then((consult) => {
+            //                     var consultRole = consult.role;
+            //                     return emailmanager.send(user.email, 'MiBo - New Consultant!', 'userconsultantnotice.ejs', {
+            //                         title: 'Congrats!',
+            //                         role: consultRole
+            //                     }).then(() => {
+            //                         return emailmanager.send(consultantEmail, 'MiBo - New Client!', 'consultantnotice.ejs', {
+            //                             title: 'New Client!',
+            //                             nickName: user.nickName
+            //                         }).then(() => this.insertDb(doc));
+            //                     })
+            //                 })
+            //             })
+
+            return this.insertDb(doc);
         }
         else return this.insertDb(doc);
     }
