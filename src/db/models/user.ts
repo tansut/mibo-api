@@ -51,6 +51,8 @@ export class User {
     integrations?: Integrations
     ivCode: string;
     requestedRole?: string;
+    language?: string;
+    country?: string;
 }
 
 
@@ -133,6 +135,8 @@ export const UserSchema = new Schema({
     verifications: { email: { type: Object, required: false }, mobile: { type: Object, required: false } },
     integrations: { stripe: { type: Object, required: false }, sinch: { type: Object, required: false } },
     ivCode: { type: String, required: true },
+    country: { type: String, required: true },
+    language: { type: String, required: true },
     requestedRole: { type: String, required: false, enum: [common.UserRoles.dietitian, common.UserRoles.therapist, common.UserRoles.trainer] }
 });
 
