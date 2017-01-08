@@ -115,7 +115,7 @@ let Configurations: ITestConfig = {
         trainer: {
             testemail: 'test-trainer@mibo.io'
         },
-        url: 'http://localhost:' + config.port.toString() + '/api/v1'
+        url: (config.get('TESTURL') || 'http://localhost:') + config.port.toString() + '/api/v1'
     },
 
     stage: {
@@ -131,7 +131,7 @@ let Configurations: ITestConfig = {
         trainer: {
             testemail: 'test-trainer@mibo.io'
         },
-        url: 'http://stage-app.mibo.io/api/v1'
+        url: (config.get('TESTURL') || 'http://stage-app.mibo.io') + config.port.toString() + '/api/v1'
     },
 
     production: {
@@ -147,7 +147,7 @@ let Configurations: ITestConfig = {
         trainer: {
             testemail: 'test-trainer@mibo.io'
         },
-        url: 'https://app.mibo.io/api/v1'
+        url: (config.get('TESTURL') || 'https://app.mibo.io/api/v1') + config.port.toString() + '/api/v1'
     }
 }
 
