@@ -75,25 +75,25 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
             status: doc.status || ChatStatus.started
         })
         if (doc.status == ChatStatus.assigned) {
-
-            // var consultantRoute = new ConsultantRoute(this.constructorParams);
-            // var userRoute = new UserRoute(this.constructorParams);
-            // userRoute.retrieve(doc.user, {
-            //     disableOwnership: true
-            // }).then((user) => {
-            //     return consultantRoute.retrieveUser(user._id).then((consultant) => {
-            //         var consultantEmail = consultant.email;
-            //         return emailmanager.send(user.email, 'MiBo - New Consultant!', 'userconsultantnotice.ejs', {
-            //             title: 'Congrats!'
-            //         }).then(() => {
-            //             return emailmanager.send(consultantEmail, 'MiBo - New Client!', 'consultantnotice.ejs', {
-            //                 title: 'New Client!',
-            //                 nickName: user.nickName
-            //             }).then(() => this.insertDb(doc));
-            //         })
-            //     })
-            // })
-            return this.insertDb(doc);
+            var consultantRoute = new ConsultantRoute(this.constructorParams);
+            var userRoute = new UserRoute(this.constructorParams);
+            return userRoute.retrieve(doc.user, {
+                disableOwnership: true
+            }).then((user) => {
+                return consultantRoute.retrieveUser(doc.consultant, {
+                    disableOwnership: true
+                }).then((consultantuser) => {
+                    var consultantEmail = consultantuser.email;
+                    return emailmanager.send(user.email, 'MiBo - New Consultant!', 'userconultantnotice.ejs', {
+                        title: 'Congrats!'
+                    }).then(() => {
+                        return emailmanager.send(consultantEmail, 'MiBo - New Client!', 'consultantnotice.ejs', {
+                            title: 'New Client!',
+                            nickName: user.nickName
+                        }).then(() => this.insertDb(doc));
+                    })
+                })
+            })
         }
         else return this.insertDb(doc);
     }
