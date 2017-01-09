@@ -9,6 +9,12 @@ export const ChatStatus = {
     started: 'started'
 }
 
+export const ChatType = {
+    text: 'text',
+    video: 'video'
+}
+
+
 export class Chat {
     user: string | ObjectID;
     consultant: string | ObjectID;
@@ -17,6 +23,7 @@ export class Chat {
     role: string;
     status: string;
     initializedBy: string | ObjectID;
+    type: string;
 }
 
 export interface ChatDocument extends Chat, IDBDocument { }
@@ -48,7 +55,8 @@ export const ChatSchema = new Schema({
     finish: { type: Date, required: false },
     role: { type: String, required: true, enum: [UserRoles.dietitian, UserRoles.sales, UserRoles.therapist, UserRoles.trainer] },
     status: { type: String, required: true, enum: [ChatStatus.assigned, ChatStatus.started] },
-    initializedBy: { type: mongoose.Schema['ObjectId'], required: true, ref: 'Users' }
+    initializedBy: { type: mongoose.Schema['ObjectId'], required: true, ref: 'Users' },
+    type: { type: String, required: true, enum: [ChatType.text, ChatType.video] }
 });
 
 ChatSchema.index({ 'user': 1, 'consultant': 1 });

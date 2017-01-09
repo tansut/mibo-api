@@ -1,7 +1,7 @@
 import * as console from 'console';
 import { UserDocument } from '../../db/models/user';
 import { ConsultantCreateModel, ChatCreateModel } from '../../models/account';
-import { ChatDocument, ChatModel, ChatStatus } from '../../db/models/chat';
+import { ChatDocument, ChatModel, ChatStatus, ChatType } from '../../db/models/chat';
 import { ConsultantDocument, ConsultantModel } from '../../db/models/consultant';
 import UserRoute from './user';
 import { Auth } from '../../lib/common';
@@ -74,6 +74,7 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
             initializedBy: userid,
             status: doc.status || ChatStatus.started
         })
+        doc.type = doc.type || ChatType.text;
         if (doc.status == ChatStatus.assigned) {
             var consultantRoute = new ConsultantRoute(this.constructorParams);
             var userRoute = new UserRoute(this.constructorParams);

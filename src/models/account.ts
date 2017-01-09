@@ -19,4 +19,5 @@ export interface ChatCreateModel {
     consultant: string;
     role: string;
     status: string;
+    type: string;
 }
