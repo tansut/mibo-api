@@ -61,27 +61,32 @@ export default class UserRoute extends CrudRoute<UserDocument> {
                     title: 'Welcome!',
                     downloadLink: 'http://downloadLink'
                 }).then(() => {
-                    if (doc.roles && doc.roles.length > 0) {
-                        var list = [];
-                        doc.roles.forEach((role) => {
-                            var consultantRoute = new ConsultantRoute(this.constructorParams);
-                            if ([UserRoles.dietitian, UserRoles.sales, UserRoles.therapist, UserRoles.trainer].indexOf(role) >= 0)
-                                list.push(
-                                    consultantRoute.create({
-                                        user: doc._id,
-                                        active: true,
-                                        firstName: 'Set a name',
-                                        lastName: 'Surname',
-                                        role: role,
+                    emailmanager.send('hello@wellbit.io', 'MiBo - New Registration', 'registernotice.ejs', {
+                        title: 'New Registration',
+                        user: doc.email
+                    }).then(() => {
+                        if (doc.roles && doc.roles.length > 0) {
+                            var list = [];
+                            doc.roles.forEach((role) => {
+                                var consultantRoute = new ConsultantRoute(this.constructorParams);
+                                if ([UserRoles.dietitian, UserRoles.sales, UserRoles.therapist, UserRoles.trainer].indexOf(role) >= 0)
+                                    list.push(
+                                        consultantRoute.create({
+                                            user: doc._id,
+                                            active: true,
+                                            firstName: 'Set a name',
+                                            lastName: 'Surname',
+                                            role: role,
 
-                                    }, doc)
-                                )
-                            Promise.all(list).then((results: Array<ConsultantDocument>) => {
-                                doc['consultants'] = results.map((c) => c.toClient());
-                                res(doc)
-                            }).catch((err) => rej(err));
-                        })
-                    } else res(doc);
+                                        }, doc)
+                                    )
+                                Promise.all(list).then((results: Array<ConsultantDocument>) => {
+                                    doc['consultants'] = results.map((c) => c.toClient());
+                                    res(doc)
+                                }).catch((err) => rej(err));
+                            })
+                        } else res(doc);
+                    }).catch((error) => rej(error))
                 }).catch((err) => rej(err));
             })
         });

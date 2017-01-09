@@ -1,15 +1,18 @@
 Privacy Policy
 
-Physioh Inc.  (“Physioh Inc.,” “we”, “us,” “our,”) provides online and desktop software services, including but not limited to, the Physioh Inc. website (“Physioh.com” or the “Site”) widgets, computer programs hosted by or on behalf of Physioh Inc.  (collectively, the “Service”). Physioh Inc. is committed to maintaining the privacy, integrity and security of any personal information about our users. This Privacy Policy (“Policy”) explains how we protect personal information we collect in connection with your use of the Service “) and how we use that “Personal information” for purposes of this Policy means information that identifies you, such as your name, or email address.
+Physioh Inc.  (“Physioh Inc.,” “we”, “us,” “our,”) provides online, mobile and desktop software services, including but not limited to, the Physioh Inc. websites, Wellbit and MiBo apps and websites (“Wellbit or MiBo software” or the “Site”) widgets, computer programs hosted by or on behalf of Physioh Inc.  (collectively, the “Service”). Physioh Inc. is committed to maintaining the privacy, integrity and security of any personal information about our users. This Privacy Policy (“Policy”) explains how we protect personal information we collect in connection with your use of the Service “) and how we use that “Personal information” for purposes of this Policy means information that identifies you, such as your name, or email address.
 This Privacy Policy (this “Policy”) is subject to the provisions our Terms of Use.
+
 What Personal Information We Collect
-Your Physioh Inc. Products work in conjunction with a user account on Physioh.com (a “User Account”). You can alter and correct any personal information created within the Product and Service by logging into your User Account.
+Your Physioh Inc. Products work in conjunction with a user account on Wellbit or MiBo software (a “User Account”). 
 When you sign up for a Physioh Inc. User Account, you are required to provide an email address (which will be used as your login ID) and to create an account password (collectively the “Registration Information”).
+We may allow service providers to access information so they can help us provide services.
+By using Physioh Inc. services you acknowledge that you are accepting to use its platforms including Wellbit and MiBo apps and accepting that the platforms are not encrypting its communications and you use it at your own risk. 
 In order to benefit fully from the Physioh Inc. Products and Service, you can also add additional personal details to your User Account, such as height, weight, gender, and age, company you work with, information about your daily activity habits such as “current knowledge of wellness and posture” and your daily routine such as what time you usually arrive at work and eat lunch. This data is not a necessary condition to use the Physioh Inc. services and it is the user’s discretion to share. The data is stored in your Physioh Inc. User Account. The data is used to further personalize the content of Physioh’s services.
-Information sent from your Physioh Inc.Desktop Software to the Service is stored in your Physioh Inc. User Account.
-Information that you add manually to the Service on physioh.com is stored in your Physioh Inc. User Account.
+Information that you add manually to the Service on Wellbit or MiBo software is stored in your Physioh Inc. User Account.
 When you elect to share data from your Physioh Inc. User Account with others, we collect the information you provide about those individuals such as their name and email address.
 We may collect industry standard log data about the browser and operating system you are using, the address of the external or internal page that referred you, your IP address at the time of account creation and keep a log of the pages that you visit on the Services in association with your IP address.
+
 How We Use Your Personal Information
 Physioh Inc. will not use your personal information for purposes other than those listed in this privacy policy unless we obtain your consent first. Physioh Inc. uses your personal information to:
 Provide you with the Service;
@@ -18,38 +21,47 @@ Deliver to you any administrative notices and communications relevant to your us
 Provide you with updates regarding Physioh Inc. Products and Services;
 Perform internal market research, project planning, troubleshooting problems, and to detect and protect against error, fraud or other criminal activity;
 Enforce the Physioh Inc. Terms of Use.
+To provide better products and services and other services that you may be interested in that we can connect you with through the Mibo and Wellbit software.
+
 Disclosure to Third Parties
-Physioh Inc.  do not intend to sell personal information to third parties.
 At times Physioh Inc. may make certain personal information available to strategic partners that work with Physioh Inc. to provide services to you e.g if we elect to partner with fitbit or nike plus and you synch your data. We may disclose information about you if we determine that disclosure is reasonably necessary to enforce our terms and conditions or protect our operations or users or if we are required to do so by any applicable law, rule, regulation, subpoena or other legal process. Additionally, in the event of a reorganization, merger, or sale we may transfer any and all personal information we collect to the relevant third party.
+
 Use of Aggregated Anonymous User Data
 Physioh Inc.  may disclose non-personally identifiable aggregated user data, such as aggregated gender, age, height, weight, and usage data gathered from Physioh Inc.  devices (without the inclusion of a user’s name or other identifying information) to:
 Organizations approved by Physioh Inc. that conduct consumer research into health and wellness;
 Further possible academic research on wellness patterns and engagement in physical activity at work;
 Users of the Service for purposes of comparison of their personal health and wellness situation relative to the broader community; and
 Advertisers and other third parties for their marketing and promotional purposes.
+
 Cookies and Other Technology
 The Physioh Inc.  Site and Service may use “cookies” and other technologies such as pixel tags and web beacons.
 Cookies are alphanumeric identifies in the form of text files that are inserted and stored by your Web browser on your computer’s hard drive. These technologies tell us which parts of our website you have visited, limit the number of times you see a Physioh Inc.  offer, or help us better determine which Physioh Inc.  offers you may like to see or to alert you to software compatibility issues. They are also used to analyze and improve our Service’s design and functionality.
 If you choose to delete cookies from your device or block them from being stored on your device, please note that the full functionality of the Service may not be available to you.
 “Web beacons” are images embedded in a Web page or email for the purpose of measuring and analyzing Site usage and activity. Physioh Inc. , or third party service providers acting on our behalf, may use Web beacons to help us analyze Site usage and improve the Service.
-We may use third party service providers to help us analyze certain online activities and improve our products and the Service. For example, these service providers may help us measure the performance of our online campaigns or analyze visitor activity on physioh.com. We may permit these service providers to use cookies and other technologies to perform these services for Physioh Inc.. We do not share any personal information about our customers with these third party service providers, and these service providers do not collect such information on our behalf. Our third party service providers are required to comply fully with this Policy.
+We may use third party service providers to help us analyze certain online activities and improve our products and the Service. For example, these service providers may help us measure the performance of our online campaigns or analyze visitor activity on Wellbit or MiBo software. We may permit these service providers to use cookies and other technologies to perform these services for Physioh Inc.. We do not share any personal information about our customers with these third party service providers, and these service providers do not collect such information on our behalf. Our third party service providers are required to comply fully with this Policy.
 We may use social media widgets and plugins so you can use social networking to share items from our site with your Facebook and Twitter accounts. These interactive mini-programs run on our site and collect your IP address, which page you are visiting on our site, and sets a cookie to enable the widget to function properly. Your interactions with these widgets are governed by the privacy policy of the company providing them, not by this Privacy Policy.
-Information You Elect to Share With Others
 
+Information You Elect to Share With Others
 If you use a message board, blog, journal or any other method of posting user-generated content on our Site or through the Service, you should be aware that such information can be read, collected or used by others and could be used to send you unsolicited messages. We are not responsible for the personal information you choose to submit in these areas.
 Through the Service, Physioh Inc. enables you to share information with others. Many users find this to be an important motivator in achieving their fitness goals. Physioh Inc.  is dedicated to providing you with full control of your personal data.
+
 Third Party Products or Services Offered Through the Physioh Inc.  Site
 There may be a number of separate products and services offered by third parties advertised by us on our Site and through the Service that may be complementary to your use of the Physioh Inc.  Products or Service, such as health clubs, weight loss programs and sports and fitness equipment makers (collectively, “Physioh Inc.  Offers”). If you choose to use these separate products or services, disclose information to the providers, or grant them permission to collect information about you, then their use of your information is governed by their privacy policies. You should evaluate the practices of external service providers before deciding to use their services. Physioh Inc.  is not responsible for their privacy practices. If you click on a link to a third party site, Physioh Inc.  encourages you to check the privacy policy of that site. Physioh Inc.  may present links in a format that enables us to keep track of whether these links have been followed and whether any action has been taken on a third party web site. We use this information to improve the quality of the Physioh Inc.  Offers and customized content on the Service.
 Third parties offering products or services will not be given your personal information without your explicit permission.
+
 Contests, Giveaways and Surveys
 From time to time, Physioh Inc.  may offer you the opportunity to participate in contests, giveaways and other promotions. Any information submitted in connection with such activities will be treated in accordance with this Policy, except as specifically set forth in the rules for those contests, giveaways or promotions. From time to time, Physioh Inc.  may also ask you to participate in surveys designed to help Physioh Inc.  improve the Service. Any personal information provided to Physioh Inc. in connection with any survey will be used only in relation to that survey and as elsewhere set forth in this Policy.
+
 Children
 We do not knowingly collect any personal information from children under 13. If we discover that a child under the age of 13 has provided us with personally identifying information, we will take steps to delete the information as soon as possible.
+
 Your Right to Delete Your Data
 If you would like to cancel your Physioh Inc.  account you may do so by emailing admin@physioh.com. When you request cancellation of your account, your personally identifiable information will be deleted, including but not limited your email address, name, and other items that you may have shared. Archival copies of your account information that exist within our back-up system will be deleted in accordance with our normal back-up expiration schedule. Following cancellation or termination of your account, Physioh Inc.  may continue to utilize de-identified and anonymized historical data associated with your use of the Physioh Inc.  Products.
+
 Email Communications From Us
 We may provide our registered customers with email alerts and daily fittips. We also may from time to time may transmit emails promoting Physioh Inc.
 Opting out in this manner will not end transmission of service-related emails, such as email alerts.
+
 Data Security
 We use a combination of encryption techniques and authentication procedures, among others, to maintain the security of data and to protect Physioh accounts and systems from unauthorized access.
 When you register for the Service, Physioh requires a password from you for your privacy and security. This password is stored in an encrypted fashion on our systems.
@@ -57,8 +69,9 @@ Any data within the program is kept secure and is not sold to third parties. The
 Your Responsibility for Maintaining the Confidentiality of your Login ID and Password
 You are responsible for maintaining the security of your login ID and password. If you believe that your login ID or password have been compromised you should immediately change your password and contact admin@physioh.com. We are not responsible if someone else accesses your account through registration information they have obtained from you or through a violation by you of this Policy or the Physioh Inc.  Terms of Use.
 If you have a security related concern, please email admin@physioh.com.
+
 Updates to this Policy
 We may update this Policy periodically. The date last revised appears at the bottom of the Policy. Changes take effect immediately upon posting.
 Contact us if you have any questions or concerns
-If you have questions, comments, concerns or feedback regarding this Policy or any other privacy or security concern, send an e-mail toadmin@physioh.com.
-This policy was last updated on June 24, 2014.
+If you have questions, comments, concerns or feedback regarding this Policy or any other privacy or security concern, send an e-mail toadmin@Wellbit or MiBo software.
+This policy was last updated on January 9, 2017
