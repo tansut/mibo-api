@@ -52,6 +52,8 @@ export default class UserRoute extends CrudRoute<UserDocument> {
             nickName: model.nickName,
             password: hash,
             email: model.email,
+            country: model.country,
+            language: model.language,
             ivCode: (Math.random() * 999999).toString() // todo
         };
         if (model.roles && config.nodeenv != 'production')

@@ -4,6 +4,8 @@ export interface SignupModel {
     roles?: Array<string>;
     email: string;
     password: string;
+    country?: string;
+    language?: string;
 }
 
 export interface ConsultantCreateModel {
