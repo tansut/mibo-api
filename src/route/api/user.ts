@@ -1,5 +1,6 @@
 import { debug } from 'util';
 import { ConsultantDocument } from '../../db/models/consultant';
+import { RefreshTokenModel } from '../../db/models/refreshToken';
 import ConsultantRoute from './consultant';
 import ChatRoute from './chatapi';
 import { IRequestParams } from '../baserouter';
@@ -74,8 +75,8 @@ export default class UserRoute extends CrudRoute<UserDocument> {
                                         consultantRoute.create({
                                             user: doc._id,
                                             active: true,
-                                            firstName: 'Set a name',
-                                            lastName: 'Surname',
+                                            firstName: 'Test User',
+                                            lastName: 'Test',
                                             role: role,
 
                                         }, doc)
@@ -233,6 +234,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         var consultantRoute = new ConsultantRoute(this.constructorParams);
         promiseList.push(consultantRoute.deleteByUser(user));
         promiseList.push(new ChatRoute(this.constructorParams).deleteByUser(user));
+        promiseList.push(RefreshTokenModel.find({ userId: user._id }).remove());
         return Promise.all(promiseList).then(() => super.delete(user));
     }
 

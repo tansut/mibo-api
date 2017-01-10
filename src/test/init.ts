@@ -32,4 +32,7 @@ describe('tests', function () {
     paymentests();
     consultantests();
     chattests();
+    after(function () {
+        return lib.removeUsers();
+    });
 });
