@@ -22,6 +22,23 @@ export default function () {
             }
             );
         })
+
+        it('should log a chat', function () {
+            return lib.forceAuthenticationAll(['user', 'sales']).then(() => {
+                return lib.post(`/chat/${chatId}/log`, {
+                    body: {
+                        from: lib.authData.user.doc._id,
+                        to: lib.authData.sales.consultant._id,
+                        contentType: 'text',
+                        content: 'Hiii! I have serious problems!'
+                    }
+                }, 'user').then((res) => {
+
+                })
+            }
+            );
+        })
+
         it('should end session', function () {
             return lib.forceAuthenticationAll(['user', 'sales']).then(() => {
                 return lib.post(`/chat/${chatId}/end`, {

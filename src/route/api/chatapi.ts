@@ -1,3 +1,4 @@
+import { ObjectID } from 'mongodb';
 import * as console from 'console';
 import { UserDocument } from '../../db/models/user';
 import { ConsultantCreateModel, ChatCreateModel } from '../../models/account';
@@ -17,7 +18,7 @@ import { CrudOperation } from './crud';
 import * as _ from 'lodash';
 import ConsultantRoute from './consultant';
 import emailmanager from '../../lib/email';
-
+import Security from '../../lib/security';
 
 interface UserChatSummary {
     role: string;
@@ -224,6 +225,32 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
         })
     }
 
+    logChat(doc: ChatDocument, from: string, to: string, contentType: string, content: any): any {
+        debugger;
+        if (validator.isEmpty(contentType) || !content)
+            return Promise.reject(new http.ValidationError('no content'));
+        if (doc.finish)
+            return Promise.reject(new http.ValidationError('chat already finished'));
+
+        var userFound = [from, to].indexOf(doc.user.toString()) >= 0;
+        var consultantFound = [from, to].indexOf(doc.consultant.toString()) >= 0;
+
+        if (!userFound || !consultantFound)
+            return Promise.reject(new http.ValidationError('unknown to or from'))
+
+        var contentAsString = JSON.stringify(content);
+        contentAsString = Security.encryptGeneric(contentAsString);
+        return this.model.findByIdAndUpdate(doc._id,
+            { $push: { "log": { date: moment.utc().toDate(), from: new ObjectID(from), to: new ObjectID(to), contentType: contentType, content: contentAsString } } }
+        )
+    }
+
+    logChatRouter() {
+        return this.retrieve(this.req.params.chatid)
+            .then((doc) => this.logChat(doc, this.req.body.from, this.req.body.to, this.req.body.contentType, this.req.body.content))
+            .then(() => this.res.sendStatus(200));
+    }
+
 
     constructor(reqParams?: IRequestParams) {
         var model = ChatModel;
@@ -242,6 +269,8 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
         router.get("/chat/search/user/:userid", ChatRoute.BindRequest('getChatsOfUserRoute'));
         router.get("/chat/search/user/:userid/summary", ChatRoute.BindRequest('getSummaryChatsOfUserRoute'));
         router.get("/chat/search/consultant/:consultantid/summary", ChatRoute.BindRequest('getSummaryChatsOfConsultantRoute'));
+        router.post("/chat/:chatid/log", ChatRoute.BindRequest('logChatRouter'));
+
     }
 }
 

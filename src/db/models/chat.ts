@@ -56,7 +56,8 @@ export const ChatSchema = new Schema({
     role: { type: String, required: true, enum: [UserRoles.dietitian, UserRoles.sales, UserRoles.therapist, UserRoles.trainer] },
     status: { type: String, required: true, enum: [ChatStatus.assigned, ChatStatus.started] },
     initializedBy: { type: mongoose.Schema['ObjectId'], required: true, ref: 'Users' },
-    type: { type: String, required: true, enum: [ChatType.text, ChatType.video] }
+    type: { type: String, required: true, enum: [ChatType.text, ChatType.video] },
+    log: [{ from: mongoose.Schema['ObjectId'], to: mongoose.Schema['ObjectId'], date: Date, contentType: String, content: mongoose.Schema.Types.Mixed }]
 });
 
 ChatSchema.index({ 'user': 1, 'consultant': 1 });
