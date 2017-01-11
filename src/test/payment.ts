@@ -6,7 +6,7 @@ import * as lib from './lib';
 
 
 export default function () {
-    describe('payment', function () {
+    describe.only('payment', function () {
         it('should create a subscription for a dietitian', function () {
             var plan = common.Plans.messageonly6mlyT;
             return lib.forceAuthenticationAll(['user']).then(() => {
@@ -16,7 +16,9 @@ export default function () {
                             plan: plan,
                             source: token.id
                         }
-                    }, 'user')
+                    }, 'user').then((result) => {
+                        result.should.have.property('created');
+                    })
                 })
             });
         })
@@ -28,19 +30,60 @@ export default function () {
                     body: {
                         plan: plan
                     }
-                }, 'user')
+                }, 'user').then((result) => {
+                    result.should.have.property('created');
+                })
             });
         })
-        it('should create an other subscription for a trainer', function () {
+
+        it('should get coupon information', function () {
+            return lib.forceAuthenticationAll(['user']).then(() => {
+                return lib.get(`/coupon/test-coupon`, {
+                    json: true
+                }, 'user').then((result) => {
+                    result.should.have.property('valid').be.eql(true);
+                })
+            });
+        })
+
+        it('should not get invalid coupon', function () {
+            return new Promise((resolve, reject) => {
+                lib.forceAuthenticationAll(['user']).then(() => {
+                    lib.get(`/coupon/test-coupon-invalid`, {
+                        json: true
+                    }, 'user').then((result) => {
+                        reject();
+                    }).catch((err) => {
+                        err.should.have.property('statusCode').be.eql(404);
+                        resolve();
+                    })
+                });
+            })
+        })
+
+        it('should create an other subscription for a trainer with a coupon', function () {
             var plan = common.Plans.messageonly6mlyT;
             return lib.forceAuthenticationAll(['user']).then(() => {
                 return stripe.createTokenSample().then((token) => {
                     return lib.post(`/subscription/create/${lib.authData.user.doc._id}/${UserRoles.trainer}`, {
                         body: {
                             plan: plan,
-                            source: token.id
+                            source: token.id,
+                            coupon: 'test-coupon'
                         }
-                    }, 'user')
+                    }, 'user').then((result) => {
+                        result.should.have.property('created');
+                    })
+                })
+            });
+        })
+
+        it('should get list of plans available', function () {
+            return lib.forceAuthenticationAll(['user']).then(() => {
+                return lib.get('/plans', {
+                    json: true
+                }, 'user').then((result) => {
+                    debugger;
                 })
             });
         })

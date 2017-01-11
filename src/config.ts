@@ -21,6 +21,7 @@ class Config {
     public static EMAILRATELIMIT = "EMAILRATELIMIT";
     public static APIURL = "APIURL";
     public static WEBURL = "WEBURL";
+    public static ENCKEY = "ENCKEY";
 
     public nodeenv: string;
     public port: number;
@@ -39,6 +40,7 @@ class Config {
     public emailRateLimit: number;
     public apiUrl: string;
     public webUrl: string;
+    public enckey: string;
 
 
     public get(key?: string, cb?: nconf.ICallbackFunction) {
@@ -64,7 +66,7 @@ class Config {
         this.emailRateLimit = this.get(Config.EMAILRATELIMIT) || 15;
         this.apiUrl = this.get(Config.APIURL) || 'http://localhost:3001';
         this.webUrl = this.get(Config.WEBURL) || 'http://localhost:3005';
-
+        this.enckey = this.get(Config.ENCKEY);
     }
 }
 

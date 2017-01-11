@@ -15,6 +15,7 @@ interface IStripeData {
 interface ISubscription {
     plan: string;
     id: string;
+    coupon?: string;
 }
 
 export class UserData extends IntegrationInfo<IStripeData> {
@@ -54,10 +55,19 @@ class StripeManager {
         })
     }
 
-    subscripe(stripeId: string, plan: string) {
+    getCoupon(coupon: string) {
+        return lib.coupons.retrieve(coupon);
+    }
+
+    getPlans() {
+        return lib.plans.list({ limit: 100 });
+    }
+
+    subscripe(stripeId: string, plan: string, coupon?: string) {
         return lib.subscriptions.create({
             customer: stripeId,
-            plan: plan
+            plan: plan,
+            coupon: coupon
         });
     }
 
@@ -73,10 +83,12 @@ class StripeManager {
         });
     }
 
-    updateSubscription(subsId: string, plan: string, source?: string) {
-        var data = {
+    updateSubscription(subsId: string, plan: string, source?: string, coupon?: string) {
+        var data = <any>{
             plan: plan
         };
+        if (coupon)
+            data.coupon = coupon;
         if (source)
             data['source'] = source;
         return lib.subscriptions.update(subsId, data);
