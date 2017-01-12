@@ -251,6 +251,21 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
             .then(() => this.res.sendStatus(200));
     }
 
+    decryptLog(doc: ChatDocument) {
+        debugger;
+        doc.log.forEach((log) => {
+            var dec = Security.decryptGeneric(log.content);
+            log.content = JSON.parse(dec);
+        })
+    }
+
+    getLogRouter() {
+        return this.retrieve(this.req.params.chatid)
+            .then((doc) => {
+                this.decryptLog(doc);
+                this.res.send(doc.log);
+            })
+    }
 
     constructor(reqParams?: IRequestParams) {
         var model = ChatModel;
@@ -270,6 +285,8 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
         router.get("/chat/search/user/:userid/summary", ChatRoute.BindRequest('getSummaryChatsOfUserRoute'));
         router.get("/chat/search/consultant/:consultantid/summary", ChatRoute.BindRequest('getSummaryChatsOfConsultantRoute'));
         router.post("/chat/:chatid/log", ChatRoute.BindRequest('logChatRouter'));
+        router.get("/chat/:chatid/log", ChatRoute.BindRequest('getLogRouter'));
+
 
     }
 }

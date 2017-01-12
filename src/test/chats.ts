@@ -39,6 +39,35 @@ export default function () {
             );
         })
 
+        it('should log a reply to chat', function () {
+            return lib.forceAuthenticationAll(['user', 'sales']).then(() => {
+                return lib.post(`/chat/${chatId}/log`, {
+                    body: {
+                        to: lib.authData.user.doc._id,
+                        from: lib.authData.sales.consultant._id,
+                        contentType: 'text',
+                        content: 'Great!!'
+                    }
+                }, 'user').then((res) => {
+
+                })
+            }
+            );
+        })
+
+        it('should retrieve chat log', function () {
+            return lib.forceAuthenticationAll(['user']).then(() => {
+                return lib.get(`/chat/${chatId}/log`, {
+                    json: true
+                }, 'user').then((res) => {
+                    debugger;
+                    res.should.have.property('length').be.eql(2);
+                })
+            }
+            );
+        })
+
+
         it('should end session', function () {
             return lib.forceAuthenticationAll(['user', 'sales']).then(() => {
                 return lib.post(`/chat/${chatId}/end`, {
@@ -95,7 +124,7 @@ export default function () {
 
                 return lib.get(`/chat/search/consultant/${lib.authData.sales.consultant._id}/summary`, {
                 }, 'user').then((result) => {
-                    debugger;
+
                 })
             }
             );

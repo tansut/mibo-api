@@ -14,6 +14,13 @@ export const ChatType = {
     video: 'video'
 }
 
+export interface ChatLog {
+    from: string | ObjectID,
+    to: string | ObjectID,
+    dare: Date;
+    contentType: string;
+    content: any;
+}
 
 export class Chat {
     user: string | ObjectID;
@@ -24,6 +31,8 @@ export class Chat {
     status: string;
     initializedBy: string | ObjectID;
     type: string;
+    log: Array<ChatLog>;
+
 }
 
 export interface ChatDocument extends Chat, IDBDocument { }
@@ -39,6 +48,7 @@ class Schema extends DBSchema {
 
     toClient(doc: IDBDocument) {
         var result = <Chat>super.toClient(doc);
+        delete result.log;
         return result;
     }
 
