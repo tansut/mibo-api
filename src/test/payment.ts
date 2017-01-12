@@ -6,7 +6,7 @@ import * as lib from './lib';
 
 
 export default function () {
-    describe('payment', function () {
+    describe.only('payment', function () {
         it('should create a subscription for a dietitian', function () {
             var plan = common.Plans.messageonly6mlyT;
             return lib.forceAuthenticationAll(['user']).then(() => {
@@ -78,9 +78,9 @@ export default function () {
             });
         })
 
-        it('should get list of plans available', function () {
+        it('should get list of plans available for a currency', function () {
             return lib.forceAuthenticationAll(['user']).then(() => {
-                return lib.get('/plans', {
+                return lib.get('/plans?currency=USD', {
                     json: true
                 }, 'user').then((result) => {
                     debugger;

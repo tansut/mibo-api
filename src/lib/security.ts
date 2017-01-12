@@ -13,7 +13,7 @@ class Security {
         return encrypted;
     }
 
-    public static decryptGeneric(encrypted: string): Object {
+    public static decryptGeneric(encrypted: string): string {
         var cipher = crypto.createDecipher(this.genericCipherAlgorithm, this.genericTokenKey);
         var decrypted = cipher.update(encrypted, 'hex', 'utf8');
         return decrypted;

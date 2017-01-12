@@ -5,6 +5,7 @@ import * as express from "express";
 import * as http from '../../lib/http';
 import * as common from '../../lib/common';
 import * as validator from 'validator';
+import * as _ from 'lodash';
 import ApiBase from './base';
 import { User, UserDocument, UserModel } from '../../db/models/user';
 import stripe from '../../lib/stripe';
@@ -96,7 +97,15 @@ export default class PaymentRoute extends ApiBase {
     }
 
     getPlansRoute() {
-        return stripe.getPlans().then((plans) => this.res.send(plans));
+        var currency = this.req.query.currency;
+        return stripe.getPlans().then((plans) => {
+            debugger;
+            if (currency) {
+                var filtered = _.filter(plans.data, (plan) => plan.currency == (<string>currency).toLowerCase());
+                this.res.send(filtered);
+            }
+            else this.res.send(plans.data)
+        });
     }
 
     constructor(reqParams: IRequestParams) {
