@@ -46,7 +46,7 @@ export default function () {
             }, 'sales')
         })
 
-        it('should register someone as consultant', function () {
+        it.only('should register someone as consultant', function () {
             return lib.post(`/consultant/register`, {
                 body: {
                     email: 'tansut@gmail.com',

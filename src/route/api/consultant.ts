@@ -120,7 +120,7 @@ export default class Route extends CrudRoute<ConsultantDocument> {
                             downloadLink: 'https://itunes.apple.com/app/mibo-online-therapy-diet-personal/id1182467723?l=tr&ls=1&mt=8',
                             userName: user.email,
                             password: password
-                        })
+                        }).then(() => newConsultant)
                     })
                 })
             })
