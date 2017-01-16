@@ -62,7 +62,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
             return new Promise<UserDocument>((res, rej) => {
                 emailmanager.send(doc.email, 'Welcome to MiBo', 'welcome.ejs', {
                     title: 'Welcome!',
-                    downloadLink: 'http://downloadLink'
+                    downloadLink: 'https://itunes.apple.com/app/mibo-online-therapy-diet-personal/id1182467723?l=tr&ls=1&mt=8'
                 }).then(() => {
                     emailmanager.send('hello@wellbit.io', 'MiBo - New Registration', 'registernotice.ejs', {
                         title: 'New Registration',
