@@ -15,6 +15,8 @@ import { CrudOperation, RetrieveOptions } from './crud';
 import ChatRoute from './chatapi';
 import config from '../../config';
 import * as _ from 'lodash';
+import emailmanager from '../../lib/email';
+
 
 export default class Route extends CrudRoute<ConsultantDocument> {
 
@@ -111,6 +113,14 @@ export default class Route extends CrudRoute<ConsultantDocument> {
                         firstName: firstName,
                         lastName: lastName,
                         role: role
+                    }).then((newConsultant) => {
+                        return emailmanager.send(user.email, 'MiBo - Welcome', 'consultantwelcome.ejs', {
+                            title: 'Welcome!',
+                            role: newConsultant.role,
+                            downloadLink: 'https://itunes.apple.com/app/mibo-online-therapy-diet-personal/id1182467723?l=tr&ls=1&mt=8',
+                            userName: user.email,
+                            password: password
+                        })
                     })
                 })
             })
