@@ -45,5 +45,19 @@ export default function () {
                 }
             }, 'sales')
         })
+
+        it.only('should register someone as consultant', function () {
+            return lib.post(`/consultant/register`, {
+                body: {
+                    email: 'markdarco@mac.com',
+                    firstName: 'Mark',
+                    lastName: 'Darco',
+                    password: 'mibo',
+                    role: 'trainer'
+                }
+            })
+        })
+
+
     });
 }

@@ -6,7 +6,7 @@ import * as lib from './lib';
 
 
 export default function () {
-    describe.only('payment', function () {
+    describe('payment', function () {
         it('should create a subscription for a dietitian', function () {
             var plan = common.Plans.messageonly6mlyT;
             return lib.forceAuthenticationAll(['user']).then(() => {

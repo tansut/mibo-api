@@ -92,6 +92,36 @@ export default class Route extends CrudRoute<ConsultantDocument> {
         return this.statusupdate(this.req.params.consultantid, this.req.body.active).then((data) => this.res.sendStatus(200));
     }
 
+    registerConsultant(email: string, password: string, firstName: string, lastName: string, role: string) {
+        return this.userRoute.retrieveByEMail(email).then((user) => {
+            var prom = user ? Promise.resolve(user) : this.userRoute.create({
+                email: email,
+                password: password
+            }).then((user) => this.userRoute.retrieve(user._id, {
+                disableOwnership: true
+            }));
+            return prom.then((user) => {
+                user.roles = user.roles || [];
+                if (user.roles.indexOf(role) <= 0)
+                    user.roles.push(role);
+                return user.update(user).then(() => {
+                    return this.create({
+                        user: user._id,
+                        active: true,
+                        firstName: firstName,
+                        lastName: lastName,
+                        role: role
+                    })
+                })
+            })
+        })
+    }
+
+    @Auth.Anonymous()
+    registerConsultantRoute() {
+        return this.registerConsultant(this.req.body.email, this.req.body.password, this.req.body.firstName, this.req.body.lastName, this.req.body.role).then((data) => this.res.send(data.toClient()))
+    }
+
     constructor(reqParams?: IRequestParams) {
         super(reqParams, ConsultantModel);
         this.userRoute = new UserRoute(reqParams);
@@ -101,6 +131,7 @@ export default class Route extends CrudRoute<ConsultantDocument> {
         router.get("/consultant/locate", Route.BindRequest('locateRoute'));
         router.post("/consultant/:consultantid/statusupdate", Route.BindRequest('statusupdateRoute'));
         router.get("/consultant/search", Route.BindRequest('searchConsultantRoute'));
+        router.post("/consultant/register", Route.BindRequest('registerConsultantRoute'));
 
         Route.SetCrudRoutes(`/consultant`, router, {
             retrieve: true
