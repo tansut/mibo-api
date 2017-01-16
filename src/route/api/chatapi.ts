@@ -49,7 +49,8 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
         return new Promise((resolve, reject) => {
             success.then(() => resolve()).catch(() => {
                 var userid = this.req.user._id.toString();
-                if (userid == doc.user || userid == doc.consultant)
+                resolve();
+                if (userid == (doc.user['id'] || doc.user) || (userid == (doc.consultant['id'] || doc.consultant)))
                     resolve();
                 else reject(new http.PermissionError());
             })

@@ -7,7 +7,7 @@ import * as lib from './lib';
 
 export default function () {
     let chatId: string;
-    describe('chat', function () {
+    describe.only('chat', function () {
         it('should create a chat session for user', function () {
             return lib.forceAuthenticationAll(['user', 'sales']).then(() => {
                 return lib.post('/chat', {
@@ -48,7 +48,7 @@ export default function () {
                         contentType: 'text',
                         content: 'Great!!'
                     }
-                }, 'user').then((res) => {
+                }, 'sales').then((res) => {
 
                 })
             }
