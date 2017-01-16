@@ -49,9 +49,9 @@ export default function () {
         it('should register someone as consultant', function () {
             return lib.post(`/consultant/register`, {
                 body: {
-                    email: 'markdarco@mac.com',
-                    firstName: 'Mark',
-                    lastName: 'Darco',
+                    email: 'tansut@gmail.com',
+                    firstName: 'Test',
+                    lastName: 'McTest',
                     password: 'mibo',
                     role: 'trainer'
                 }
