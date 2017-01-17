@@ -47,17 +47,15 @@ export default function () {
         })
 
         it.only('should register someone as consultant', function () {
-            return lib.post(`/consultant/register`, {
-                body: {
-                    email: 'tansut@gmail.com',
-                    firstName: 'Test',
-                    lastName: 'McTest',
-                    password: 'mibo',
-                    role: 'trainer'
-                }
-            })
+            // return lib.post(`/consultant/register`, {
+            //     body: {
+            //         email: 'melike.abacioglu@physioh.com',
+            //         firstName: 'Melike',
+            //         lastName: 'Abacıoğlu',
+            //         password: 'mibo',
+            //         role: 'sales'
+            //     }
+            // })
         })
-
-
     });
 }
