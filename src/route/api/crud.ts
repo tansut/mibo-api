@@ -65,7 +65,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
         if (select != '')
             baseQuery = baseQuery.select(select);
         return baseQuery.then((doc: T) => {
-            if (!doc) return Promise.reject(new http.NotFoundError());
+            if (!doc) return Promise.reject(new http.NotFoundError(`ID:${id.toString()}, model:${this.model ? this.model.modelName : ''}`));
             if (options.disableOwnership) {
                 if (options.toClient)
                     return doc.toClient()
