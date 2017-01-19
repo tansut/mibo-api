@@ -121,7 +121,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
     updateRoute() {
         var dbId = this.toObjectId(this.req.params._id);
         var updateValues = this.req.body;
-        var updateResult = this.retrieve(dbId, { lean: true }).then((doc) => {
+        var updateResult = this.retrieve(dbId).then((doc) => {
             return this.validateDocumentOwnership(doc, CrudOperation.update).then(() => this.update(doc, updateValues));
         });
         return updateResult.then((result) => { this.res.send(result || 200) });
