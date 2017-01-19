@@ -240,6 +240,13 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         return Promise.all(promiseList).then(() => super.delete(user));
     }
 
+    update(doc: UserDocument, updateValues: any) {
+        debugger;
+        doc.country = updateValues.country || doc.country;
+        doc.language = updateValues.language || doc.language;
+        return doc.save().then((doc) => null);
+    }
+
     protected static generateCreateRoute(url: string, router: express.Router) {
         router.post(url, this.BindRequest('createRoute'));
     }

@@ -95,6 +95,18 @@ export default function () {
             }, 'user')
         });
 
+        it('should update user profile', function () {
+            return lib.forceAuthentication('user').then(() => {
+                return lib.put('/user/'.concat(lib.authData.user.doc._id), {
+                    body: {
+                        country: 'Turkey',
+                        language: 'GB'
+                    }
+                }, 'user')
+            });
+
+        });
+
         it('should get new account page', function () {
             return lib.get('/account/new', {
 

@@ -135,7 +135,7 @@ export default class CrudRoute<T extends IDBDocument> extends ApiRoute {
         router.post(url, this.BindRequest('createRoute'));
     }
     protected static generateUpdateRoute(url: string, router: express.Router) {
-        router.get(url.concat('/:_id'), this.BindRequest('updateRoute'));
+        router.put(url.concat('/:_id'), this.BindRequest('updateRoute'));
     }
     protected static generateDeleteRoute(url: string, router: express.Router) {
         router.delete(url.concat('/:_id'), this.BindRequest('deleteRoute'));
