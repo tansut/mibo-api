@@ -23,7 +23,7 @@ export default class PaymentRoute extends ApiBase {
         return stripe.createUser(user._id.toString(), user.email, source).then((striperes) => {
             user.integrations.stripe = new StripeData(striperes.id);
             user.integrations.stripe.source = source;
-            return user.save().then(() => this.changeSubscription(user, plan, role, undefined, coupon));
+            return <Promise<any>>user.save().then(() => this.changeSubscription(user, plan, role, undefined, coupon));
         })
     }
 

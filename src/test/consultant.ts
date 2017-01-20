@@ -49,11 +49,11 @@ export default function () {
         it('should register someone as consultant', function () {
             // return lib.post(`/consultant/register`, {
             //     body: {
-            //         email: 'melike.abacioglu@physioh.com',
-            //         firstName: 'Melike',
-            //         lastName: 'Abacıoğlu',
+            //         email: 'Ceyla.erh@gmail.com',
+            //         firstName: 'Ceyla',
+            //         lastName: 'Erhan',
             //         password: 'mibo',
-            //         role: 'sales'
+            //         role: 'therapist'
             //     }
             // })
         })

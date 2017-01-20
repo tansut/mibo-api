@@ -80,7 +80,7 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
         if (doc.status == ChatStatus.assigned) {
             var consultantRoute = new ConsultantRoute(this.constructorParams);
             var userRoute = new UserRoute(this.constructorParams);
-            return userRoute.retrieve(doc.user, {
+            return <Promise<any>>userRoute.retrieve(doc.user, {
                 disableOwnership: true
             }).then((user) => {
                 return consultantRoute.retrieveUser(doc.consultant, {

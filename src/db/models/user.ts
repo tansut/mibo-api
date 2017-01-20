@@ -97,8 +97,11 @@ class Schema extends DBSchema {
             Object.keys(integrations).forEach((key) => {
                 result.integrations = result.integrations || {};
                 if (key == 'stripe') {
-                    var stripe: any = result.integrations[key] = {};
-                    stripe.subscriptions = {};
+                    var stripe: any = result.integrations[key] = {
+                        subscriptions: {
+
+                        }
+                    };
 
                     if (integrations[key].subscriptions) {
                         Object.keys(integrations[key].subscriptions).forEach((s) => {
