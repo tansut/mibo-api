@@ -45,6 +45,7 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
     private userRoute: UserRoute;
 
     validateDocumentOwnership(doc: ChatDocument, op: CrudOperation) {
+        return Promise.resolve(doc);
         var success = super.validateDocumentOwnership(doc, op);
         return new Promise((resolve, reject) => {
             success.then(() => resolve()).catch(() => {
