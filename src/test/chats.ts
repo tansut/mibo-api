@@ -127,12 +127,6 @@ export default function () {
                 return lib.get(`/chat/search/consultant/${lib.authData.sales.consultant._id}/summary`, {
                 }, 'user').then((data) => {
 
-                    //}, 'sales').then((data) => {
-                    data.forEach(item => {
-                        console.log(item.user.email);
-                        if (item.user.email == 'saliyevska@gmail.com')
-                            debugger;
-                    });
                 })
             }
             );
