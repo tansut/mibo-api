@@ -87,7 +87,6 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
                 return consultantRoute.retrieveUser(doc.consultant, {
                     disableOwnership: true
                 }).then((consultantuser) => {
-                    debugger;
                     var consultantEmail = consultantuser.email;
                     var promiseList = [];
                     if (!consultantuser.inRole(UserRoles.sales))
@@ -96,7 +95,7 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
                         }));
                     promiseList.push(emailmanager.send(consultantEmail, 'MiBo - New Client!', 'consultantnotice.ejs', {
                         title: 'New Client!',
-                        nickName: user.nickName
+                        nickName: user.nickName || user.email
                     }));
                     return Promise.all(promiseList).then(() => this.insertDb(doc));
                 })

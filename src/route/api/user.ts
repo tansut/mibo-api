@@ -46,7 +46,6 @@ export default class UserRoute extends CrudRoute<UserDocument> {
     }
 
     assignUser2Consultant(user: string): Promise<any> {
-        debugger;
         var consultantRoute = new ConsultantRoute(this.constructorParams);
         var chatRoute = new ChatRoute(this.constructorParams);
         return consultantRoute.locate(UserRoles.sales).then((consultant) => {
@@ -75,6 +74,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         };
         if (model.roles && config.nodeenv != 'production')
             doc.roles = model.roles;
+        else doc.roles = [];
         return this.insertDb(doc).then((doc) => {
             this.req.user = doc;
             return new Promise<UserDocument>((res, rej) => {
@@ -86,29 +86,27 @@ export default class UserRoute extends CrudRoute<UserDocument> {
                         title: 'New Registration',
                         user: doc.email
                     }).then(() => {
-                        if (doc.roles && doc.roles.length > 0) {
-                            var list = [];
-                            doc.roles.forEach((role) => {
-                                var consultantRoute = new ConsultantRoute(this.constructorParams);
-                                if ([UserRoles.dietitian, UserRoles.sales, UserRoles.therapist, UserRoles.trainer].indexOf(role) >= 0)
-                                    list.push(
-                                        consultantRoute.create({
-                                            user: doc._id,
-                                            active: true,
-                                            firstName: 'Test User',
-                                            lastName: 'Test',
-                                            role: role,
+                        var list = [];
+                        doc.roles.forEach((role) => {
+                            var consultantRoute = new ConsultantRoute(this.constructorParams);
+                            if ([UserRoles.dietitian, UserRoles.sales, UserRoles.therapist, UserRoles.trainer].indexOf(role) >= 0)
+                                list.push(
+                                    consultantRoute.create({
+                                        user: doc._id,
+                                        active: true,
+                                        firstName: 'Test User',
+                                        lastName: 'Test',
+                                        role: role,
 
-                                        }, doc)
-                                    )
-                                Promise.all(list).then((results: Array<ConsultantDocument>) => {
-                                    this.assignUser2Consultant(doc._id.toString()).then(() => {
-                                        doc['consultants'] = results.map((c) => c.toClient());
-                                        res(doc)
-                                    })
-                                }).catch((err) => rej(err));
-                            })
-                        } else res(doc);
+                                    }, doc)
+                                )
+                        })
+                        Promise.all(list).then((results: Array<ConsultantDocument>) => {
+                            this.assignUser2Consultant(doc._id.toString()).then(() => {
+                                doc['consultants'] = results.map((c) => c.toClient());
+                                res(doc)
+                            }).catch((err) => rej(err));
+                        }).catch((err) => rej(err));
                     }).catch((error) => rej(error))
                 }).catch((err) => rej(err));
             })
