@@ -25,6 +25,8 @@ describe('tests', function () {
     before(function () {
         return apiApp().bootstrap().then(() => {
             return lib.initUsers();
+            // .then(() => lib.deleteUsers(['test@physioh.com', 'test12@physioh.com', 'test11@physioh.com', 'test10@physioh.com',
+            //     'test8@physioh.com', 'test7@physioh.com', 'test6@physioh.com', 'test5@physioh.com', 'test4@physioh.com', 'test3@physioh.com']));
         });
     });
     systemtests();
@@ -32,7 +34,7 @@ describe('tests', function () {
     paymentests();
     consultantests();
     chattests();
-    // after(function () {
-    //     return lib.removeUsers();
-    // });
+    after(function () {
+        return lib.removeUsers();
+    });
 });

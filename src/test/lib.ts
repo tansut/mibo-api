@@ -153,6 +153,21 @@ let Configurations: ITestConfig = {
 
 export let activeConfig = Configurations[config.get('NODE_ENV')];
 
+export function deleteUsers(emails: Array<string>) {
+    var promises = [];
+    emails.forEach(email => {
+        if (email) {
+            promises.push(
+                route.retrieveByEMail(email).then((user) => {
+                    if (user) return route.delete(user);
+                })
+            )
+        }
+    })
+
+    return Promise.all(promises);
+}
+
 export function removeUsers() {
     var promises = [];
     Object.keys(activeConfig).forEach((key) => {

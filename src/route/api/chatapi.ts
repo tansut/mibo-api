@@ -5,7 +5,7 @@ import { ConsultantCreateModel, ChatCreateModel } from '../../models/account';
 import { ChatDocument, ChatModel, ChatStatus, ChatType } from '../../db/models/chat';
 import { ConsultantDocument, ConsultantModel } from '../../db/models/consultant';
 import UserRoute from './user';
-import { Auth } from '../../lib/common';
+import { Auth, UserRoles } from '../../lib/common';
 import * as stream from 'stream';
 import { default as ApiBase, IRequestParams } from '../baserouter';
 import * as express from 'express';
@@ -87,15 +87,18 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
                 return consultantRoute.retrieveUser(doc.consultant, {
                     disableOwnership: true
                 }).then((consultantuser) => {
+                    debugger;
                     var consultantEmail = consultantuser.email;
-                    return emailmanager.send(user.email, 'MiBo - New Consultant!', 'userconultantnotice.ejs', {
-                        title: 'Congrats!'
-                    }).then(() => {
-                        return emailmanager.send(consultantEmail, 'MiBo - New Client!', 'consultantnotice.ejs', {
-                            title: 'New Client!',
-                            nickName: user.nickName
-                        }).then(() => this.insertDb(doc));
-                    })
+                    var promiseList = [];
+                    if (!consultantuser.inRole(UserRoles.sales))
+                        promiseList.push(emailmanager.send(user.email, 'MiBo - New Consultant!', 'userconultantnotice.ejs', {
+                            title: 'Congrats!'
+                        }));
+                    promiseList.push(emailmanager.send(consultantEmail, 'MiBo - New Client!', 'consultantnotice.ejs', {
+                        title: 'New Client!',
+                        nickName: user.nickName
+                    }));
+                    return Promise.all(promiseList).then(() => this.insertDb(doc));
                 })
             })
         }
@@ -146,12 +149,13 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
         return consultantRoute.retrieve(this.req.params.consultantid).then((consultant) => this.getChatsOfConsultant(consultant, this.req.query.userid, this.req.query.role).then((Chats) => this.res.send(Chats.map((c) => c.toClient()))));
     }
 
+
     getSummaryChatsOfConsultant(consultantid: string, userid?: string, role?: string) {
         var consultantRoute = new ConsultantRoute(this.constructorParams);
-        return consultantRoute.retrieve(consultantid).then((consultant) => this.getChatsOfConsultant(consultant, userid, role).then((chats) => {
+        return consultantRoute.retrieve(consultantid, { disableOwnership: true }).then((consultant) => this.getChatsOfConsultant(consultant, userid, role).then((chats) => {
             var result: Array<ConsultantChatSummary> = [];
             var promiseList = [];
-            var group = _.groupBy(chats, 'user.id');
+            var group = _.groupBy(chats, (e) => e.user.toString());
             Object.keys(group).forEach((key) => {
                 let list = group[key];
                 let dateSorted = _.sortBy(list, 'start', 'desc');
@@ -176,7 +180,6 @@ export default class ChatRoute extends CrudRoute<ChatDocument> {
             });
         }));
     };
-
 
     getSummaryChatsOfConsultantRoute() {
 

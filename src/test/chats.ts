@@ -14,7 +14,8 @@ export default function () {
                     body: {
                         user: lib.authData.user.doc._id,
                         consultant: lib.authData.sales.consultant._id,
-                        role: 'sales'
+                        role: 'sales',
+                        status: ChatStatus.assigned
                     }
                 }, 'user').then((res) => {
                     chatId = res._id;
@@ -119,12 +120,19 @@ export default function () {
         })
         it('should summarize chats by consultant', function () {
             return lib.forceAuthenticationAll(['user', 'sales']).then(() => {
-                // var consultantId = "58579e2361dd5d045cc23f3e";
-                // return lib.get(`/chat/search/consultant/${consultantId}/summary`, {
+                //var consultantId = "587daa7961289d065c72d0bf";
+                //return lib.get(`/chat/search/consultant/${consultantId}/summary`, {
+                //    json: true
 
                 return lib.get(`/chat/search/consultant/${lib.authData.sales.consultant._id}/summary`, {
-                }, 'user').then((result) => {
+                }, 'user').then((data) => {
 
+                    //}, 'sales').then((data) => {
+                    data.forEach(item => {
+                        console.log(item.user.email);
+                        if (item.user.email == 'saliyevska@gmail.com')
+                            debugger;
+                    });
                 })
             }
             );

@@ -1,3 +1,4 @@
+import { ChatStatus, ChatType } from '../../db/models/chat';
 import { debug } from 'util';
 import { ConsultantDocument } from '../../db/models/consultant';
 import { RefreshTokenModel } from '../../db/models/refreshToken';
@@ -44,6 +45,22 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         })
     }
 
+    assignUser2Consultant(user: string): Promise<any> {
+        debugger;
+        var consultantRoute = new ConsultantRoute(this.constructorParams);
+        var chatRoute = new ChatRoute(this.constructorParams);
+        return consultantRoute.locate(UserRoles.sales).then((consultant) => {
+            if (consultant)
+                return chatRoute.create({
+                    consultant: consultant._id.toString(),
+                    role: UserRoles.sales,
+                    status: ChatStatus.assigned,
+                    type: ChatType.text,
+                    user: user
+                })
+        })
+    }
+
     create(model: SignupModel): Promise<UserDocument> {
         let passwordSalt = bcrypt.genSaltSync(10);
         let hash = bcrypt.hashSync(model.password, passwordSalt);
@@ -59,6 +76,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
         if (model.roles && config.nodeenv != 'production')
             doc.roles = model.roles;
         return this.insertDb(doc).then((doc) => {
+            this.req.user = doc;
             return new Promise<UserDocument>((res, rej) => {
                 emailmanager.send(doc.email, 'Welcome to MiBo', 'welcome.ejs', {
                     title: 'Welcome!',
@@ -84,8 +102,10 @@ export default class UserRoute extends CrudRoute<UserDocument> {
                                         }, doc)
                                     )
                                 Promise.all(list).then((results: Array<ConsultantDocument>) => {
-                                    doc['consultants'] = results.map((c) => c.toClient());
-                                    res(doc)
+                                    this.assignUser2Consultant(doc._id.toString()).then(() => {
+                                        doc['consultants'] = results.map((c) => c.toClient());
+                                        res(doc)
+                                    })
                                 }).catch((err) => rej(err));
                             })
                         } else res(doc);

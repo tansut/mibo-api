@@ -64,7 +64,7 @@ export default class Route extends CrudRoute<ConsultantDocument> {
         })
     }
 
-    locate(role: string) {
+    locate(role: string): Promise<ConsultantDocument> {
         var q = this.model.find().where('active', true);
         role && q.where('role', role);
         return q.then((list: Array<ConsultantDocument>) => {
