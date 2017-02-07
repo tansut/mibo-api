@@ -40,7 +40,12 @@ export default class UserRoute extends CrudRoute<UserDocument> {
     createRoute() {
         return this.create(this.req.body).then((user: any) => {
             return this.createTokens(user).then((generatedTokens: GeneratedTokenData) => {
-                this.res.send({ user: user.toClient(), token: generatedTokens, consultants: user['consultants'] });
+                this.res.send({
+                    user: user.toClient(),
+                    token: generatedTokens,
+                    assignedConsultants: user['assignedConsultants'],
+                    consultants: user['consultants']
+                });
             })
         })
     }
