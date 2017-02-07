@@ -46,18 +46,18 @@ export default class UserRoute extends CrudRoute<UserDocument> {
     }
 
     assignUser2Consultant(user: string): Promise<any> {
-        debugger;
         var consultantRoute = new ConsultantRoute(this.constructorParams);
         var chatRoute = new ChatRoute(this.constructorParams);
         return consultantRoute.locate(UserRoles.sales).then((consultant) => {
-            if (consultant)
+            if (consultant) {
                 return chatRoute.create({
                     consultant: consultant._id.toString(),
                     role: UserRoles.sales,
                     status: ChatStatus.assigned,
                     type: ChatType.text,
                     user: user
-                })
+                }).then(() => consultant)
+            } else return null;
         })
     }
 
@@ -102,8 +102,9 @@ export default class UserRoute extends CrudRoute<UserDocument> {
                                         }, doc)
                                     )
                                 Promise.all(list).then((results: Array<ConsultantDocument>) => {
-                                    this.assignUser2Consultant(doc._id.toString()).then(() => {
+                                    this.assignUser2Consultant(doc._id.toString()).then((assigned) => {
                                         doc['consultants'] = results.map((c) => c.toClient());
+                                        doc['assigned'] = assigned.toClient()
                                         res(doc)
                                     })
                                 }).catch((err) => rej(err));
