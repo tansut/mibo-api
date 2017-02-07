@@ -106,7 +106,7 @@ export default class UserRoute extends CrudRoute<UserDocument> {
                             this.assignUser2Consultant(doc._id.toString()).then((assigned: ConsultantDocument) => {
                                 doc['consultants'] = results.map((c) => c.toClient());
                                 doc['assignedConsultants'] = {
-                                    sales: assigned ? assigned.toClient() : undefined
+                                    sales: assigned ? assigned : undefined
                                 }
                                 res(doc)
                             }).catch((err) => rej(err));
