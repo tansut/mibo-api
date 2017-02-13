@@ -10,7 +10,7 @@ module.exports = function (shipit) {
             deployTo: '/srv/nodejs/' + pkg.name,
             repositoryUrl: pkg.repository.url,
             ignores: ['.git', 'node_modules'],
-            keepReleases: 5
+            keepReleases: 1
         },
         production: {
             servers: ['nodejs@ec2-52-43-162-172.us-west-2.compute.amazonaws.com'],
